@@ -71,6 +71,7 @@ public:
 	/** \brief Destructor */
 	~Profile();
 
+#if 0
 	/** \brief start a new timer */
 	void start() {
 		gettimeofday(&starttime, nullptr);
@@ -93,6 +94,10 @@ public:
 		}
 		avg = totaltime / timings.size();
 	}
+#else
+    void start();
+    void stop();
+#endif
 
 	/** \brief Return Max stored timing */
 	double getMax() const;

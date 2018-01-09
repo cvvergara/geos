@@ -34,19 +34,20 @@ Profile::~Profile()
 {
 }
 
-#if 0
+#if 1
 void
 Profile::start()
 {
-	gettimeofday(&starttime, NULL);
+	gettimeofday(&starttime, nullptr);
 }
 
 void
 Profile::stop()
 {
-	gettimeofday(&stoptime, NULL);
-	double elapsed = 1000000*(stoptime.tv_sec-starttime.tv_sec)+
-		(stoptime.tv_usec-starttime.tv_usec);
+	gettimeofday(&stoptime, nullptr);
+	double elapsed = static_cast<double>(
+            1000000 * (stoptime.tv_sec - starttime.tv_sec)
+            + (stoptime.tv_usec - starttime.tv_usec));
 
 	timings.push_back(elapsed);
 	totaltime += elapsed;
@@ -56,7 +57,7 @@ Profile::stop()
 		if ( elapsed > max ) max = elapsed;
 		if ( elapsed < min ) min = elapsed;
 	}
-	avg = totaltime / timings.size();
+	avg = totaltime / static_cast<double>(timings.size());
 }
 #endif
 
