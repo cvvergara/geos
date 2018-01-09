@@ -127,13 +127,13 @@ SimpleMCSweepLineIntersector::computeIntersections(SegmentIntersector *si)
 {
 	nOverlaps=0;
 	prepareEvents();
-	for(size_t i=0; i<events.size(); ++i)
+	for (for(size_t i=0; i<events.size(); ++i)
 	{
 		GEOS_CHECK_FOR_INTERRUPTS();
 		SweepLineEvent *ev=events[i];
 		if (ev->isInsert())
 		{
-			processOverlaps(i,ev->getDeleteEventIndex(),ev,si);
+			processOverlaps(static_cast<int>(i),ev->getDeleteEventIndex(),ev,si);
 		}
 		if (si->getIsDone())
 		{
