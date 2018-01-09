@@ -151,10 +151,10 @@ NodeBase::depth() const
 	return maxSubDepth + 1;
 }
 
-unsigned int
+size_t
 NodeBase::size() const
 {
-	unsigned int subSize=0;
+	size_t subSize=0;
 	for(int i=0; i<4; i++)
 	{
 		if (subnode[i] != nullptr)
