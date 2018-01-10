@@ -165,19 +165,16 @@ NodeBase::size() const
 	return subSize + items.size();
 }
 
-unsigned int
+size_t
 NodeBase::getNodeCount() const
 {
-	unsigned int subSize=0;
-	for(int i=0; i<4; ++i)
-	{
-		if (subnode[i] != nullptr)
-		{
-			subSize += subnode[i]->size();
-		}
-	}
+    size_t subSize{0};
+    for (const auto n : subnode)
+    {
+        subSize += n != nullptr ? n->size() : 0;
+    };
 
-	return subSize + 1;
+	return ++subSize;
 }
 
 string
