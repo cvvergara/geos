@@ -126,7 +126,7 @@ LineString* ExtractLineByLocation::computeLine(const LinearLocation& start, cons
     }
 
 	// ensure there is at least one coordinate in the result
-	if (newCoordinateArray.size() == 0)
+	if (newCoordinateArray.empty())
     {
 		newCoordinateArray.add(start.getCoordinate(line));
     }
