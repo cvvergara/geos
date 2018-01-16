@@ -19,6 +19,7 @@
 #pragma once
 
 #include <cinttypes>
+#include <limits>
 
 /* Set to 1 if you have `int64_t' type */
 #cmakedefine HAVE_INT64_T_64 1
@@ -28,6 +29,11 @@
 
 /* Set to 1 if `long long int' is 64 bits */
 #cmakedefine HAVE_LONG_LONG_INT_64 1
+
+/* Set to 1 if you have ieeefp.h */
+#cmakedefine HAVE_IEEEFP_H 1
+
+
 
 #ifdef HAVE_INT64_T_64
 # ifdef _MSC_VER
@@ -57,15 +63,7 @@ typedef long int int64;
 #  ifndef ISNAN
 #    define ISNAN(x) _isnan(x)
 #  endif
-#elif defined(__sun) && defined(__SVR4) //Solaris
-#  include <ieeefp.h>
-#  ifndef FINITE
-#    define FINITE(x) finite(x)
-#  endif
-#  ifndef ISNAN
-#    define ISNAN(x) isnan(x)
-#  endif
-#else
+#elif !defined(HAVE_IEEEFP_H)
 #  include <cmath>
 #  ifndef FINITE
 #    define FINITE(x) std::isfinite(x)
@@ -73,15 +71,23 @@ typedef long int int64;
 #  ifndef ISNAN
 #    define ISNAN(x) std::isnan(x)
 #  endif
+#else
+#  include <ieeefp.h>
+#  ifndef FINITE
+#    define FINITE(x) finite(x)
+#  endif
+#  ifndef ISNAN
+#    define ISNAN(x) isnan(x)
+#  endif
 #endif
 
 
 
 // Defines NaN for Intel platforms
-#define DoubleNotANumber std::numeric_limits<double>::quiet_NaN()
+constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
 
 // Some handy constants
-#define DoubleMax (std::numeric_limits<double>::max)()
-#define DoubleInfinity (std::numeric_limits<double>::infinity)()
-#define DoubleNegInfinity (-(std::numeric_limits<double>::infinity)())
+constexpr double DoubleMax = (std::numeric_limits<double>::max)();
+constexpr double DoubleInfinity = (std::numeric_limits<double>::infinity)();
+constexpr double DoubleNegInfinity = (-(std::numeric_limits<double>::infinity)());
 
