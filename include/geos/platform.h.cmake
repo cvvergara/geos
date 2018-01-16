@@ -20,30 +20,59 @@
 
 #include <cinttypes>
 
-#if defined(_MSC_VER) && _MSC_VER >= 1200 // VC++ 6.0 and above
-typedef long int  int64;
-typedef long long int  int64;
-#else
+/* Set to 1 if you have `int64_t' type */
+#cmakedefine HAVE_INT64_T_64 1
+
+/* Set to 1 if `long int' is 64 bits */
+#cmakedefine HAVE_LONG_INT_64 1
+
+/* Set to 1 if `long long int' is 64 bits */
+#cmakedefine HAVE_LONG_LONG_INT_64 1
+
+#ifdef HAVE_INT64_T_64
+# ifdef _MSC_VER
+typedef __int64 int64;
+# else
 typedef int64_t int64;
-typedef long int  int64;
+# endif
+#else
+# ifdef HAVE_LONG_LONG_INT_64
+typedef long long int int64;
+# else
+typedef long int int64;
+#  ifndef HAVE_LONG_INT_64
+#   define INT64_IS_REALLY32 1
+#   warning "Could not find 64bit integer definition!"
+#  endif
+# endif
 #endif
 
-#ifndef ISNAN
-#endif
 
 
 #if defined(_MSC_VER) && _MSC_VER >= 1200 // VC++ 6.0 and above
 #  include <float.h>
-#  define FINITE(x) _finite(x)
-#  define ISNAN(x) _isnan(x)
+#  ifndef FINITE
+#    define FINITE(x) _finite(x)
+#  endif
+#  ifndef ISNAN
+#    define ISNAN(x) _isnan(x)
+#  endif
 #elif defined(__sun) && defined(__SVR4) //Solaris
 #  include <ieeefp.h>
-#  define FINITE(x) finite(x)
-#  define ISNAN(x) isnan(x)
+#  ifndef FINITE
+#    define FINITE(x) finite(x)
+#  endif
+#  ifndef ISNAN
+#    define ISNAN(x) isnan(x)
+#  endif
 #else
 #  include <cmath>
-#  define FINITE(x) std::isfinite(x)
-#  define ISNAN(x) std::isnan(x)
+#  ifndef FINITE
+#    define FINITE(x) std::isfinite(x)
+#  endif
+#  ifndef ISNAN
+#    define ISNAN(x) std::isnan(x)
+#  endif
 #endif
 
 
