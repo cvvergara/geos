@@ -20,10 +20,13 @@
 
 #include <cinttypes>
 
-typedef int64_t   int64;
+#if defined(_MSC_VER) && _MSC_VER >= 1200 // VC++ 6.0 and above
 typedef long int  int64;
-typedef long long int int64;
-
+typedef long long int  int64;
+#else
+typedef int64_t int64;
+typedef long int  int64;
+#endif
 
 #ifndef ISNAN
 #endif
