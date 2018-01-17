@@ -131,25 +131,6 @@ extern "C"
 # endif
 #endif
 
-#if 0
-
-#if defined(HAVE_STD_ISNAN)
-# define ISNAN(x) (std::isnan)(x)
-#elif defined(HAVE_INLINE_ISNAND_XCODE)
-# define ISNAN(x) __inline_isnand(static_cast<double>(x))
-#elif defined(HAVE_ISNAND_XCODE)
-# define ISNAN(x) __isnand(static_cast<double>(x))
-#elif defined(HAVE_ISNAN)
-# if defined(_MSC_VER)
-#  define ISNAN(x) _isnan(static_cast<double>(x))
-# else
-#  define ISNAN(x) isnan(x)
-# endif
-#else
-# error "Could not find isnan function or macro!"
-#endif
-
-#else
 
 #if defined(_MSC_VER) && _MSC_VER >= 1200 // VC++ 6.0 and above
 #  ifndef ISNAN
@@ -167,8 +148,6 @@ extern "C"
 #endif
 
 
-#endif  // if 0
-
 
 
 #if defined(HAVE_STD_ISFINITE)
@@ -182,7 +161,7 @@ extern "C"
 #endif
 
 
-#if 1
+#if 0
 
 #define DoubleNegInfinity (-(std::numeric_limits<double>::infinity)())
 #define DoubleMax (std::numeric_limits<double>::max)()
