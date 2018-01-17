@@ -66,7 +66,7 @@ namespace tut
 		CoordsVectAptr ret(snapper.snapTo(snpCoords));
 
 		// both points should have been snapped
-		ensure_equals(ret->size(), 2u);
+		ensure_equals(ret->size(), 2ul);
 		ensure_equals(ret->operator[](0), snp_a);
 		ensure_equals(ret->operator[](1), snp_b);
 
