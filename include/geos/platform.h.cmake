@@ -11,7 +11,7 @@
  *
  * This is free software; you can redistribute and/or modify it under
  * the terms of the GNU Lesser General Public Licence as published
- * by the Free Software Foundation. 
+ * by the Free Software Foundation.
  * See the COPYING file for more information.
  *
  *********************************************************************/
@@ -67,6 +67,8 @@
 /* Set to 1 if Visual C++ finite is defined */
 #cmakedefine HAVE_FINITE 1
 
+#include <cmath>
+#include <limits>
 
 #ifdef HAVE_IEEEFP_H
 extern "C"
@@ -129,6 +131,8 @@ extern "C"
 # endif
 #endif
 
+#if 0
+
 #if defined(HAVE_STD_ISNAN)
 # define ISNAN(x) (std::isnan)(x)
 #elif defined(HAVE_INLINE_ISNAND_XCODE)
@@ -145,6 +149,28 @@ extern "C"
 # error "Could not find isnan function or macro!"
 #endif
 
+#else
+
+#if defined(_MSC_VER) && _MSC_VER >= 1200 // VC++ 6.0 and above
+#  ifndef ISNAN
+#    define ISNAN(x) _isnan(x)
+#  endif
+#elif !defined(HAVE_IEEEFP_H)
+#  ifndef ISNAN
+#    define ISNAN(x) std::isnan(x)
+#  endif
+#else
+#  include <ieeefp.h>
+#  ifndef ISNAN
+#    define ISNAN(x) isnan(x)
+#  endif
+#endif
+
+
+#endif  // if 0
+
+
+
 #if defined(HAVE_STD_ISFINITE)
 # define FINITE(x) (std::isfinite)(x)
 #elif defined(HAVE_ISFINITE)
@@ -155,11 +181,27 @@ extern "C"
 # error "Could not find finite or isfinite function or macro!"
 #endif
 
+
+#if 1
+
 #define DoubleNegInfinity (-(std::numeric_limits<double>::infinity)())
 #define DoubleMax (std::numeric_limits<double>::max)()
 // Defines NaN for Intel platforms
 #define DoubleNotANumber std::numeric_limits<double>::quiet_NaN()
 // Don't forget to define infinities
 #define DoubleInfinity (std::numeric_limits<double>::infinity)()
+
+
+#else
+
+constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
+
+// Some handy constants
+constexpr double DoubleMax = (std::numeric_limits<double>::max)();
+constexpr double DoubleInfinity = (std::numeric_limits<double>::infinity)();
+constexpr double DoubleNegInfinity = (-(std::numeric_limits<double>::infinity)());
+
+#endif   // if 0
+
 
 #endif // GEOS_PLATFORM_H_INCLUDED
