@@ -16,6 +16,8 @@
  *
  *********************************************************************/
 
+#ifndef GEOS_PLATFORM_H_INCLUDED
+#define GEOS_PLATFORM_H_INCLUDED
 #pragma once
 
 #include <cinttypes>
@@ -83,6 +85,7 @@ typedef long int int64;
 
 
 
+#if 1
 // Defines NaN for Intel platforms
 constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
 
@@ -90,4 +93,13 @@ constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
 constexpr double DoubleMax = (std::numeric_limits<double>::max)();
 constexpr double DoubleInfinity = (std::numeric_limits<double>::infinity)();
 constexpr double DoubleNegInfinity = (-(std::numeric_limits<double>::infinity)());
+#else
+#  define DoubleNegInfinity (-(std::numeric_limits<double>::infinity)())
+#  define DoubleMax (std::numeric_limits<double>::max)()
+// Defines NaN for Intel platforms
+# define DoubleNotANumber std::numeric_limits<double>::quiet_NaN()
+// Don't forget to define infinities
+#  define DoubleInfinity (std::numeric_limits<double>::infinity)()
+#endif
 
+#endif // GEOS_PLATFORM_H_INCLUDED
