@@ -69,6 +69,7 @@
 
 #include <cmath>
 #include <limits>
+#include <cinttypes>
 
 #ifdef HAVE_IEEEFP_H
 extern "C"
@@ -77,6 +78,7 @@ extern "C"
 }
 #endif
 
+#if 0
 #ifdef HAVE_INTTYPES_H
 extern "C"
 {
@@ -86,7 +88,7 @@ extern "C"
 #  error Warning: inttypes.h included but HAVE_INT64_T_64 not defined
 # endif
 #endif
-
+# endif // if 0
 /* We need M_PI, but on MSVC you need to define _USE_MATH_DEFINES before
  * including math.h to get it.  If we are too late (math.h already included)
  * we will define it manually.
@@ -161,26 +163,14 @@ extern "C"
 #endif
 
 
-#if 0
 
-#define DoubleNegInfinity (-(std::numeric_limits<double>::infinity)())
-#define DoubleMax (std::numeric_limits<double>::max)()
-// Defines NaN for Intel platforms
-#define DoubleNotANumber std::numeric_limits<double>::quiet_NaN()
-// Don't forget to define infinities
-#define DoubleInfinity (std::numeric_limits<double>::infinity)()
-
-
-#else
-
-constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
 
 // Some handy constants
+constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
 constexpr double DoubleMax = (std::numeric_limits<double>::max)();
 constexpr double DoubleInfinity = (std::numeric_limits<double>::infinity)();
 constexpr double DoubleNegInfinity = (-(std::numeric_limits<double>::infinity)());
 
-#endif   // if 0
 
 
 #endif // GEOS_PLATFORM_H_INCLUDED
