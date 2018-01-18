@@ -134,35 +134,32 @@ extern "C"
 #endif
 
 
+
 #if defined(_MSC_VER) && _MSC_VER >= 1200 // VC++ 6.0 and above
+#  include <float.h>
+#  ifndef FINITE
+#    define FINITE(x) _finite(x)
+#  endif
 #  ifndef ISNAN
 #    define ISNAN(x) _isnan(x)
 #  endif
 #elif !defined(HAVE_IEEEFP_H)
+#  include <cmath>
+#  ifndef FINITE
+#    define FINITE(x) std::isfinite(x)
+#  endif
 #  ifndef ISNAN
 #    define ISNAN(x) std::isnan(x)
 #  endif
 #else
 #  include <ieeefp.h>
+#  ifndef FINITE
+#    define FINITE(x) finite(x)
+#  endif
 #  ifndef ISNAN
 #    define ISNAN(x) isnan(x)
 #  endif
 #endif
-
-
-
-
-#if defined(HAVE_STD_ISFINITE)
-# define FINITE(x) (std::isfinite)(x)
-#elif defined(HAVE_ISFINITE)
-# define FINITE(x) isfinite(x)
-#elif defined(HAVE_FINITE)
-# define FINITE(x) _finite(static_cast<double>(x))
-#else
-# error "Could not find finite or isfinite function or macro!"
-#endif
-
-
 
 
 // Some handy constants
