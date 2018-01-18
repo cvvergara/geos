@@ -85,7 +85,7 @@ void object::test<1>()
     //   0: GeometryCollection
     //   1: Point
     //   2: Polygon
-    ensure_equals(lineal.size(), 5); // TODO: Why MultiLineString is in?
+    ensure_equals(lineal.size(), 5ul); // TODO: Why MultiLineString is in?
     // TODO: shouldn't be 1 for POLYGON?
     ensure_equals(nonlineal.size(), 3);
     // TODO: is 8 right?
