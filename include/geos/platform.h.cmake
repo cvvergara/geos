@@ -67,10 +67,14 @@
 /* Set to 1 if Visual C++ finite is defined */
 #cmakedefine HAVE_FINITE 1
 
+#ifdef _MSC_VER
+#  define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 #include <limits>
 #include <cinttypes>
 
+#if 0
 #ifdef HAVE_IEEEFP_H
 extern "C"
 {
@@ -78,17 +82,6 @@ extern "C"
 }
 #endif
 
-#if 0
-#ifdef HAVE_INTTYPES_H
-extern "C"
-{
-#include <inttypes.h>
-}
-# ifndef HAVE_INT64_T_64
-#  error Warning: inttypes.h included but HAVE_INT64_T_64 not defined
-# endif
-#endif
-# endif // if 0
 /* We need M_PI, but on MSVC you need to define _USE_MATH_DEFINES before
  * including math.h to get it.  If we are too late (math.h already included)
  * we will define it manually.
@@ -101,6 +94,8 @@ extern "C"
 #include <cmath>
 #endif
 #include <limits>
+#endif // if 0
+
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
