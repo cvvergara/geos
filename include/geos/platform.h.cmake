@@ -74,33 +74,15 @@
 #include <limits>
 #include <cinttypes>
 
-#if 0
-#ifdef HAVE_IEEEFP_H
-extern "C"
-{
-#include <ieeefp.h>
-}
-#endif
-
-/* We need M_PI, but on MSVC you need to define _USE_MATH_DEFINES before
- * including math.h to get it.  If we are too late (math.h already included)
- * we will define it manually.
- */
-#ifdef _MSC_VER
-#define _USE_MATH_DEFINES
-#include <cmath>
-#include <float.h>
-#else
-#include <cmath>
-#endif
-#include <limits>
-#endif // if 0
 
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 
+   typedef int64_t int64;
+
+#if 0
 /* For MingW the appropriate definitions are included in math.h
  * and float.h but the definitions in math.h are only included
  * if __STRICT_ANSI__ is not defined. Since GEOS is compiled
@@ -128,6 +110,7 @@ extern "C"
 # endif
 #endif
 
+#endif // if 0
 
 
 #if defined(_MSC_VER) && _MSC_VER >= 1200 // VC++ 6.0 and above
