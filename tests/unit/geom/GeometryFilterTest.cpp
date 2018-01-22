@@ -89,8 +89,8 @@ void object::test<1>()
     ensure_equals(nonlineal.size(), 3ul);
     // TODO: is 7, shouldn't be not 4?
     //ensure_equals(lineal.size() + nonlineal.size(), g->getNumGeometries());
-    ensure_equals(g->getNumGeometries(), 4);
-    ensure_equals(lineal.size() + nonlineal.size(), 7);
+    ensure_equals(g->getNumGeometries(), 4ul);
+    ensure_equals(lineal.size() + nonlineal.size(), 7ul);
 }
 
 } // namespace tut
