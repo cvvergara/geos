@@ -127,7 +127,7 @@ LineString::getCoordinatesRO() const
 }
 
 const Coordinate&
-LineString::getCoordinateN(int n) const
+LineString::getCoordinateN(size_t n) const
 {
 	assert(points.get());
 	return points->getAt(n);
