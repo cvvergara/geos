@@ -97,8 +97,8 @@ LengthLocationMap::getLocationForward(double length) const
 		 */
 		if (it.isEndOfLine()) {
 			if (totalLength == length) {
-				unsigned int compIndex = it.getComponentIndex();
-				unsigned int segIndex = it.getVertexIndex();
+				auto compIndex = it.getComponentIndex();
+				auto segIndex = it.getVertexIndex();
 				return LinearLocation(compIndex, segIndex, 0.0);
 			}
 		}
@@ -110,8 +110,8 @@ LengthLocationMap::getLocationForward(double length) const
 			if (totalLength + segLen > length)
 			{
 				double frac = (length - totalLength) / segLen;
-				unsigned int compIndex = it.getComponentIndex();
-				unsigned int segIndex = it.getVertexIndex();
+				auto compIndex = it.getComponentIndex();
+				auto segIndex = it.getVertexIndex();
 				return LinearLocation(compIndex, segIndex, frac);
 			}
 			totalLength += segLen;
