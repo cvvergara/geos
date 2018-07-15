@@ -30,7 +30,7 @@ namespace noding { // geos.noding
 /*private*/
 bool
 IntersectionAdder::isTrivialIntersection(const SegmentString* e0,
-		int segIndex0, const SegmentString* e1, int segIndex1)
+		size_t segIndex0, const SegmentString* e1, size_t segIndex1)
 {
 	if (e0 != e1) return false;
 
@@ -40,7 +40,7 @@ IntersectionAdder::isTrivialIntersection(const SegmentString* e0,
 
 	if (! e0->isClosed()) return false;
 
-	int maxSegIndex = e0->size() - 1;
+	auto maxSegIndex = e0->size() - 1;
 	if ( (segIndex0 == 0 && segIndex1 == maxSegIndex)
 		||  (segIndex1 == 0 && segIndex0 == maxSegIndex) )
 	{

@@ -78,7 +78,7 @@ SegmentNodeList::add(const Coordinate& intPt, size_t segmentIndex)
 
 void SegmentNodeList::addEndpoints()
 {
-	int maxSegIndex = edge.size() - 1;
+	size_t maxSegIndex = edge.size() - 1;
 	add(&(edge.getCoordinate(0)), 0);
 	add(&(edge.getCoordinate(maxSegIndex)), maxSegIndex);
 }
@@ -98,7 +98,7 @@ SegmentNodeList::addCollapsedNodes()
 			e=collapsedVertexIndexes.end();
 		i != e; ++i)
 	{
-		auto vertexIndex = static_cast<unsigned int>(*i);
+		auto vertexIndex = static_cast<size_t>(*i);
 		add(edge.getCoordinate(vertexIndex), vertexIndex);
 	}
 }

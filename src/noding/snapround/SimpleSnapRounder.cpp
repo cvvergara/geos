@@ -136,7 +136,7 @@ SimpleSnapRounder::computeSnaps(NodedSegmentString* ss, vector<Coordinate>& snap
 	{
 		const Coordinate& snapPt = *it;
 		HotPixel hotPixel(snapPt, scaleFactor, li);
-		for (int i=0, n=ss->size()-1; i<n; ++i) {
+		for (size_t i = 0, n = ss->size() - 1; i < n; ++i) {
 			hotPixel.addSnappedNode(*ss, i);
 		}
 	}

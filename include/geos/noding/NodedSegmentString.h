@@ -124,7 +124,7 @@ public:
 		if (nextSegIndex < size())
 		{
 			geom::Coordinate const& nextPt =
-                getCoordinate(static_cast<unsigned int>(nextSegIndex));
+                getCoordinate(nextSegIndex);
 
 			// Normalize segment index if intPt falls on vertex
 			// The check for point equality is 2D only - Z values are ignored
@@ -143,12 +143,12 @@ public:
 
 	const SegmentNodeList& getNodeList() const;
 
-	unsigned int size() const override
+	size_t size() const override
 	{
-		return static_cast<unsigned int>(pts->size());
+		return pts->size();
 	}
 
-	const geom::Coordinate& getCoordinate(unsigned int i) const override;
+	const geom::Coordinate& getCoordinate(size_t i) const override;
 
 	geom::CoordinateSequence* getCoordinates() const override;
 

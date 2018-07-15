@@ -48,7 +48,7 @@ BasicSegmentString::getSegmentOctant(unsigned int index) const
 
 /* virtual public */
 const geom::Coordinate&
-BasicSegmentString::getCoordinate(unsigned int i) const
+BasicSegmentString::getCoordinate(size_t i) const
 {
 	return pts->getAt(i);
 }

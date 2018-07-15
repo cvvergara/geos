@@ -147,7 +147,7 @@ NodedSegmentString::getNodedSubstrings(
 
 /* virtual public */
 const geom::Coordinate&
-NodedSegmentString::getCoordinate(unsigned int i) const
+NodedSegmentString::getCoordinate(size_t i) const
 {
 	return pts->getAt(i);
 }
