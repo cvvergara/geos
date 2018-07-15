@@ -109,8 +109,8 @@ public:
 
 	~Edge() override;
 
-	virtual int getNumPoints() const {
-		return static_cast<int>(pts->getSize());
+	virtual size_t getNumPoints() const {
+		return pts->getSize();
 	}
 
 	virtual void setName(const std::string &newName) {
@@ -122,7 +122,7 @@ public:
 		return pts;
 	}
 
-	virtual const geom::Coordinate& getCoordinate(int i) const {
+	virtual const geom::Coordinate& getCoordinate(size_t i) const {
 		testInvariant();
 		return pts->getAt(i);
 	}
@@ -153,7 +153,7 @@ public:
 		testInvariant();
 	}
 
-	virtual int getMaximumSegmentIndex() const {
+	virtual size_t getMaximumSegmentIndex() const {
 		testInvariant();
 		return getNumPoints()-1;
 	}

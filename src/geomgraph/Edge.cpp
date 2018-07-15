@@ -174,7 +174,7 @@ Edge::addIntersection(LineIntersector *li,
 
 	// normalize the intersection point location
 	unsigned int nextSegIndex=normalizedSegmentIndex+1;
-	unsigned int npts=getNumPoints();
+	auto npts = getNumPoints();
 	if (nextSegIndex<npts)
 	{
 		const Coordinate& nextPt=pts->getAt(nextSegIndex);
@@ -203,15 +203,15 @@ Edge::equals(const Edge& e) const
 {
 	testInvariant();
 
-	unsigned int npts1=getNumPoints();
-	unsigned int npts2=e.getNumPoints();
+	auto npts1 = getNumPoints();
+	auto npts2 = e.getNumPoints();
 
 	if (npts1 != npts2 ) return false;
 
 	bool isEqualForward=true;
 	bool isEqualReverse=true;
 
-	for (unsigned int i=0, iRev=npts1-1; i<npts1; ++i, --iRev)
+	for (size_t i = 0, iRev = npts1 - 1; i < npts1; ++i, --iRev)
 	{
 		const Coordinate &e1pi=pts->getAt(i);
 		const Coordinate &e2pi=e.pts->getAt(i);
@@ -233,8 +233,8 @@ Edge::isPointwiseEqual(const Edge *e) const
 #if GEOS_DEBUG > 2
 	cerr<<"Edge::isPointwiseEqual call"<<endl;
 #endif
-	unsigned int npts=getNumPoints();
-	unsigned int enpts=e->getNumPoints();
+	auto npts = getNumPoints();
+	auto enpts = e->getNumPoints();
 	if (npts!=enpts) return false;
 #if GEOS_DEBUG
 	cerr<<"Edge::isPointwiseEqual scanning "<<enpts<<"x"<<npts<<" points"<<endl;
@@ -273,8 +273,8 @@ Edge::printReverse() const
 	   << " depthDelta:" << depthDelta
 	   << ":" << std::endl
 	   << "  LINESTRING(";
-	unsigned int npts=getNumPoints();
-	for (unsigned int i=npts; i>0; --i)
+	auto npts=getNumPoints();
+	for (auto i=npts; i>0; --i)
 	{
 		if (i<npts) os << ", ";
 		os << pts->getAt(i-1).toString();
@@ -291,8 +291,8 @@ Edge::getEnvelope()
 	if (env==nullptr)
 	{
 		env=new Envelope();
-		unsigned int npts=getNumPoints();
-		for (unsigned int i = 0; i<npts; ++i)
+		auto npts=getNumPoints();
+		for (size_t i = 0; i < npts; ++i)
 		{
 			env->expandToInclude(pts->getAt(i));
 		}
