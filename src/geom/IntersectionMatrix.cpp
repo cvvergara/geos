@@ -170,10 +170,10 @@ IntersectionMatrix::set(const string& dimensionSymbols)
 
 /*public*/
 void
-IntersectionMatrix::setAtLeast(int row, int col, int minimumDimensionValue)
+IntersectionMatrix::setAtLeast(size_t row, size_t col, int minimumDimensionValue)
 {
-	assert( row >= 0 && row < firstDim );
-	assert( col >= 0 && col < secondDim );
+	assert( row < firstDim );
+	assert( col < secondDim );
 
 	if (matrix[row][col] < minimumDimensionValue)
 	{
