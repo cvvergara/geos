@@ -44,7 +44,7 @@ private:
 	std::vector<Boundable*> childBoundables;
 	int level;
 public:
-	AbstractNode(int newLevel, int capacity=10);
+	AbstractNode(int newLevel, size_t capacity = 10);
 		~AbstractNode() override;
 
 	// TODO: change signature to return by ref,

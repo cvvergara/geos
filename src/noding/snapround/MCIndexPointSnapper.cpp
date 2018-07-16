@@ -53,7 +53,7 @@ public:
 
 	bool isNodeAdded() const { return isNodeAddedVar; }
 
-	void select(chain::MonotoneChain& mc, unsigned int startIndex) override
+	void select(chain::MonotoneChain& mc, size_t startIndex) override
 	{
 		// This is casting away 'constness'!
 		NodedSegmentString& ss = *(static_cast<NodedSegmentString*>(mc.getContext()));

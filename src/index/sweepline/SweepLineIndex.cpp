@@ -90,7 +90,7 @@ SweepLineIndex::computeOverlaps(SweepLineOverlapAction *action)
 }
 
 void
-SweepLineIndex::processOverlaps(int start, int end,
+SweepLineIndex::processOverlaps(size_t start, size_t end,
 		SweepLineInterval *s0, SweepLineOverlapAction *action)
 {
 	/**
@@ -98,7 +98,7 @@ SweepLineIndex::processOverlaps(int start, int end,
 	 * include current insert event object in list of event objects to test.
 	 * Last index can be skipped, because it must be a Delete event.
 	 */
-	for(int i=start; i<end; i++)
+	for(auto i = start; i < end; i++)
 	{
 		SweepLineEvent *ev=events[i];
 		if (ev->isInsert()) {

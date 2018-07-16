@@ -73,7 +73,7 @@ private:
 	 */
 	void buildIndex();
 
-	void processOverlaps(int start, int end,
+	void processOverlaps(size_t start, size_t end,
 			SweepLineInterval *s0,
 			SweepLineOverlapAction *action);
 };

@@ -53,8 +53,8 @@ IntersectionAdder::isTrivialIntersection(const SegmentString* e0,
 /*public*/
 void
 IntersectionAdder::processIntersections(
-		SegmentString* e0,  int segIndex0,
-		SegmentString* e1,  int segIndex1)
+		SegmentString* e0,  size_t segIndex0,
+		SegmentString* e1,  size_t segIndex1)
 {
 	// don't bother intersecting a segment with itself
 	if (e0 == e1 && segIndex0 == segIndex1) return;
