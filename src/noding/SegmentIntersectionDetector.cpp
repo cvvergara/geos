@@ -12,7 +12,7 @@
  *
  **********************************************************************/
 
-
+#include <cstddef>
 #include <geos/noding/SegmentIntersectionDetector.h>
 #include <geos/noding/SegmentIntersector.h>
 #include <geos/algorithm/LineIntersector.h>
@@ -29,8 +29,8 @@ namespace noding { // geos::noding
 void
 SegmentIntersectionDetector::
 processIntersections(
-	noding::SegmentString * e0, int segIndex0,
-	noding::SegmentString * e1, int segIndex1 )
+	noding::SegmentString * e0, size_t segIndex0,
+	noding::SegmentString * e1, size_t segIndex1 )
 {
 	// don't bother intersecting a segment with itself
 	if (e0 == e1 && segIndex0 == segIndex1) return;

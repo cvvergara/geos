@@ -157,8 +157,8 @@ public:
 	 * intersect (e.g. by an disjoint envelope test).
 	 */
 	void processIntersections(
-		SegmentString* e0,  int segIndex0,
-		SegmentString* e1,  int segIndex1) override;
+		SegmentString* e0,  size_t segIndex0,
+		SegmentString* e1,  size_t segIndex1) override;
 
 
 	static bool isAdjacentSegments(size_t i1, size_t i2) {
