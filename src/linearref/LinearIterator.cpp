@@ -31,7 +31,7 @@ namespace geos
 namespace linearref   // geos.linearref
 {
 
-unsigned int LinearIterator::segmentEndVertexIndex(const LinearLocation& loc)
+size_t LinearIterator::segmentEndVertexIndex(const LinearLocation& loc)
 {
 	if (loc.getSegmentFraction() > 0.0)
 		return loc.getSegmentIndex() + 1;

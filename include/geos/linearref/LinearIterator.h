@@ -132,7 +132,7 @@ public:
 
 private:
 
-	static unsigned int segmentEndVertexIndex(const LinearLocation& loc);
+	static size_t segmentEndVertexIndex(const LinearLocation& loc);
 
 	const geom::LineString *currentLine;
 	size_t vertexIndex;

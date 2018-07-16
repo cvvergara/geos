@@ -127,7 +127,7 @@ public:
 
 	bool hasProperInteriorIntersection();
 
-	void addIntersections(Edge *e0, int segIndex0, Edge *e1, int segIndex1);
+	void addIntersections(Edge *e0, size_t segIndex0, Edge *e1, size_t segIndex1);
 
 	void setIsDoneIfProperInt(bool isDoneWhenProperInt);
 

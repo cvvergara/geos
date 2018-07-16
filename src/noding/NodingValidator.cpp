@@ -193,7 +193,7 @@ bool
 NodingValidator::hasInteriorIntersection(const LineIntersector& aLi,
 		const Coordinate& p0, const Coordinate& p1) const
 {
-	for (int i=0, n=aLi.getIntersectionNum(); i<n; i++)
+	for (size_t i=0, n = aLi.getIntersectionNum(); i < n; ++i)
 	{
 		const Coordinate &intPt=aLi.getIntersection(i);
 		if (!(intPt==p0 || intPt==p1))

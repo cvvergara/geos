@@ -148,12 +148,12 @@ Edge::getCollapsedEdge()
 
 /*public*/
 void
-Edge::addIntersections(LineIntersector *li, int segmentIndex, int geomIndex)
+Edge::addIntersections(LineIntersector *li, size_t segmentIndex, size_t geomIndex)
 {
 #if GEOS_DEBUG
 	cerr<<"["<<this<<"] Edge::addIntersections("<<li->toString()<<", "<<segmentIndex<<", "<<geomIndex<<") called"<<endl;
 #endif
-	for (int i=0; i<li->getIntersectionNum();i++) {
+	for (size_t i = 0; i < li->getIntersectionNum(); ++i) {
 		addIntersection(li,segmentIndex,geomIndex,i);
 	}
 
@@ -163,19 +163,19 @@ Edge::addIntersections(LineIntersector *li, int segmentIndex, int geomIndex)
 /*public*/
 void
 Edge::addIntersection(LineIntersector *li,
-	int segmentIndex, int geomIndex, int intIndex)
+	size_t segmentIndex, size_t geomIndex, size_t intIndex)
 {
 #if GEOS_DEBUG
 	std::cerr << "["<<this<<"] Edge::addIntersection("<<li->toString()<<", "<<segmentIndex<<", "<<geomIndex<<", "<<intIndex<<") called"<< std::endl;
 #endif
 	const Coordinate& intPt=li->getIntersection(intIndex);
-	unsigned int normalizedSegmentIndex=segmentIndex;
-	double dist=li->getEdgeDistance(geomIndex,intIndex);
+	auto normalizedSegmentIndex = segmentIndex;
+	double dist = li->getEdgeDistance(geomIndex, intIndex);
 
 	// normalize the intersection point location
-	unsigned int nextSegIndex=normalizedSegmentIndex+1;
+	auto nextSegIndex = normalizedSegmentIndex + 1;
 	auto npts = getNumPoints();
-	if (nextSegIndex<npts)
+	if (nextSegIndex < npts)
 	{
 		const Coordinate& nextPt=pts->getAt(nextSegIndex);
         // Normalize segment index if intPt falls on vertex

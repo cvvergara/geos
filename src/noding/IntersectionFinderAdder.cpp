@@ -49,7 +49,7 @@ IntersectionFinderAdder::processIntersections(
 	{
 		if (li.isInteriorIntersection())
 		{
-			for (int intIndex=0, n=li.getIntersectionNum(); intIndex<n; intIndex++)
+			for (size_t intIndex = 0, n = li.getIntersectionNum(); intIndex < n; ++intIndex)
 			{
 				interiorIntersections.push_back(li.getIntersection(intIndex));
 			}

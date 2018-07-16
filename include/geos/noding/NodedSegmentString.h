@@ -172,7 +172,7 @@ public:
 	 * intersection list.
 	 */
 	void addIntersections(algorithm::LineIntersector *li,
-			unsigned int segmentIndex, int geomIndex);
+			size_t segmentIndex, size_t geomIndex);
 
 	/** \brief
 	 * Add an SegmentNode for intersection intIndex.
@@ -182,8 +182,8 @@ public:
 	 * to use the higher of the two possible segmentIndexes
 	 */
 	void addIntersection(algorithm::LineIntersector *li,
-			unsigned int segmentIndex,
-			int geomIndex, int intIndex);
+			size_t segmentIndex,
+			size_t geomIndex, size_t intIndex);
 
 	/** \brief
 	 * Add an SegmentNode for intersection intIndex.
@@ -193,7 +193,7 @@ public:
 	 * to use the higher of the two possible segmentIndexes
 	 */
 	void addIntersection(const geom::Coordinate& intPt,
-			unsigned int segmentIndex);
+			size_t segmentIndex);
 
 
 private:

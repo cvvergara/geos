@@ -129,7 +129,7 @@ LengthLocationMap::resolveHigher(const LinearLocation& loc) const
 {
   if (! loc.isEndpoint(*linearGeom)) return loc;
 
-  unsigned int compIndex = loc.getComponentIndex();
+  auto compIndex = loc.getComponentIndex();
   // if last component can't resolve any higher
   if (compIndex >= linearGeom->getNumGeometries() - 1) return loc;
 

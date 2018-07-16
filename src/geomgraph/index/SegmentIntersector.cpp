@@ -143,7 +143,7 @@ SegmentIntersector::isTrivialIntersection(Edge *e0,
  * certain pairs of segments for efficiency reasons.
  */
 void
-SegmentIntersector::addIntersections(Edge *e0,int segIndex0,Edge *e1,int segIndex1)
+SegmentIntersector::addIntersections(Edge *e0, size_t segIndex0, Edge *e1, size_t segIndex1)
 {
 
 #if GEOS_DEBUG
