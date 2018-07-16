@@ -16,8 +16,8 @@
 #ifndef GEOS_GEOMGRAPH_INDEX_MONOTONECHAININDEXER_H
 #define GEOS_GEOMGRAPH_INDEX_MONOTONECHAININDEXER_H
 
-#include <geos/export.h>
 #include <vector>
+#include <geos/export.h>
 
 // Forward declarations
 namespace geos {
