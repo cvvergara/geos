@@ -105,19 +105,19 @@ CoordinateSequence::minCoordinate(CoordinateSequence *cl)
 	return minCoord;
 }
 
-int
+size_t
 CoordinateSequence::indexOf(const Coordinate *coordinate,
 		const CoordinateSequence *cl)
 {
-	size_t size=cl->getSize();
-	for (size_t i=0; i<size; ++i)
+	size_t size = cl->size();
+	for (size_t i=0; i < size; ++i)
 	{
 		if ((*coordinate)==cl->getAt(i))
 		{
-			return static_cast<int>(i); // FIXME: what if we overflow the int ?
+			return i;
 		}
 	}
-	return -1;
+	return std::numeric_limits<std::size_t>::max();
 }
 
 void
@@ -161,9 +161,9 @@ CoordinateSequence::reverse(CoordinateSequence *cl)
 {
 
 	// FIXME: use a standard algorithm
-	int last = static_cast<int>(cl->getSize()) - 1;
-	int mid=last/2;
-	for(int i=0;i<=mid;i++) {
+	auto last = cl->size() - 1;
+	auto mid = last / 2;
+	for(size_t i=0; i <= mid; i++) {
 		const Coordinate tmp=cl->getAt(i);
 		cl->setAt(cl->getAt(last-i),i);
 		cl->setAt(tmp,last-i);
