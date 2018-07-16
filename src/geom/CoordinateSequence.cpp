@@ -227,14 +227,14 @@ CoordinateSequence::add(const CoordinateSequence *cl,
 {
 	// FIXME:  don't rely on negative values for 'j' (the reverse case)
 
-	const int npts = static_cast<int>(cl->getSize());
+	const auto npts = cl->size();
 	if (direction) {
-		for (int i=0; i<npts; i++) {
+		for (size_t i = 0; i < npts; ++i) {
 			add(cl->getAt(i), allowRepeated);
 		}
 	} else {
-		for (int j=npts-1; j>=0; j--) {
-			add(cl->getAt(j), allowRepeated);
+		for (auto j = npts; j > 0; --j) {
+			add(cl->getAt(j - 1), allowRepeated);
 		}
 	}
 }
