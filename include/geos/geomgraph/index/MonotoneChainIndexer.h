@@ -37,11 +37,11 @@ public:
 
 	MonotoneChainIndexer(){}
 
-	void getChainStartIndices(const geom::CoordinateSequence*, std::vector<int>&);
+	void getChainStartIndices(const geom::CoordinateSequence*, std::vector<size_t>&);
 
 private:
 
-	int findChainEnd(const geom::CoordinateSequence* pts, int start);
+	size_t findChainEnd(const geom::CoordinateSequence* pts, size_t start);
 
 };
 

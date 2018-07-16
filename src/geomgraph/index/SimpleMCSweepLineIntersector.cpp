@@ -89,16 +89,16 @@ void
 SimpleMCSweepLineIntersector::add(Edge *edge, void* edgeSet)
 {
 	MonotoneChainEdge *mce=edge->getMonotoneChainEdge();
-	vector<int> &startIndex=mce->getStartIndexes();
-	size_t n = startIndex.size()-1;
+	auto& startIndex = mce->getStartIndexes();
+	size_t n = startIndex.size() - 1;
 	events.reserve(events.size()+(n*2));
-	for(size_t i=0; i<n; ++i)
+	for(size_t i = 0; i < n; ++i)
 	{
 		GEOS_CHECK_FOR_INTERRUPTS();
-		MonotoneChain *mc=new MonotoneChain(mce, static_cast<int>(i));
-		SweepLineEvent *insertEvent=new SweepLineEvent(edgeSet,mce->getMinX(static_cast<int>(i)),nullptr,mc);
+		MonotoneChain *mc=new MonotoneChain(mce, i);
+		SweepLineEvent *insertEvent=new SweepLineEvent(edgeSet, mce->getMinX(i), nullptr, mc);
 		events.push_back(insertEvent);
-		events.push_back(new SweepLineEvent(edgeSet,mce->getMaxX(static_cast<int>(i)),insertEvent,mc));
+		events.push_back(new SweepLineEvent(edgeSet, mce->getMaxX(i), insertEvent, mc));
 	}
 }
 
