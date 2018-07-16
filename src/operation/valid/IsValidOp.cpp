@@ -70,7 +70,7 @@ IsValidOp::findPtNotNode(const CoordinateSequence *testCoords,
 	// find a point in the testCoords which is not a node of the searchRing
 	EdgeIntersectionList &eiList=searchEdge->getEdgeIntersectionList();
 	// somewhat inefficient - is there a better way? (Use a node map, for instance?)
-	unsigned int npts = static_cast<int>(testCoords->getSize());
+	auto npts = testCoords->getSize();
 	for(unsigned int i=0; i<npts; ++i)
 	{
 		const Coordinate& pt=testCoords->getAt(i);
@@ -231,10 +231,10 @@ IsValidOp::checkValid(const Polygon *g)
 void
 IsValidOp::checkValid(const MultiPolygon *g)
 {
-	unsigned int ngeoms = static_cast<unsigned int>(g->getNumGeometries());
+	auto ngeoms = g->getNumGeometries();
 	vector<const Polygon *>polys(ngeoms);
 
-	for (unsigned int i=0; i<ngeoms; ++i)
+	for (size_t i=0; i < ngeoms; ++i)
 	{
 		const Polygon *p = dynamic_cast<const Polygon *>(g->getGeometryN(i));
 

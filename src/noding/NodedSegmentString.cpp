@@ -52,7 +52,7 @@ NodedSegmentString::safeOctant(const Coordinate& p0, const Coordinate& p1)
 
 /*public*/
 int
-NodedSegmentString::getSegmentOctant(unsigned int index) const
+NodedSegmentString::getSegmentOctant(size_t index) const
 {
 	if (index >= size() - 1) return -1;
 	return safeOctant(getCoordinate(index), getCoordinate(index+1));

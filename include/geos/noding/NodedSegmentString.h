@@ -164,7 +164,7 @@ public:
 	 *        Must not be the last index in the vertex list
 	 * @return the octant of the segment at the vertex
 	 */
-	int getSegmentOctant(unsigned int index) const;
+	int getSegmentOctant(size_t index) const;
 
 	/** \brief
 	 * Add {SegmentNode}s for one or both

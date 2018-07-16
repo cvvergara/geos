@@ -40,7 +40,7 @@ namespace noding { // geos.noding
 
 /*public*/
 int
-BasicSegmentString::getSegmentOctant(unsigned int index) const
+BasicSegmentString::getSegmentOctant(size_t index) const
 {
 	if (index >= size() - 1) return -1;
 	return Octant::octant(getCoordinate(index), getCoordinate(index+1));
