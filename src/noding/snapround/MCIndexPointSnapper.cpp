@@ -42,7 +42,7 @@ public:
 
 	HotPixelSnapAction(HotPixel& nHotPixel,
 			SegmentString* nParentEdge,
-			unsigned int nVertexIndex)
+			size_t nVertexIndex)
 		:
 		MonotoneChainSelectAction(),
 		hotPixel(nHotPixel),
@@ -76,7 +76,7 @@ public:
 private:
 	HotPixel& hotPixel;
 	SegmentString* parentEdge;
-	unsigned int vertexIndex;
+	size_t vertexIndex;
 	bool isNodeAddedVar;
 
     // Declare type as noncopyable
@@ -114,7 +114,7 @@ private:
 bool
 MCIndexPointSnapper::snap(HotPixel& hotPixel,
 		SegmentString* parentEdge,
-		unsigned int vertexIndex)
+		size_t vertexIndex)
 {
 	const Envelope& pixelEnv = hotPixel.getSafeEnvelope();
 	HotPixelSnapAction hotPixelSnapAction(hotPixel, parentEdge, vertexIndex);
