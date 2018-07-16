@@ -15,6 +15,7 @@
 #ifndef GEOS_INDEX_STRTREE_ABSTRACTNODE_H
 #define GEOS_INDEX_STRTREE_ABSTRACTNODE_H
 
+#include <cstddef>
 #include <geos/export.h>
 #include <geos/index/strtree/Boundable.h> // for inheritance
 
