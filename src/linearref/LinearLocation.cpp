@@ -210,7 +210,7 @@ LinearLocation::getSegment(const Geometry* linearGeom) const
 	// check for endpoint - return last segment of the line if so
 	if (segmentIndex >= lineComp->getNumPoints() - 1)
 	{
-		Coordinate prev = lineComp->getCoordinateN(static_cast<int>(lineComp->getNumPoints() - 2));
+		Coordinate prev = lineComp->getCoordinateN(lineComp->getNumPoints() - 2);
 		return std::unique_ptr<LineSegment>(new LineSegment(prev, p0));
 	}
 	Coordinate p1 = lineComp->getCoordinateN(segmentIndex + 1);

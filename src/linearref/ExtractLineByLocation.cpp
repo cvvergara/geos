@@ -90,7 +90,7 @@ LineString* ExtractLineByLocation::computeLine(const LinearLocation& start, cons
 	CoordinateSequence* coordinates = line->getCoordinates();
 	CoordinateArraySequence newCoordinateArray;
 
-    const unsigned int indexStep = 1;
+    const size_t indexStep = 1;
 	auto startSegmentIndex = start.getSegmentIndex();
 
 	if (start.getSegmentFraction() > 0.0)
@@ -107,7 +107,7 @@ LineString* ExtractLineByLocation::computeLine(const LinearLocation& start, cons
 	if (lastSegmentIndex >= coordinates->size())
     {
         assert(coordinates->size() > 0);
-        lastSegmentIndex = static_cast<unsigned int>(coordinates->size() - indexStep);
+        lastSegmentIndex = coordinates->size() - indexStep;
     }
 
 	if (! start.isVertex())
