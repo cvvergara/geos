@@ -131,8 +131,8 @@ Edge::isCollapsed() const
 {
 	testInvariant();
 	if (!label.isArea()) return false;
-	if (getNumPoints()!= 3) return false;
-	if (pts->getAt(0)==pts->getAt(2) ) return true;
+	if (getNumPoints() != 3) return false;
+	if (pts->getAt(0) == pts->getAt(2)) return true;
 	return false;
 }
 
