@@ -845,7 +845,7 @@ XMLTester::parseTest(const TiXmlNode* node)
 
         else if (opName=="isvalid")
         {
-            geom::Geometry *gT=gA;
+            gT=gA;
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) {
                 gT=gB;
             }
@@ -1030,7 +1030,7 @@ XMLTester::parseTest(const TiXmlNode* node)
 
         else if (opName=="getboundary")
         {
-            geom::Geometry *gT=gA;
+            gT=gA;
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) gT=gB;
 
             GeomPtr gRes(parseGeometry(opRes, "expected"));
@@ -1050,7 +1050,7 @@ XMLTester::parseTest(const TiXmlNode* node)
 
         else if (opName=="getcentroid")
         {
-            geom::Geometry *gT=gA;
+            gT=gA;
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) gT=gB;
 
             GeomPtr gRes(parseGeometry(opRes, "expected"));
@@ -1073,7 +1073,7 @@ XMLTester::parseTest(const TiXmlNode* node)
 
         else if (opName=="issimple")
         {
-            geom::Geometry *gT=gA;
+            gT=gA;
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) gT=gB;
 
             if (gT->isSimple()) actual_result="true";
@@ -1085,7 +1085,7 @@ XMLTester::parseTest(const TiXmlNode* node)
 
         else if (opName=="convexhull")
         {
-            geom::Geometry *gT=gA;
+            gT=gA;
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) gT=gB;
 
             GeomPtr gRes(parseGeometry(opRes, "expected"));
@@ -1107,7 +1107,7 @@ XMLTester::parseTest(const TiXmlNode* node)
         {
             using namespace operation::buffer;
 
-            geom::Geometry *gT=gA;
+            gT=gA;
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) gT=gB;
 
             GeomPtr gRes(parseGeometry(opRes, "expected"));
@@ -1144,7 +1144,7 @@ XMLTester::parseTest(const TiXmlNode* node)
         {
             using namespace operation::buffer;
 
-            geom::Geometry *gT=gA;
+            gT=gA;
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) gT=gB;
 
             GeomPtr gRes(parseGeometry(opRes, "expected"));
@@ -1189,7 +1189,7 @@ XMLTester::parseTest(const TiXmlNode* node)
         {
             using namespace operation::buffer;
 
-            geom::Geometry *gT=gA;
+            gT=gA;
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) gT=gB;
 
             GeomPtr gRes(parseGeometry(opRes, "expected"));
@@ -1226,7 +1226,7 @@ XMLTester::parseTest(const TiXmlNode* node)
 
         else if (opName=="getinteriorpoint")
         {
-            geom::Geometry *gT=gA;
+            gT=gA;
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) gT=gB;
 
             GeomPtr gRes(parseGeometry(opRes, "expected"));
@@ -1292,7 +1292,7 @@ XMLTester::parseTest(const TiXmlNode* node)
             GeomPtr gRes(wktreader->read(opRes));
             gRes->normalize();
 
-            geom::Geometry *gT=gA;
+            gT=gA;
 
             if ( ( opArg1 == "B" || opArg1 == "b" ) && gB ) gT=gB;
 

@@ -58,7 +58,7 @@ public:
      * algorithm, and provides a more realistic test.
      */
     using geos::precision::SimpleGeometryPrecisionReducer;
-    PrecisionModel pm(size/10);
+    pm = size / 10.0;
     SimpleGeometryPrecisionReducer reducer(&pm);
     Geometry::Ptr sinePolyCrinkly ( reducer.reduce(sinePoly.get()) );
     sinePoly.reset();
