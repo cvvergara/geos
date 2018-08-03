@@ -111,4 +111,4 @@ endif() # (GEOS_ENABLE_MACOSX_FRAMEWORK)
 #################################################################################
 # Group source files for IDE source explorers (e.g. Visual Studio)
 #################################################################################
-GenerateSourceGroups(src)
+#GenerateSourceGroups(src)
