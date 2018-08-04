@@ -22,7 +22,6 @@
 #include <geos/export.h>
 #include <geos/geom/Coordinate.h> // for composition
 #include <memory> // for std::unique_ptr
-#include <vector>
 
 // Forward declarations
 namespace geos {
@@ -98,7 +97,7 @@ public:
 
 private:
 
-	//class GEOS_DLL VecWrapper : vector<geom::Coordinate> {};   // C4251
+	class GEOS_DLL uniqueptrWrapper : std::unique_ptr<geom::Coordinate> {};   // C4251
   std::unique_ptr<geom::Coordinate> areaBasePt;
   geom::Coordinate triangleCent3;
   geom::Coordinate cg3;
