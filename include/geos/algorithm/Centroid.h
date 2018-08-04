@@ -97,6 +97,7 @@ public:
 
 private:
 
+	class GEOS_DLL VecWrapper : vector<geom::Coordinate> {};   // C4251
   std::unique_ptr<geom::Coordinate> areaBasePt;
   geom::Coordinate triangleCent3;
   geom::Coordinate cg3;
