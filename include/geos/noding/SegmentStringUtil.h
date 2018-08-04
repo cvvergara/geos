@@ -20,6 +20,7 @@
 #ifndef GEOS_NODING_SEGMENTSTRINGUTIL_H
 #define GEOS_NODING_SEGMENTSTRINGUTIL_H
 
+#include <geos/export.h>
 #include <geos/noding/NodedSegmentString.h>
 #include <geos/geom/LineString.h>
 #include <geos/geom/CoordinateSequence.h>
@@ -34,7 +35,7 @@ namespace noding { // geos::noding
  * @author Martin Davis
  *
  */
-class SegmentStringUtil
+class GEOS_DLL SegmentStringUtil
 {
 public:
 	/** \brief
