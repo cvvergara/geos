@@ -58,7 +58,8 @@ if(GEOS_ENABLE_MACOSX_FRAMEWORK)
     install(CODE "execute_process(COMMAND ln -sfh Versions/Current/unix \"${GEOS_FWDIR}/unix\")")
   endif()
 
-elseif (_MSC_VER)
+elseif (MSVC)
+  message(STATUS "Using MSVC"
   file(GLOB_RECURSE geos_ALL_HEADERS ${CMAKE_SOURCE_DIR}/include/*.h) # fix source_group issue
   if(GEOS_BUILD_SHARED)
     add_library(geos SHARED ${geos_SOURCES} ${geos_ALL_HEADERS})
