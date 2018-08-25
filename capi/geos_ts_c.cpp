@@ -806,7 +806,7 @@ GEOSDistanceIndexed_r(GEOSContextHandle_t extHandle, const Geometry *g1, const G
   return execute<int, 0>(extHandle, [&]() {
       *dist = IndexedFacetDistance::distance(g1, g2);
       return 1;
-    };
+    });
 }
 
 int
@@ -824,7 +824,7 @@ GEOSHausdorffDistanceDensify_r(GEOSContextHandle_t extHandle, const Geometry *g1
 {
   assert(0 != dist);
   return execute<int, 0>(extHandle, [&]() -> int {
-      *ldist = DiscreteHausdorffDistance::distance(*g1, *g2, ldensifyFrac);
+      *dist = DiscreteHausdorffDistance::distance(*g1, *g2, densifyFrac);
       return 1;
     });
 }
@@ -856,34 +856,26 @@ GEOSArea_r(GEOSContextHandle_t extHandle, const Geometry *g, double *area)
   return execute<int, 0>(extHandle, [&]() -> int {
       *area = g->getArea();
       return 1;
-    };
+    });
 }
 
 int
 GEOSLength_r(GEOSContextHandle_t extHandle, const Geometry *g, double *length)
 {
   assert(0 != length);
-  std::function<int(const Geometry*, double*)> lambda =
-    [](const Geometry *g1, double * llength)->int
-    {
-      *llength = g1->getLength();
+  return execute<int, 2>(extHandle, [&]() -> int {
+      *length = g->getLength();
       return 1;
-    };
-
-  return excecute<int, 2>(extHandle, lambda, g, length);
+    });
 }
 
 CoordinateSequence *
 GEOSNearestPoints_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2)
 {
-  std::function<CoordinateSequence *(const Geometry*, const Geometry *)> lambda =
-    [](const Geometry *g1, const Geometry * g2)->CoordinateSequence *
-    {
+  return execute<CoordinateSequence*, nullptr>(extHandle, [&]() -> CoordinateSequence* {
       if (g1->isEmpty() || g2->isEmpty()) return 0;
       return geos::operation::distance::DistanceOp::nearestPoints(g1, g2);
-    };
-
-  return excecute<CoordinateSequence *, nullptr>(extHandle, lambda, g1, g2);
+    });
 }
 
 Geometry *
@@ -924,13 +916,9 @@ GEOSGeomFromWKT_r(GEOSContextHandle_t extHandle, const char *wkt)
 char *
 GEOSGeomToWKT_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-  std::function<char *(const Geometry*)> lambda =
-    [](const Geometry *g1)->char *
-    {
+  return execute<char*, nullptr>(extHandle, [&]() -> char* {
         return gstrdup(g1->toString());
-    };
-
-  return excecute<char *, nullptr>(extHandle, lambda, g1);
+    });
 }
 
 // Remember to free the result!
