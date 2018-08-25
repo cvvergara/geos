@@ -2110,6 +2110,7 @@ GEOSPolygonize_full_r(GEOSContextHandle_t extHandle, const Geometry* g,
     }
 }
 
+/* TODO can not use the template because of GEOS_DEBUG */
 Geometry *
 GEOSLineMerge_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
@@ -2222,151 +2223,75 @@ GEOSHasZ_r(GEOSContextHandle_t extHandle, const Geometry *g)
 int
 GEOS_getWKBOutputDims_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle )
-    {
-        return -1;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return -1;
-    }
-
-    return handle->WKBOutputDims;
+  return execute<int, -1, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
+        return handle->WKBOutputDims;
+        });
 }
 
 int
 GEOS_setWKBOutputDims_r(GEOSContextHandle_t extHandle, int newdims)
 {
-    if ( 0 == extHandle )
-    {
-        return -1;
-    }
+  return execute<int, -1, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
+        if ( newdims < 2 || newdims > 3 )
+        {
+            handle->ERROR_MESSAGE("WKB output dimensions out of range 2..3");
+        }
 
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return -1;
-    }
+        const int olddims = handle->WKBOutputDims;
+        handle->WKBOutputDims = newdims;
 
-    if ( newdims < 2 || newdims > 3 )
-    {
-        handle->ERROR_MESSAGE("WKB output dimensions out of range 2..3");
-    }
-
-    const int olddims = handle->WKBOutputDims;
-    handle->WKBOutputDims = newdims;
-
-    return olddims;
+        return olddims;
+        });
 }
 
 int
 GEOS_getWKBByteOrder_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle )
-    {
-        return -1;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return -1;
-    }
-
-    return handle->WKBByteOrder;
+  return execute<int, -1, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
+        return handle->WKBByteOrder;
+        });
 }
 
 int
 GEOS_setWKBByteOrder_r(GEOSContextHandle_t extHandle, int byteOrder)
 {
-    if ( 0 == extHandle )
-    {
-        return -1;
-    }
+  return execute<int, -1, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
+        const int oldByteOrder = handle->WKBByteOrder;
+        handle->WKBByteOrder = byteOrder;
 
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return -1;
-    }
-
-    const int oldByteOrder = handle->WKBByteOrder;
-    handle->WKBByteOrder = byteOrder;
-
-    return oldByteOrder;
+        return oldByteOrder;
+        });
 }
 
 
 CoordinateSequence *
 GEOSCoordSeq_create_r(GEOSContextHandle_t extHandle, unsigned int size, unsigned int dims)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<CoordinateSequence*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> CoordinateSequence* {
         const GeometryFactory *gf = handle->geomFactory;
         return gf->getCoordinateSequenceFactory()->create(size, dims);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 int
 GEOSCoordSeq_setOrdinate_r(GEOSContextHandle_t extHandle, CoordinateSequence *cs,
                            unsigned int idx, unsigned int dim, double val)
 {
-    assert(0 != cs);
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
+  assert(0 != cs);
+  return execute<int, 0>(extHandle, [&]() {
         cs->setOrdinate(idx, dim, val);
         return 1;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+    });
 }
 
 int
@@ -2390,72 +2315,25 @@ GEOSCoordSeq_setZ_r(GEOSContextHandle_t extHandle, CoordinateSequence *s, unsign
 CoordinateSequence *
 GEOSCoordSeq_clone_r(GEOSContextHandle_t extHandle, const CoordinateSequence *cs)
 {
-    assert(0 != cs);
-
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  assert(0 != cs);
+  return execute<CoordinateSequence*, nullptr>(
+      extHandle,
+      [&]() -> CoordinateSequence* {
         return cs->clone();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 int
 GEOSCoordSeq_getOrdinate_r(GEOSContextHandle_t extHandle, const CoordinateSequence *cs,
                            unsigned int idx, unsigned int dim, double *val)
 {
-    assert(0 != cs);
-    assert(0 != val);
+  assert(0 != cs);
+  assert(0 != val);
 
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
-        double d = cs->getOrdinate(idx, dim);
-        *val = d;
-
+  return execute<int, 0>(extHandle, [&]() {
+        *val = cs->getOrdinate(idx, dim);
         return 1;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+    });
 }
 
 int
@@ -2517,42 +2395,9 @@ GEOSCoordSeq_isCCW_r(GEOSContextHandle_t extHandle, const CoordinateSequence *cs
 void
 GEOSCoordSeq_destroy_r(GEOSContextHandle_t extHandle, CoordinateSequence *s)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-
-    try
-    {
+  return execute(extHandle, [&]() {
         delete s;
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+    });
 }
 
 const CoordinateSequence *
