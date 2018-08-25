@@ -1186,8 +1186,7 @@ GEOSMinimumClearance_r(GEOSContextHandle_t extHandle, const Geometry *g, double 
 {
   return execute<int, 2>(extHandle, [&]() {
         geos::precision::MinimumClearance mc(g);
-        double res = mc.getDistance();
-        *d = res;
+        *d = mc.getDistance();
         return 0;
     });
 }
@@ -1216,6 +1215,7 @@ GEOSSymDifference_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geo
     });
 }
 
+/* TODO can not use the template because of VERBOSE_EXCEPTIONS*/
 Geometry *
 GEOSUnion_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2)
 {
@@ -1293,6 +1293,7 @@ GEOSUnaryUnion_r(GEOSContextHandle_t extHandle, const Geometry *g)
     return NULL;
 }
 
+/* TODO can not use the template because of VERBOSE_EXCEPTIONS*/
 Geometry *
 GEOSNode_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
@@ -1335,59 +1336,27 @@ GEOSNode_r(GEOSContextHandle_t extHandle, const Geometry *g)
 Geometry *
 GEOSUnionCascaded_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         const geos::geom::MultiPolygon *p = dynamic_cast<const geos::geom::MultiPolygon *>(g1);
         if ( ! p )
         {
             handle->ERROR_MESSAGE("Invalid argument (must be a MultiPolygon)");
-            return NULL;
+            return nullptr;
         }
 
         using geos::operation::geounion::CascadedPolygonUnion;
         return CascadedPolygonUnion::Union(p);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSPointOnSurface_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         Geometry *ret = g1->getInteriorPoint();
         if ( ! ret )
         {
@@ -1396,19 +1365,10 @@ GEOSPointOnSurface_r(GEOSContextHandle_t extHandle, const Geometry *g1)
             return gf->createPoint();
         }
         return ret;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
+/* TODO can not use the template because of VERBOSE_EXCEPTIONS*/
 Geometry *
 GEOSClipByRect_r(GEOSContextHandle_t extHandle, const Geometry *g, double xmin, double ymin, double xmax, double ymax)
 {
@@ -1458,86 +1418,27 @@ GEOSClipByRect_r(GEOSContextHandle_t extHandle, const Geometry *g, double xmin, 
 void
 GEOSGeom_destroy_r(GEOSContextHandle_t extHandle, Geometry *a)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-
-    // FIXME: mloskot: Does this try-catch around delete means that
-    // destructors in GEOS may throw? If it does, this is a serious
-    // violation of "never throw an exception from a destructor" principle
-
-    try
-    {
+  execute(extHandle, [&]() -> void {
         delete a;
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+    });
 }
 
 void
 GEOSGeom_setUserData_r(GEOSContextHandle_t extHandle, Geometry *g, void* userData)
 {
-    assert(0 != g);
-
-    if ( 0 == extHandle )
-    {
-        return;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return;
-    }
-
-    g->setUserData(userData);
+  assert(0 != g);
+  execute(extHandle, [&]() -> void {
+      g->setUserData(userData);
+    });
 }
 
 void
 GEOSSetSRID_r(GEOSContextHandle_t extHandle, Geometry *g, int srid)
 {
-    assert(0 != g);
-
-    if ( 0 == extHandle )
-    {
-        return;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return;
-    }
-
-    g->setSRID(srid);
+  assert(0 != g);
+  execute(extHandle, [&]() -> void {
+      g->setSRID(srid);
+    });
 }
 
 
@@ -1567,20 +1468,9 @@ GEOSNormalize_r(GEOSContextHandle_t extHandle, Geometry *g)
 int
 GEOSGetNumInteriorRings_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-    if ( 0 == extHandle )
-    {
-        return -1;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return -1;
-    }
-
-    try
-    {
+  return execute<int, -1, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
         const Polygon *p = dynamic_cast<const Polygon *>(g1);
         if ( ! p )
         {
@@ -1588,17 +1478,7 @@ GEOSGetNumInteriorRings_r(GEOSContextHandle_t extHandle, const Geometry *g1)
             return -1;
         }
         return static_cast<int>(p->getNumInteriorRing());
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return -1;
+    });
 }
 
 
@@ -1631,39 +1511,18 @@ GEOSGetGeometryN_r(GEOSContextHandle_t extHandle, const Geometry *g1, int n)
 Geometry *
 GEOSGeomGetPointN_r(GEOSContextHandle_t extHandle, const Geometry *g1, int n)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
-    	using geos::geom::LineString;
-    	const LineString *ls = dynamic_cast<const LineString *>(g1);
-    	if ( ! ls )
-    	{
-    		handle->ERROR_MESSAGE("Argument is not a LineString");
-    		return NULL;
-    	}
-    	return ls->getPointN(n);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
+        using geos::geom::LineString;
+        const LineString *ls = dynamic_cast<const LineString *>(g1);
+        if ( ! ls )
+        {
+          handle->ERROR_MESSAGE("Argument is not a LineString");
+          return nullptr;
+        }
+        return ls->getPointN(n);
+      });
 }
 
 /*
@@ -1672,39 +1531,18 @@ GEOSGeomGetPointN_r(GEOSContextHandle_t extHandle, const Geometry *g1, int n)
 Geometry *
 GEOSGeomGetStartPoint_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
-    	using geos::geom::LineString;
-    	const LineString *ls = dynamic_cast<const LineString *>(g1);
-    	if ( ! ls )
-    	{
-    		handle->ERROR_MESSAGE("Argument is not a LineString");
-    		return NULL;
-    	}
-    	return ls->getStartPoint();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
+        using geos::geom::LineString;
+        const LineString *ls = dynamic_cast<const LineString *>(g1);
+        if ( ! ls )
+        {
+          handle->ERROR_MESSAGE("Argument is not a LineString");
+          return nullptr;
+        }
+        return ls->getStartPoint();
+    });
 }
 
 /*
@@ -1713,39 +1551,18 @@ GEOSGeomGetStartPoint_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 Geometry *
 GEOSGeomGetEndPoint_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
-    	using geos::geom::LineString;
-    	const LineString *ls = dynamic_cast<const LineString *>(g1);
-    	if ( ! ls )
-    	{
-    		handle->ERROR_MESSAGE("Argument is not a LineString");
-    		return NULL;
-    	}
-    	return ls->getEndPoint();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
+        using geos::geom::LineString;
+        const LineString *ls = dynamic_cast<const LineString *>(g1);
+        if ( ! ls )
+        {
+          handle->ERROR_MESSAGE("Argument is not a LineString");
+          return NULL;
+        }
+        return ls->getEndPoint();
+    });
 }
 
 /*
@@ -1755,46 +1572,25 @@ GEOSGeomGetEndPoint_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 char
 GEOSisClosed_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-    if ( 0 == extHandle )
-    {
-        return 2;
-    }
+  return execute<char, 2, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> char {
+        using geos::geom::LineString;
+        using geos::geom::MultiLineString;
 
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 2;
-    }
+        auto ls = dynamic_cast<const LineString *>(g1);
+        if ( ls ) {
+            return ls->isClosed();
+        }
 
-    try
-    {
-    	using geos::geom::LineString;
-    	using geos::geom::MultiLineString;
-
-    	const LineString *ls = dynamic_cast<const LineString *>(g1);
-    	if ( ls ) {
-    	    return ls->isClosed();
-    	}
-
-    	const MultiLineString *mls = dynamic_cast<const MultiLineString *>(g1);
-    	if ( mls ) {
-    	    return mls->isClosed();
-    	}
+        auto mls = dynamic_cast<const MultiLineString *>(g1);
+        if ( mls ) {
+            return mls->isClosed();
+        }
 
         handle->ERROR_MESSAGE("Argument is not a LineString or MultiLineString");
         return 2;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 2;
+      });
 }
 
 /*
@@ -1804,40 +1600,19 @@ GEOSisClosed_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 int
 GEOSGeomGetLength_r(GEOSContextHandle_t extHandle, const Geometry *g1, double *length)
 {
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
-    	using geos::geom::LineString;
-    	const LineString *ls = dynamic_cast<const LineString *>(g1);
-    	if ( ! ls )
-    	{
-    		handle->ERROR_MESSAGE("Argument is not a LineString");
-    		return 0;
-    	}
-    	*length = ls->getLength();
-    	return 1;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+  return execute<int, 0, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
+        using geos::geom::LineString;
+        const LineString *ls = dynamic_cast<const LineString *>(g1);
+        if ( ! ls )
+        {
+          handle->ERROR_MESSAGE("Argument is not a LineString");
+          return 0;
+        }
+        *length = ls->getLength();
+        return 1;
+      });
 }
 
 /*
@@ -1846,39 +1621,19 @@ GEOSGeomGetLength_r(GEOSContextHandle_t extHandle, const Geometry *g1, double *l
 int
 GEOSGeomGetNumPoints_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-    if ( 0 == extHandle )
-    {
-        return -1;
-    }
+  return execute<int, -1, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
 
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return -1;
-    }
-
-    try
-    {
-    	using geos::geom::LineString;
-		const LineString *ls = dynamic_cast<const LineString *>(g1);
-		if ( ! ls )
-		{
-			handle->ERROR_MESSAGE("Argument is not a LineString");
-			return -1;
-		}
-		return static_cast<int>(ls->getNumPoints());
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return -1;
+    	  using geos::geom::LineString;
+		    const LineString *ls = dynamic_cast<const LineString *>(g1);
+        if ( ! ls )
+        {
+          handle->ERROR_MESSAGE("Argument is not a LineString");
+          return -1;
+        }
+        return static_cast<int>(ls->getNumPoints());
+    });
 }
 
 /*
@@ -1888,40 +1643,19 @@ GEOSGeomGetNumPoints_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 int
 GEOSGeomGetX_r(GEOSContextHandle_t extHandle, const Geometry *g1, double *x)
 {
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
-    	using geos::geom::Point;
-    	const Point *po = dynamic_cast<const Point *>(g1);
-    	if ( ! po )
-    	{
-    		handle->ERROR_MESSAGE("Argument is not a Point");
-    		return 0;
-    	}
-    	*x = po->getX();
-    	return 1;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+  return execute<int, 0, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
+        using geos::geom::Point;
+        const Point *po = dynamic_cast<const Point *>(g1);
+        if ( ! po )
+        {
+          handle->ERROR_MESSAGE("Argument is not a Point");
+          return 0;
+        }
+        *x = po->getX();
+        return 1;
+      });
 }
 
 /*
@@ -1931,40 +1665,19 @@ GEOSGeomGetX_r(GEOSContextHandle_t extHandle, const Geometry *g1, double *x)
 int
 GEOSGeomGetY_r(GEOSContextHandle_t extHandle, const Geometry *g1, double *y)
 {
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
-    	using geos::geom::Point;
-    	const Point *po = dynamic_cast<const Point *>(g1);
-    	if ( ! po )
-    	{
-    		handle->ERROR_MESSAGE("Argument is not a Point");
-    		return 0;
-    	}
-    	*y = po->getY();
-    	return 1;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+  return execute<int, 0, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
+        using geos::geom::Point;
+        const Point *po = dynamic_cast<const Point *>(g1);
+        if ( ! po )
+        {
+          handle->ERROR_MESSAGE("Argument is not a Point");
+          return 0;
+        }
+        *y = po->getY();
+        return 1;
+      });
 }
 
 /*
@@ -1974,20 +1687,9 @@ GEOSGeomGetY_r(GEOSContextHandle_t extHandle, const Geometry *g1, double *y)
 int
 GEOSGeomGetZ_r(GEOSContextHandle_t extHandle, const Geometry *g1, double *z)
 {
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
+  return execute<int, 0, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) {
         using geos::geom::Point;
         const Point *po = dynamic_cast<const Point *>(g1);
         if ( ! po )
@@ -1997,17 +1699,7 @@ GEOSGeomGetZ_r(GEOSContextHandle_t extHandle, const Geometry *g1, double *z)
         }
         *z = po->getZ();
         return 1;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+    });
 }
 
 /*
@@ -2017,38 +1709,17 @@ GEOSGeomGetZ_r(GEOSContextHandle_t extHandle, const Geometry *g1, double *z)
 const Geometry *
 GEOSGetExteriorRing_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
-        const Polygon *p = dynamic_cast<const Polygon *>(g1);
+  return execute<const Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> const Geometry* {
+        auto p = dynamic_cast<const Polygon *>(g1);
         if ( ! p )
         {
             handle->ERROR_MESSAGE("Invalid argument (must be a Polygon)");
-            return NULL;
+            return nullptr;
         }
         return p->getExteriorRing();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 /*
@@ -2058,57 +1729,25 @@ GEOSGetExteriorRing_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 const Geometry *
 GEOSGetInteriorRingN_r(GEOSContextHandle_t extHandle, const Geometry *g1, int n)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
-        const Polygon *p = dynamic_cast<const Polygon *>(g1);
+  return execute<const Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> const Geometry* {
+        auto p = dynamic_cast<const Polygon *>(g1);
         if ( ! p )
         {
             handle->ERROR_MESSAGE("Invalid argument (must be a Polygon)");
             return NULL;
         }
         return p->getInteriorRingN(n);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSGetCentroid_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         Geometry *ret = g->getCentroid();
         if (0 == ret)
         {
@@ -2116,19 +1755,10 @@ GEOSGetCentroid_r(GEOSContextHandle_t extHandle, const Geometry *g)
             return gf->createPoint();
         }
         return ret;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
+/* TODO can not use the template because of GEOS_DEBUG */
 Geometry *
 GEOSGeom_createEmptyCollection_r(GEOSContextHandle_t extHandle, int type)
 {
@@ -2189,6 +1819,7 @@ GEOSGeom_createEmptyCollection_r(GEOSContextHandle_t extHandle, int type)
     return 0;
 }
 
+/* TODO can not use the template because of GEOS_DEBUG */
 Geometry *
 GEOSGeom_createCollection_r(GEOSContextHandle_t extHandle, int type, Geometry **geoms, unsigned int ngeoms)
 {
@@ -2252,6 +1883,7 @@ GEOSGeom_createCollection_r(GEOSContextHandle_t extHandle, int type, Geometry **
     return 0;
 }
 
+/* TODO can not use the template because of GEOS_DEBUG */
 Geometry *
 GEOSPolygonize_r(GEOSContextHandle_t extHandle, const Geometry * const * g, unsigned int ngeoms)
 {
@@ -2318,6 +1950,7 @@ GEOSPolygonize_r(GEOSContextHandle_t extHandle, const Geometry * const * g, unsi
     return out;
 }
 
+/* TODO can not use the template because of GEOS_DEBUG */
 Geometry *
 GEOSPolygonizer_getCutEdges_r(GEOSContextHandle_t extHandle, const Geometry * const * g, unsigned int ngeoms)
 {
@@ -2385,6 +2018,7 @@ GEOSPolygonizer_getCutEdges_r(GEOSContextHandle_t extHandle, const Geometry * co
     return out;
 }
 
+/* TODO can not use the template because of GEOS_DEBUG */
 Geometry *
 GEOSPolygonize_full_r(GEOSContextHandle_t extHandle, const Geometry* g,
 	Geometry** cuts, Geometry** dangles, Geometry** invalid)
