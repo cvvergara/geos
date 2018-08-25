@@ -3360,54 +3360,20 @@ GEOSGeometry *
 GEOSSnap_r(GEOSContextHandle_t extHandle, const GEOSGeometry* g1,
            const GEOSGeometry* g2, double tolerance)
 {
-    using namespace geos::operation::overlay::snap;
-
-    if ( 0 == extHandle ) return 0;
-    GEOSContextHandleInternal_t *handle =
-      reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( handle->initialized == 0 ) return 0;
-
-    try{
+  return execute<GEOSGeometry*, nullptr>(extHandle, [&]() -> GEOSGeometry* {
+      using namespace geos::operation::overlay::snap;
       GeometrySnapper snapper( *g1 );
       std::unique_ptr<Geometry> ret = snapper.snapTo(*g2, tolerance);
       return ret.release();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-        return 0;
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-        return 0;
-    }
+    });
 }
 
 BufferParameters *
 GEOSBufferParams_create_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle ) return NULL;
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized ) return NULL;
-
-    try
-    {
-        BufferParameters *p = new BufferParameters();
-        return p;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+  return execute<BufferParameters*, nullptr>(extHandle, [&]() -> BufferParameters* {
+        return new BufferParameters();
+    });
 }
 
 void
@@ -3483,45 +3449,19 @@ GEOSBufferParams_setSingleSided_r(GEOSContextHandle_t extHandle,
 Geometry *
 GEOSBufferWithParams_r(GEOSContextHandle_t extHandle, const Geometry *g1, const BufferParameters* bp, double width)
 {
-    using geos::operation::buffer::BufferOp;
-
-    if ( 0 == extHandle ) return NULL;
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized ) return NULL;
-
-    try
-    {
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
+        using geos::operation::buffer::BufferOp;
         BufferOp op(g1, *bp);
         Geometry *g3 = op.getResultGeometry(width);
         return g3;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSDelaunayTriangulation_r(GEOSContextHandle_t extHandle, const Geometry *g1, double tolerance, int onlyEdges)
 {
-    if ( 0 == extHandle ) return NULL;
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized ) return NULL;
-
-    using geos::triangulate::DelaunayTriangulationBuilder;
-
-    try
-    {
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
+      using geos::triangulate::DelaunayTriangulationBuilder;
       DelaunayTriangulationBuilder builder;
       builder.setTolerance(tolerance);
       builder.setSites(*g1);
@@ -3529,18 +3469,9 @@ GEOSDelaunayTriangulation_r(GEOSContextHandle_t extHandle, const Geometry *g1, d
       if ( onlyEdges ) return builder.getEdges( *g1->getFactory() ).release();
       else return builder.getTriangles( *g1->getFactory() ).release();
 
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-	    handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
+
 Geometry*
 GEOSVoronoiDiagram_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *env, double tolerance ,int onlyEdges)
 {
