@@ -330,7 +330,6 @@ execute(GEOSContextHandle_t &extHandle,
     std::function<RT(HT)> lambda)
 {
     if (!extHandle) return value;
-
     auto handle = reinterpret_cast<HT>(extHandle);
     if (!handle->initialized) return value;
 
@@ -357,17 +356,9 @@ RT
 execute(GEOSContextHandle_t &extHandle,
     std::function<RT()> lambda)
 {
-    if ( 0 == extHandle )
-    {
-        return value;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( handle->initialized == 0 )
-    {
-        return value;
-    }
+    if (!extHandle) return value;
+    auto handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
+    if (!handle->initialized) return value;
 
     try
     {
@@ -638,7 +629,9 @@ GEOSRelate_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *
 char *
 GEOSRelateBoundaryNodeRule_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, int bnr)
 {
-  return execute<char*, nullptr, GEOSContextHandleInternal_t*>(extHandle, [&](GEOSContextHandleInternal_t * handle) -> char* {
+  return execute<char*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t * handle) -> char* {
         using geos::operation::relate::RelateOp;
         using geos::geom::IntersectionMatrix;
         using geos::algorithm::BoundaryNodeRule;
@@ -664,7 +657,7 @@ GEOSRelateBoundaryNodeRule_r(GEOSContextHandle_t extHandle, const Geometry *g1, 
           default:
             handle->ERROR_MESSAGE("Invalid boundary node rule %d", bnr);
             return nullptr;
-            break;
+          break;
         }
 
         if (0 == im) return nullptr;
@@ -675,7 +668,7 @@ GEOSRelateBoundaryNodeRule_r(GEOSContextHandle_t extHandle, const Geometry *g1, 
         im = nullptr;
 
         return result;
-    });
+      });
 }
 
 
@@ -688,20 +681,9 @@ GEOSRelateBoundaryNodeRule_r(GEOSContextHandle_t extHandle, const Geometry *g1, 
 char
 GEOSisValid_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-    if ( 0 == extHandle )
-    {
-        return 2;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 2;
-    }
-
-    try
-    {
+  return execute<char, 2, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t * handle) {
         using geos::operation::valid::IsValidOp;
         using geos::operation::valid::TopologyValidationError;
 
@@ -716,17 +698,7 @@ GEOSisValid_r(GEOSContextHandle_t extHandle, const Geometry *g1)
         {
            return 1;
         }
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 2;
+    });
 }
 
 char *
@@ -764,20 +736,9 @@ char
 GEOSisValidDetail_r(GEOSContextHandle_t extHandle, const Geometry *g,
 	int flags, char** reason, Geometry ** location)
 {
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
+  return execute<char, 2, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t * handle) {
         using geos::operation::valid::IsValidOp;
         using geos::operation::valid::TopologyValidationError;
 
@@ -801,18 +762,7 @@ GEOSisValidDetail_r(GEOSContextHandle_t extHandle, const Geometry *g,
         if ( location ) *location = 0;
         if ( reason ) *reason = 0;
         return 1; /* valid */
-
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 2; /* exception */
+    });
 }
 
 //-----------------------------------------------------------------
@@ -925,36 +875,15 @@ GEOSNearestPoints_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geo
 Geometry *
 GEOSGeomFromWKT_r(GEOSContextHandle_t extHandle, const char *wkt)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         const std::string wktstring(wkt);
         WKTReader r(static_cast<GeometryFactory const*>(handle->geomFactory));
 
         Geometry *g = r.read(wktstring);
         return g;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 char *
@@ -969,23 +898,13 @@ GEOSGeomToWKT_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 unsigned char *
 GEOSGeomToWKB_buf_r(GEOSContextHandle_t extHandle, const Geometry *g, size_t *size)
 {
-    assert(0 != size);
+  assert(0 != size);
 
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
+  return execute<unsigned char*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> unsigned char* {
+        using geos::io::WKBWriter;
 
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    using geos::io::WKBWriter;
-    try
-    {
         int byteOrder = handle->WKBByteOrder;
         WKBWriter w(handle->WKBOutputDims, byteOrder);
         std::ostringstream os(std::ios_base::binary);
@@ -1001,37 +920,16 @@ GEOSGeomToWKB_buf_r(GEOSContextHandle_t extHandle, const Geometry *g, size_t *si
             *size = len;
         }
         return result;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSGeomFromWKB_buf_r(GEOSContextHandle_t extHandle, const unsigned char *wkb, size_t size)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    using geos::io::WKBReader;
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
+        using geos::io::WKBReader;
         std::string wkbstring(reinterpret_cast<const char*>(wkb), size); // make it binary !
         WKBReader r(*(static_cast<GeometryFactory const*>(handle->geomFactory)));
         std::istringstream is(std::ios_base::binary);
@@ -1039,17 +937,7 @@ GEOSGeomFromWKB_buf_r(GEOSContextHandle_t extHandle, const unsigned char *wkb, s
         is.seekg(0, std::ios::beg); // rewind reader pointer
         Geometry *g = r.read(is);
         return g;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 /* Read/write wkb hex values.  Returned geometries are
@@ -1057,21 +945,10 @@ GEOSGeomFromWKB_buf_r(GEOSContextHandle_t extHandle, const unsigned char *wkb, s
 unsigned char *
 GEOSGeomToHEX_buf_r(GEOSContextHandle_t extHandle, const Geometry *g, size_t *size)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    using geos::io::WKBWriter;
-    try
-    {
+  return execute<unsigned char*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> unsigned char* {
+        using geos::io::WKBWriter;
         int byteOrder = handle->WKBByteOrder;
         WKBWriter w(handle->WKBOutputDims, byteOrder);
         std::ostringstream os(std::ios_base::binary);
@@ -1085,37 +962,16 @@ GEOSGeomToHEX_buf_r(GEOSContextHandle_t extHandle, const Geometry *g, size_t *si
         }
 
         return reinterpret_cast<unsigned char*>(result);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSGeomFromHEX_buf_r(GEOSContextHandle_t extHandle, const unsigned char *hex, size_t size)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    using geos::io::WKBReader;
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
+        using geos::io::WKBReader;
         std::string hexstring(reinterpret_cast<const char*>(hex), size);
         WKBReader r(*(static_cast<GeometryFactory const*>(handle->geomFactory)));
         std::istringstream is(std::ios_base::binary);
@@ -1124,17 +980,7 @@ GEOSGeomFromHEX_buf_r(GEOSContextHandle_t extHandle, const unsigned char *hex, s
 
         Geometry *g = r.readHEX(is);
         return g;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 char
@@ -1206,56 +1052,19 @@ GEOSIntersection_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geom
 Geometry *
 GEOSBuffer_r(GEOSContextHandle_t extHandle, const Geometry *g1, double width, int quadrantsegments)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
-        Geometry *g3 = g1->buffer(width, quadrantsegments);
-        return g3;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
+      Geometry *g3 = g1->buffer(width, quadrantsegments);
+      return g3;
+    });
 }
 
 Geometry *
 GEOSBufferWithStyle_r(GEOSContextHandle_t extHandle, const Geometry *g1, double width, int quadsegs, int endCapStyle, int joinStyle, double mitreLimit)
 {
-    using geos::operation::buffer::BufferParameters;
-    using geos::operation::buffer::BufferOp;
-    using geos::util::IllegalArgumentException;
-
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
+        using geos::operation::buffer::BufferParameters;
+        using geos::operation::buffer::BufferOp;
+        using geos::util::IllegalArgumentException;
         BufferParameters bp;
         bp.setQuadrantSegments(quadsegs);
 
@@ -1278,30 +1087,13 @@ GEOSBufferWithStyle_r(GEOSContextHandle_t extHandle, const Geometry *g1, double 
         BufferOp op(g1, bp);
         Geometry *g3 = op.getResultGeometry(width);
         return g3;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSOffsetCurve_r(GEOSContextHandle_t extHandle, const Geometry *g1, double width, int quadsegs, int joinStyle, double mitreLimit)
 {
-    if ( 0 == extHandle ) return NULL;
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized ) return NULL;
-
-    try
-    {
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
         BufferParameters bp;
         bp.setEndCapStyle( BufferParameters::CAP_FLAT );
         bp.setQuadrantSegments(quadsegs);
@@ -1324,31 +1116,14 @@ GEOSOffsetCurve_r(GEOSContextHandle_t extHandle, const Geometry *g1, double widt
         Geometry *g3 = bufBuilder.bufferLineSingleSided(g1, width, isLeftSide);
 
         return g3;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 /* @deprecated in 3.3.0 */
 Geometry *
 GEOSSingleSidedBuffer_r(GEOSContextHandle_t extHandle, const Geometry *g1, double width, int quadsegs, int joinStyle, double mitreLimit, int leftSide)
 {
-    if ( 0 == extHandle ) return NULL;
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized ) return NULL;
-
-    try
-    {
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
         BufferParameters bp;
         bp.setEndCapStyle( BufferParameters::CAP_FLAT );
         bp.setQuadrantSegments(quadsegs);
@@ -1367,17 +1142,7 @@ GEOSSingleSidedBuffer_r(GEOSContextHandle_t extHandle, const Geometry *g1, doubl
         Geometry *g3 = bufBuilder.bufferLineSingleSided(g1, width, isLeftSide);
 
         return g3;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
