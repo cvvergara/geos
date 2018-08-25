@@ -318,64 +318,6 @@ char* gstrdup(std::string const& str)
     return gstrdup_s(str.c_str(), str.size());
 }
 
-#if 0
-template <typename RT, RT value, typename T1, typename T2, typename T3, typename T4>
-RT
-excecute(GEOSContextHandle_t &extHandle,
-    std::function<RT(T1, T2, T3, T4)> &lambda,
-    T1 &d1, T2 &d2, T3 &d3, T4 &d4)
-{
-    if ( 0 == extHandle ) return value;
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( handle->initialized == 0 ) return value;
-
-    try
-    {
-        return lambda(d1, d2, d3, d4);
-    }
-
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-    return value;
-}
-
-template <typename RT, RT value, typename T1, typename T2, typename T3>
-RT
-excecute(GEOSContextHandle_t &extHandle,
-    std::function<RT(T1, T2, T3)> &lambda,
-    T1 &d1, T2 &d2, T3 d3)
-{
-    if ( 0 == extHandle ) return value;
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( handle->initialized == 0 ) return value;
-
-    try
-    {
-        return lambda(d1, d2, d3);
-    }
-
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-    return value;
-}
-#endif
-
 
 template <typename RT, RT value>
 RT
@@ -410,41 +352,6 @@ execute(GEOSContextHandle_t &extHandle,
     return value;
 }
 
-#if 0
-template <typename RT, RT value, typename T1>
-RT
-excecute(GEOSContextHandle_t &extHandle,
-    std::function<RT(T1)> &lambda,
-    T1 &g1)
-{
-    if ( 0 == extHandle )
-    {
-        return value;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( handle->initialized == 0 )
-    {
-        return value;
-    }
-
-    try
-    {
-        return lambda(g1);
-    }
-
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-    return value;
-}
-#endif
 
 
 
