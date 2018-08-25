@@ -3141,51 +3141,39 @@ GEOSCoordSeq_getZ_r(GEOSContextHandle_t extHandle, const CoordinateSequence *s, 
 int
 GEOSCoordSeq_getSize_r(GEOSContextHandle_t extHandle, const CoordinateSequence *cs, unsigned int *size)
 {
-    assert(0 != cs);
-    assert(0 != size);
+  assert(0 != cs);
+  assert(0 != size);
 
-  std::function<int(const CoordinateSequence*,  unsigned int*)> lambda =
-    [](const CoordinateSequence *lcs,  unsigned int *lsize)->int
-    {
-        const std::size_t sz = lcs->getSize();
-        *lsize = static_cast<unsigned int>(sz);
+  return execute<int, 0>(extHandle, [&]() -> int {
+        const std::size_t sz = cs->getSize();
+        *size = static_cast<unsigned int>(sz);
         return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, cs, size);
+    });
 }
 
 int
 GEOSCoordSeq_getDimensions_r(GEOSContextHandle_t extHandle, const CoordinateSequence *cs, unsigned int *dims)
 {
-    assert(0 != cs);
-    assert(0 != dims);
+  assert(0 != cs);
+  assert(0 != dims);
 
-  std::function<int(const CoordinateSequence*,  unsigned int*)> lambda =
-    [](const CoordinateSequence *lcs,  unsigned int *ldims)->int
-    {
-      const std::size_t dim = lcs->getDimension();
-      *ldims = static_cast<unsigned int>(dim);
+  return execute<int, 0>(extHandle, [&]() -> int {
+      const std::size_t dim = cs->getDimension();
+      *dims = static_cast<unsigned int>(dim);
       return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, cs, dims);
+    });
 }
 
 int
 GEOSCoordSeq_isCCW_r(GEOSContextHandle_t extHandle, const CoordinateSequence *cs, char *val)
 {
-    assert(cs != nullptr);
-    assert(val != nullptr);
+  assert(cs != nullptr);
+  assert(val != nullptr);
 
-  std::function<int(const CoordinateSequence*,  char*)> lambda =
-    [](const CoordinateSequence *lcs,  char *lval)->int
-    {
-        *lval = geos::algorithm::CGAlgorithms::isCCW(lcs);
+  return execute<int, 0>(extHandle, [&]() -> int {
+        *val = geos::algorithm::CGAlgorithms::isCCW(cs);
         return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, cs, val);
+    });
 }
 
 void
@@ -3647,99 +3635,71 @@ GEOSGeom_getPrecision_r(GEOSContextHandle_t extHandle, const GEOSGeometry *g)
 int
 GEOSGeom_getDimensions_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-  std::function<int(const Geometry*)> lambda =
-    [](const Geometry *lg)->int
-    {
-      return (int) lg->getDimension();
-    };
-
-  return excecute<int, 0>(extHandle, lambda, g);
+  return execute<int, 0>(extHandle, [&]() -> int {
+      return (int) g->getDimension();
+    });
 }
 
 int
 GEOSGeom_getCoordinateDimension_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-  std::function<int(const Geometry*)> lambda =
-    [](const Geometry *lg)->int
-    {
-      return lg->getCoordinateDimension();
-    };
-
-  return excecute<int, 0>(extHandle, lambda, g);
+  return execute<int, 0>(extHandle, [&]() -> int {
+      return g->getCoordinateDimension();
+    });
 }
 
 int
 GEOSGeom_getXMin_r(GEOSContextHandle_t extHandle, const Geometry *g, double *value)
 {
-  std::function<int(const Geometry*, double *)> lambda =
-    [](const Geometry *lg, double *lvalue)->int
-    {
-      if (lg->isEmpty()) return 0;
+  return execute<int, 0>(extHandle, [&]() -> int {
+      if (g->isEmpty()) return 0;
 
-      *lvalue = lg->getEnvelopeInternal()->getMinX();
+      *value = g->getEnvelopeInternal()->getMinX();
       return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, g, value);
+    });
 }
 
 int
 GEOSGeom_getXMax_r(GEOSContextHandle_t extHandle, const Geometry *g, double *value)
 {
-  std::function<int(const Geometry*, double *)> lambda =
-    [](const Geometry *lg, double *lvalue)->int
-    {
-      if (lg->isEmpty()) return 0;
+  return execute<int, 0>(extHandle, [&]() -> int {
+      if (g->isEmpty()) return 0;
 
-      *lvalue = lg->getEnvelopeInternal()->getMaxX();
+      *value = g->getEnvelopeInternal()->getMaxX();
       return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, g, value);
+    });
 }
 
 int
 GEOSGeom_getYMin_r(GEOSContextHandle_t extHandle, const Geometry *g, double *value)
 {
-  std::function<int(const Geometry*, double *)> lambda =
-    [](const Geometry *lg, double *lvalue)->int
-    {
-      if (lg->isEmpty()) return 0;
+  return execute<int, 0>(extHandle, [&]() -> int {
+      if (g->isEmpty()) return 0;
 
-      *lvalue = lg->getEnvelopeInternal()->getMinY();
+      *value = g->getEnvelopeInternal()->getMinY();
       return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, g, value);
+    });
 }
 
 int
 GEOSGeom_getYMax_r(GEOSContextHandle_t extHandle, const Geometry *g, double *value)
 {
-  std::function<int(const Geometry*, double *)> lambda =
-    [](const Geometry *lg, double *lvalue)->int
-    {
-      if (lg->isEmpty()) return 0;
+  return execute<int, 0>(extHandle, [&]() -> int {
+      if (g->isEmpty()) return 0;
 
-      *lvalue = lg->getEnvelopeInternal()->getMaxY();
+      *value = g->getEnvelopeInternal()->getMaxY();
       return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, g, value);
+    });
 }
 
 Geometry *
 GEOSSimplify_r(GEOSContextHandle_t extHandle, const Geometry *g1, double tolerance)
 {
-  std::function<Geometry*(const Geometry*, double)> lambda =
-    [](const Geometry *lg, double ltolerance)->Geometry*
-    {
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
         using namespace geos::simplify;
-        Geometry::Ptr g(DouglasPeuckerSimplifier::simplify(lg, ltolerance));
+        Geometry::Ptr g(DouglasPeuckerSimplifier::simplify(g1, tolerance));
         return g.release();
-    };
-
-  return excecute<Geometry*, nullptr>(extHandle, lambda, g1, tolerance);
+    });
 }
 
 Geometry *
@@ -3747,7 +3707,7 @@ GEOSTopologyPreserveSimplify_r(GEOSContextHandle_t extHandle, const Geometry *g1
 {
   return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
         using namespace geos::simplify;
-        Geometry::Ptr g(TopologyPreservingSimplifier::simplify(g, tolerance));
+        Geometry::Ptr g(TopologyPreservingSimplifier::simplify(g1, tolerance));
         return g.release();
     });
 }
