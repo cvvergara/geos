@@ -2773,74 +2773,17 @@ GEOSWKTWriter_setOld3D_r(GEOSContextHandle_t extHandle, WKTWriter *writer, int u
 WKBReader *
 GEOSWKBReader_create_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    using geos::io::WKBReader;
-    try
-    {
+  return execute<WKBReader*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t *handle) -> WKBReader* {
         return new WKBReader(*(GeometryFactory*)handle->geomFactory);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 void
 GEOSWKBReader_destroy_r(GEOSContextHandle_t extHandle, WKBReader *reader)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-
-    try
-    {
-        delete reader;
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+  execute(extHandle, [&]() { delete reader; });
 }
 
 struct membuf : public std::streambuf
@@ -2854,23 +2797,10 @@ struct membuf : public std::streambuf
 Geometry*
 GEOSWKBReader_read_r(GEOSContextHandle_t extHandle, WKBReader *reader, const unsigned char *wkb, size_t size)
 {
-    assert(0 != reader);
-    assert(0 != wkb);
+  assert(0 != reader);
+  assert(0 != wkb);
 
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
         //std::string wkbstring(reinterpret_cast<const char*>(wkb), size); // make it binary !
         //std::istringstream is(std::ios_base::binary);
         //is.str(wkbstring);
@@ -2882,39 +2812,16 @@ GEOSWKBReader_read_r(GEOSContextHandle_t extHandle, WKBReader *reader, const uns
 
         Geometry *g = reader->read(is);
         return g;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+    });
 }
 
 Geometry*
 GEOSWKBReader_readHEX_r(GEOSContextHandle_t extHandle, WKBReader *reader, const unsigned char *hex, size_t size)
 {
-    assert(0 != reader);
-    assert(0 != hex);
+  assert(0 != reader);
+  assert(0 != hex);
 
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
         std::string hexstring(reinterpret_cast<const char*>(hex), size);
         std::istringstream is(std::ios_base::binary);
         is.str(hexstring);
@@ -2922,91 +2829,23 @@ GEOSWKBReader_readHEX_r(GEOSContextHandle_t extHandle, WKBReader *reader, const 
 
         Geometry *g = reader->readHEX(is);
         return g;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+    });
 }
 
 /* WKB Writer */
 WKBWriter *
 GEOSWKBWriter_create_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<WKBWriter*, nullptr>(extHandle, [&]() -> WKBWriter* {
         using geos::io::WKBWriter;
         return new WKBWriter();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 void
 GEOSWKBWriter_destroy_r(GEOSContextHandle_t extHandle, WKBWriter *Writer)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-
-    try
-    {
-        delete Writer;
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+  execute(extHandle, [&]()  { delete Writer; });
 }
 
 
@@ -3014,24 +2853,11 @@ GEOSWKBWriter_destroy_r(GEOSContextHandle_t extHandle, WKBWriter *Writer)
 unsigned char*
 GEOSWKBWriter_write_r(GEOSContextHandle_t extHandle, WKBWriter *writer, const Geometry *geom, size_t *size)
 {
-    assert(0 != writer);
-    assert(0 != geom);
-    assert(0 != size);
+  assert(0 != writer);
+  assert(0 != geom);
+  assert(0 != size);
 
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<unsigned char*, nullptr>(extHandle, [&]() -> unsigned char* {
         std::ostringstream os(std::ios_base::binary);
         writer->write(*geom, os);
 
@@ -3043,40 +2869,18 @@ GEOSWKBWriter_write_r(GEOSContextHandle_t extHandle, WKBWriter *writer, const Ge
         std::memcpy(result, wkbstring.c_str(), len);
         *size = len;
         return result;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-    return NULL;
+    });
 }
 
 /* The caller owns the result */
 unsigned char*
 GEOSWKBWriter_writeHEX_r(GEOSContextHandle_t extHandle, WKBWriter *writer, const Geometry *geom, size_t *size)
 {
-    assert(0 != writer);
-    assert(0 != geom);
-    assert(0 != size);
+  assert(0 != writer);
+  assert(0 != geom);
+  assert(0 != size);
 
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<unsigned char*, nullptr>(extHandle, [&]() -> unsigned char* {
         std::ostringstream os(std::ios_base::binary);
         writer->writeHEX(*geom, os);
         std::string wkbstring(os.str());
@@ -3087,17 +2891,7 @@ GEOSWKBWriter_writeHEX_r(GEOSContextHandle_t extHandle, WKBWriter *writer, const
         std::memcpy(result, wkbstring.c_str(), len);
         *size = len;
         return result;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 int
@@ -3113,76 +2907,28 @@ GEOSWKBWriter_getOutputDimension_r(GEOSContextHandle_t extHandle, const GEOSWKBW
 void
 GEOSWKBWriter_setOutputDimension_r(GEOSContextHandle_t extHandle, GEOSWKBWriter* writer, int newDimension)
 {
-    assert(0 != writer);
-
-    if ( 0 == extHandle )
-    {
-        return;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 != handle->initialized )
-    {
-        try
-        {
-            writer->setOutputDimension(newDimension);
-        }
-        catch (const std::exception &e)
-        {
-            handle->ERROR_MESSAGE("%s", e.what());
-        }
-        catch (...)
-        {
-            handle->ERROR_MESSAGE("Unknown exception thrown");
-        }
-    }
+  assert(0 != writer);
+  execute(extHandle, [&]() { writer->setOutputDimension(newDimension); });
 }
 
 int
 GEOSWKBWriter_getByteOrder_r(GEOSContextHandle_t extHandle, const GEOSWKBWriter* writer)
 {
-    assert(0 != writer);
-
-  return execute<int, 0>(extHandle, [&]() {
-      return writer->getByteOrder();
-    });
+  assert(0 != writer);
+  return execute<int, 0>(extHandle, [&]() { return writer->getByteOrder(); });
 }
 
 void
 GEOSWKBWriter_setByteOrder_r(GEOSContextHandle_t extHandle, GEOSWKBWriter* writer, int newByteOrder)
 {
-    assert(0 != writer);
-
-    if ( 0 == extHandle )
-    {
-        return;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 != handle->initialized )
-    {
-        try
-        {
-            writer->setByteOrder(newByteOrder);
-        }
-        catch (const std::exception &e)
-        {
-            handle->ERROR_MESSAGE("%s", e.what());
-        }
-        catch (...)
-        {
-            handle->ERROR_MESSAGE("Unknown exception thrown");
-        }
-    }
+  assert(0 != writer);
+  execute(extHandle, [&]() { writer->setByteOrder(newByteOrder); });
 }
 
 char
 GEOSWKBWriter_getIncludeSRID_r(GEOSContextHandle_t extHandle, const GEOSWKBWriter* writer)
 {
-    assert(0 != writer);
-
+  assert(0 != writer);
   return execute<char, -1>(extHandle, [&]() {
        return static_cast<char>(writer->getIncludeSRID());
     });
@@ -3191,26 +2937,8 @@ GEOSWKBWriter_getIncludeSRID_r(GEOSContextHandle_t extHandle, const GEOSWKBWrite
 void
 GEOSWKBWriter_setIncludeSRID_r(GEOSContextHandle_t extHandle, GEOSWKBWriter* writer, const char newIncludeSRID)
 {
-    assert(0 != writer);
-
-    if ( 0 == extHandle )
-    {
-        return;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 != handle->initialized )
-    {
-        try
-        {
-            writer->setIncludeSRID(newIncludeSRID);
-        }
-        catch (...)
-        {
-            handle->ERROR_MESSAGE("Unknown exception thrown");
-        }
-    }
+  assert(0 != writer);
+  execute(extHandle, [&]() { writer->setIncludeSRID(newIncludeSRID); });
 }
 
 
