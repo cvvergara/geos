@@ -3838,15 +3838,11 @@ GEOSSimplify_r(GEOSContextHandle_t extHandle, const Geometry *g1, double toleran
 Geometry *
 GEOSTopologyPreserveSimplify_r(GEOSContextHandle_t extHandle, const Geometry *g1, double tolerance)
 {
-  std::function<Geometry*(const Geometry*, double)> lambda =
-    [](const Geometry *lg, double ltolerance)->Geometry*
-    {
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
         using namespace geos::simplify;
-        Geometry::Ptr g(TopologyPreservingSimplifier::simplify(lg, ltolerance));
+        Geometry::Ptr g(TopologyPreservingSimplifier::simplify(g, tolerance));
         return g.release();
-    };
-
-  return excecute<Geometry*, nullptr>(extHandle, lambda, g1, tolerance);
+    });
 }
 
 /* WKT Reader */
@@ -3928,14 +3924,10 @@ Geometry*
 GEOSWKTReader_read_r(GEOSContextHandle_t extHandle, WKTReader *reader, const char *wkt)
 {
   assert(0 != reader);
-  std::function<Geometry*(WKTReader*, const char *)> lambda =
-    [](WKTReader *lreader, const char *lwkt)->Geometry*
-    {
-      const std::string wktstring(lwkt);
-      return lreader->read(wktstring);
-    };
-
-  return excecute<Geometry*, nullptr>(extHandle, lambda, reader, wkt);
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
+      const std::string wktstring(wkt);
+      return reader->read(wktstring);
+    });
 }
 
 /* WKT Writer */
@@ -4018,14 +4010,10 @@ GEOSWKTWriter_write_r(GEOSContextHandle_t extHandle, WKTWriter *writer, const Ge
 {
   assert(0 != writer);
 
-  std::function<char*(WKTWriter*, const Geometry*)> lambda =
-    [](WKTWriter *lwriter, const Geometry *lgeom)->char*
-    {
-      std::string sgeom(lwriter->write(lgeom));
+  return execute<char*, nullptr>(extHandle, [&]() -> char* {
+      std::string sgeom(writer->write(geom));
       return gstrdup(sgeom);
-    };
-
-  return excecute<char*, nullptr>(extHandle, lambda, writer, geom);
+    });
 }
 
 void
@@ -4102,15 +4090,11 @@ GEOSWKTWriter_setOutputDimension_r(GEOSContextHandle_t extHandle, WKTWriter *wri
 int
 GEOSWKTWriter_getOutputDimension_r(GEOSContextHandle_t extHandle, WKTWriter *writer)
 {
-    assert(0 != writer);
+  assert(0 != writer);
 
-  std::function<int(WKTWriter*)> lambda =
-    [](WKTWriter *lwriter)->int
-    {
-        return lwriter->getOutputDimension();
-    };
-
-  return excecute<int, -1>(extHandle, lambda, writer);
+  return execute<int, -1>(extHandle, [&]() -> int {
+      return writer->getOutputDimension();
+      });
 }
 
 void
@@ -4467,15 +4451,11 @@ GEOSWKBWriter_writeHEX_r(GEOSContextHandle_t extHandle, WKBWriter *writer, const
 int
 GEOSWKBWriter_getOutputDimension_r(GEOSContextHandle_t extHandle, const GEOSWKBWriter* writer)
 {
-    assert(0 != writer);
+  assert(0 != writer);
 
-  std::function<int(const GEOSWKBWriter*)> lambda =
-    [](const GEOSWKBWriter *lwriter)->int
-    {
-      return lwriter->getOutputDimension();
-    };
-
-  return excecute<int, 0>(extHandle, lambda, writer);
+  return execute<int, 0>(extHandle, [&]() -> int {
+      return writer->getOutputDimension();
+    });
 }
 
 void
@@ -4512,13 +4492,9 @@ GEOSWKBWriter_getByteOrder_r(GEOSContextHandle_t extHandle, const GEOSWKBWriter*
 {
     assert(0 != writer);
 
-  std::function<int(const GEOSWKBWriter*)> lambda =
-    [](const GEOSWKBWriter *lwriter)->int
-    {
-      return lwriter->getByteOrder();
-    };
-
-  return excecute<int, 0>(extHandle, lambda, writer);
+  return execute<int, 0>(extHandle, [&]() -> int {
+      return writer->getByteOrder();
+    });
 }
 
 void
@@ -4555,13 +4531,10 @@ GEOSWKBWriter_getIncludeSRID_r(GEOSContextHandle_t extHandle, const GEOSWKBWrite
 {
     assert(0 != writer);
 
-  std::function<char(const GEOSWKBWriter*)> lambda =
-    [](const GEOSWKBWriter *lwriter)->char
-    {
-       return static_cast<char>(lwriter->getIncludeSRID());
-    };
-
-  return excecute<char, -1>(extHandle, lambda, writer);
+  return execute<char, -1>(extHandle,
+      [&]() -> char {
+       return static_cast<char>(writer->getIncludeSRID());
+    });
 }
 
 void
