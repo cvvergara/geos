@@ -2403,20 +2403,9 @@ GEOSCoordSeq_destroy_r(GEOSContextHandle_t extHandle, CoordinateSequence *s)
 const CoordinateSequence *
 GEOSGeom_getCoordSeq_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
+  return execute<const CoordinateSequence*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> const CoordinateSequence* {
         using geos::geom::Point;
 
         const LineString *ls = dynamic_cast<const LineString *>(g);
@@ -2433,234 +2422,86 @@ GEOSGeom_getCoordSeq_r(GEOSContextHandle_t extHandle, const Geometry *g)
 
         handle->ERROR_MESSAGE("Geometry must be a Point or LineString");
         return 0;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+    });
 }
 
 Geometry *
 GEOSGeom_createEmptyPoint_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         const GeometryFactory *gf = handle->geomFactory;
         return gf->createPoint();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSGeom_createPoint_r(GEOSContextHandle_t extHandle, CoordinateSequence *cs)
 {
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         const GeometryFactory *gf = handle->geomFactory;
         return gf->createPoint(cs);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+    });
 }
 
 Geometry *
 GEOSGeom_createLinearRing_r(GEOSContextHandle_t extHandle, CoordinateSequence *cs)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         const GeometryFactory *gf = handle->geomFactory;
 
         return gf->createLinearRing(cs);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSGeom_createEmptyLineString_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         const GeometryFactory *gf = handle->geomFactory;
 
         return gf->createLineString();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSGeom_createLineString_r(GEOSContextHandle_t extHandle, CoordinateSequence *cs)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         const GeometryFactory *gf = handle->geomFactory;
 
         return gf->createLineString(cs);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSGeom_createEmptyPolygon_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
         const GeometryFactory *gf = handle->geomFactory;
         return gf->createPolygon();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSGeom_createPolygon_r(GEOSContextHandle_t extHandle, Geometry *shell, Geometry **holes, unsigned int nholes)
 {
-    // FIXME: holes must be non-nullptr or may be nullptr?
-    //assert(0 != holes);
-
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> Geometry* {
+        // FIXME: holes must be non-nullptr or may be nullptr?
+        //assert(0 != holes);
         using geos::geom::LinearRing;
 
         std::vector<Geometry *> *vholes = new std::vector<Geometry *>(holes, holes + nholes);
@@ -2670,79 +2511,30 @@ GEOSGeom_createPolygon_r(GEOSContextHandle_t extHandle, Geometry *shell, Geometr
         {
             handle->ERROR_MESSAGE("Shell is not a LinearRing");
             delete vholes;
-            return NULL;
+            return nullptr;
         }
         const GeometryFactory *gf = handle->geomFactory;
 
         return gf->createPolygon(nshell, vholes);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 Geometry *
 GEOSGeom_clone_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-    assert(0 != g);
-
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  assert(0 != g);
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
         return g->clone();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 GEOSGeometry *
 GEOSGeom_setPrecision_r(GEOSContextHandle_t extHandle, const GEOSGeometry *g,
                                           double gridSize, int flags)
 {
-    using namespace geos::geom;
-
-    assert(0 != g);
-
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  assert(0 != g);
+  return execute<GEOSGeometry*, nullptr>(extHandle, [&]() -> GEOSGeometry* {
+        using namespace geos::geom;
         const PrecisionModel *pm = g->getPrecisionModel();
         double cursize = pm->isFloating() ? 0 : 1.0/pm->getScale();
         std::unique_ptr<PrecisionModel> newpm;
@@ -2765,19 +2557,10 @@ GEOSGeom_setPrecision_r(GEOSContextHandle_t extHandle, const GEOSGeometry *g,
           ret = gf->createGeometry(g);
         }
         return ret;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
+/* TODO can not use the template because of double */
 double
 GEOSGeom_getPrecision_r(GEOSContextHandle_t extHandle, const GEOSGeometry *g)
 {
@@ -2899,76 +2682,19 @@ GEOSTopologyPreserveSimplify_r(GEOSContextHandle_t extHandle, const Geometry *g1
 WKTReader *
 GEOSWKTReader_create_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<WKTReader*, nullptr, GEOSContextHandleInternal_t*>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t* handle) -> WKTReader* {
         using geos::io::WKTReader;
         return new WKTReader((GeometryFactory*)handle->geomFactory);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 void
 GEOSWKTReader_destroy_r(GEOSContextHandle_t extHandle, WKTReader *reader)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-
-    try
-    {
-        delete reader;
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+  execute(extHandle, [&]() { delete reader; });
 }
-
 
 Geometry*
 GEOSWKTReader_read_r(GEOSContextHandle_t extHandle, WKTReader *reader, const char *wkt)
@@ -2984,75 +2710,16 @@ GEOSWKTReader_read_r(GEOSContextHandle_t extHandle, WKTReader *reader, const cha
 WKTWriter *
 GEOSWKTWriter_create_r(GEOSContextHandle_t extHandle)
 {
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    try
-    {
+  return execute<WKTWriter*, nullptr>(extHandle, [&]() -> WKTWriter* {
         using geos::io::WKTWriter;
         return new WKTWriter();
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+    });
 }
 
 void
 GEOSWKTWriter_destroy_r(GEOSContextHandle_t extHandle, WKTWriter *Writer)
 {
-
-    GEOSContextHandleInternal_t *handle = 0;
-
-    try
-    {
-        delete Writer;
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+  execute(extHandle, [&]() { delete Writer; });
 }
 
 char*
@@ -3069,79 +2736,27 @@ GEOSWKTWriter_write_r(GEOSContextHandle_t extHandle, WKTWriter *writer, const Ge
 void
 GEOSWKTWriter_setTrim_r(GEOSContextHandle_t extHandle, WKTWriter *writer, char trim)
 {
-    assert(0 != writer);
-
-    if ( 0 == extHandle )
-    {
-        return;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return;
-    }
-
-    writer->setTrim(0 != trim);
+  execute(extHandle, [&]() { writer->setTrim(0 != trim); });
 }
 
 void
 GEOSWKTWriter_setRoundingPrecision_r(GEOSContextHandle_t extHandle, WKTWriter *writer, int precision)
 {
-    assert(0 != writer);
-
-    if ( 0 == extHandle )
-    {
-        return;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return;
-    }
-
-    writer->setRoundingPrecision(precision);
+  assert(0 != writer);
+  execute(extHandle, [&]() { writer->setRoundingPrecision(precision); });
 }
 
 void
 GEOSWKTWriter_setOutputDimension_r(GEOSContextHandle_t extHandle, WKTWriter *writer, int dim)
 {
-    assert(0 != writer);
-
-    if ( 0 == extHandle )
-    {
-        return;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return;
-    }
-
-    try
-    {
-        writer->setOutputDimension(dim);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+  assert(0 != writer);
+  execute(extHandle, [&]() { writer->setOutputDimension(dim); });
 }
 
 int
 GEOSWKTWriter_getOutputDimension_r(GEOSContextHandle_t extHandle, WKTWriter *writer)
 {
   assert(0 != writer);
-
   return execute<int, -1>(extHandle, [&]() {
       return writer->getOutputDimension();
       });
@@ -3150,21 +2765,8 @@ GEOSWKTWriter_getOutputDimension_r(GEOSContextHandle_t extHandle, WKTWriter *wri
 void
 GEOSWKTWriter_setOld3D_r(GEOSContextHandle_t extHandle, WKTWriter *writer, int useOld3D)
 {
-    assert(0 != writer);
-
-    if ( 0 == extHandle )
-    {
-        return;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return;
-    }
-
-    writer->setOld3D(0 != useOld3D);
+  assert(0 != writer);
+  execute(extHandle, [&]() { writer->setOld3D(0 != useOld3D); });
 }
 
 /* WKB Reader */
