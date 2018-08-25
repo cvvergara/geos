@@ -318,6 +318,7 @@ char* gstrdup(std::string const& str)
     return gstrdup_s(str.c_str(), str.size());
 }
 
+#if 0
 template <typename RT, RT value, typename T1, typename T2, typename T3, typename T4>
 RT
 excecute(GEOSContextHandle_t &extHandle,
@@ -373,9 +374,10 @@ excecute(GEOSContextHandle_t &extHandle,
     }
     return value;
 }
+#endif
 
 
-template <typename RT, RT value, typename T1, typename T2>
+template <typename RT, RT value>
 RT
 execute(GEOSContextHandle_t &extHandle,
     std::function<RT()> lambda)
@@ -408,7 +410,7 @@ execute(GEOSContextHandle_t &extHandle,
     return value;
 }
 
-
+#if 0
 template <typename RT, RT value, typename T1>
 RT
 excecute(GEOSContextHandle_t &extHandle,
@@ -442,6 +444,7 @@ excecute(GEOSContextHandle_t &extHandle,
     }
     return value;
 }
+#endif
 
 
 
@@ -594,7 +597,7 @@ GEOSOverlaps_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry
 {
   return execute<char, 2>(extHandle, [&]() { return g1->overlaps(g2); });
 }
-  
+
 char
 GEOSCovers_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2)
 {
@@ -615,58 +618,47 @@ GEOSCoveredBy_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometr
 char
 GEOSRelatePattern_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, const char *pat)
 {
-  std::function<char(const Geometry*, const Geometry*, const char *)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2, const char *lpat)->char
-    {
-        std::string s(lpat);
-        return lg1->relate(lg2, s);
-    };
+  return execute<char, 2>(extHandle, [&]() {
+      std::string s(pat);
+      return g1->relate(g2, s);
+      });
 
-  return excecute<char, 2>(extHandle, lambda, g1, g2, pat);
 }
 
 char
 GEOSRelatePatternMatch_r(GEOSContextHandle_t extHandle, const char *mat,
                            const char *pat)
 {
-  std::function<char(const char *, const char*)> lambda =
-    [](const char *lmat, const char *lpat)->char
-    {
+  return execute<char, 2>(extHandle, [&]() {
         using geos::geom::IntersectionMatrix;
 
-        std::string m(lmat);
-        std::string p(lpat);
+        std::string m(mat);
+        std::string p(pat);
         IntersectionMatrix im(m);
 
         return im.matches(p);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, mat, pat);
+    });
 }
 
 char *
 GEOSRelate_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2)
 {
-  std::function<char* (const Geometry*, const Geometry*)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2)->char*
-    {
-        using geos::geom::IntersectionMatrix;
+  return execute<char*, nullptr>(extHandle, [&]() -> char* {
+      using geos::geom::IntersectionMatrix;
 
-        IntersectionMatrix* im = lg1->relate(lg2);
-        if (0 == im)
-        {
-            return 0;
-        }
+      IntersectionMatrix* im = g1->relate(g2);
+      if (0 == im)
+      {
+      return nullptr;
+      }
 
-        char * result = gstrdup(im->toString());
+      char * result = gstrdup(im->toString());
 
-        delete im;
-        im = 0;
+      delete im;
+      im = 0;
 
-        return result;
-    };
-
-  return excecute<char*, nullptr>(extHandle, lambda, g1, g2);
+      return result;
+      });
 }
 
 char *
@@ -789,16 +781,14 @@ GEOSisValid_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 char *
 GEOSisValidReason_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-  std::function<char*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->char*
-    {
+  return execute<char*, nullptr>(extHandle, [&]() -> char* {
         using geos::operation::valid::IsValidOp;
         using geos::operation::valid::TopologyValidationError;
 
         char* result = 0;
         char const* const validstr = "Valid Geometry";
 
-        IsValidOp ivo(lg1);
+        IsValidOp ivo(g1);
         TopologyValidationError *err = ivo.getValidationError();
         if (0 != err)
         {
@@ -816,9 +806,7 @@ GEOSisValidReason_r(GEOSContextHandle_t extHandle, const Geometry *g1)
         }
 
         return result;
-    };
-
-  return excecute<char*, nullptr>(extHandle, lambda, g1);
+    });
 }
 
 char
@@ -889,111 +877,79 @@ GEOSEquals_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *
 char
 GEOSEqualsExact_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double tolerance)
 {
-  std::function<char(const Geometry*, const Geometry *, double)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2, double ltolerance)->char
-    {
-        return lg1->equalsExact(lg2, ltolerance);
-    };
-
-    return excecute<char, 2>(extHandle, lambda, g1, g2, tolerance);
+  return execute<char, 2>(extHandle, [&]() {
+      return g1->equalsExact(g2, tolerance);
+      });
 }
 
 int
 GEOSDistance_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double *dist)
 {
   assert(0 != dist);
-  std::function<int(const Geometry*, const Geometry *, double*)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2, double *ldist)->int
-    {
-      *ldist = lg1->distance(lg2);
+  return execute<int, 0>(extHandle, [&]() {
+      *dist = g1->distance(g2);
       return 1;
-    };
-
-    return excecute<int, 0>(extHandle, lambda, g1, g2, dist);
+    });
 }
 
 int
 GEOSDistanceIndexed_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double *dist)
 {
   assert(0 != dist);
-  std::function<int(const Geometry*, const Geometry *, double*)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2, double *ldist)->int
-    {
-      *ldist = IndexedFacetDistance::distance(lg1, lg2);
+  return execute<int, 0>(extHandle, [&]() {
+      *dist = IndexedFacetDistance::distance(g1, g2);
       return 1;
     };
-
-    return excecute<int, 0>(extHandle, lambda, g1, g2, dist);
 }
 
 int
 GEOSHausdorffDistance_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double *dist)
 {
   assert(0 != dist);
-  std::function<int(const Geometry*, const Geometry *, double*)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2, double *ldist)->int
-    {
-      *ldist = DiscreteHausdorffDistance::distance(*lg1, *lg2);
+  return execute<int, 0>(extHandle, [&]() {
+      *dist = DiscreteHausdorffDistance::distance(*g1, *g2);
       return 1;
-    };
-
-    return excecute<int, 0>(extHandle, lambda, g1, g2, dist);
+    });
 }
 
 int
 GEOSHausdorffDistanceDensify_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double densifyFrac, double *dist)
 {
   assert(0 != dist);
-  std::function<int(const Geometry*, const Geometry *, double, double*)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2, double ldensifyFrac, double *ldist)->int
-    {
-      *ldist = DiscreteHausdorffDistance::distance(*lg1, *lg2, ldensifyFrac);
+  return execute<int, 0>(extHandle, [&]() -> int {
+      *ldist = DiscreteHausdorffDistance::distance(*g1, *g2, ldensifyFrac);
       return 1;
-    };
-
-    return excecute<int, 0>(extHandle, lambda, g1, g2, densifyFrac, dist);
+    });
 }
 
 int
 GEOSFrechetDistance_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double *dist)
 {
   assert(0 != dist);
-  std::function<int(const Geometry*, const Geometry *, double*)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2, double *ldist)->int
-    {
-      *ldist = DiscreteFrechetDistance::distance(*lg1, *lg2);
+  return execute<int, 0>(extHandle, [&]() -> int {
+      *dist = DiscreteFrechetDistance::distance(*g1, *g2);
       return 1;
-    };
-
-    return excecute<int, 0>(extHandle, lambda, g1, g2, dist);
+    });
 }
 
 int
 GEOSFrechetDistanceDensify_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double densifyFrac, double *dist)
 {
   assert(0 != dist);
-  std::function<int(const Geometry*, const Geometry *, double, double*)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2, double ldensifyFrac, double *ldist)->int
-    {
-      *ldist = DiscreteFrechetDistance::distance(*lg1, *lg2, ldensifyFrac);
+  return execute<int, 0>(extHandle, [&]() -> int {
+      *dist = DiscreteFrechetDistance::distance(*g1, *g2, densifyFrac);
       return 1;
-    };
-
-    return excecute<int, 0>(extHandle, lambda, g1, g2, densifyFrac, dist);
+    });
 }
 
 int
 GEOSArea_r(GEOSContextHandle_t extHandle, const Geometry *g, double *area)
 {
   assert(0 != area);
-  std::function<int(const Geometry*, double*)> lambda =
-    [](const Geometry *lg, double* larea)->int
-    {
-      *larea = lg->getArea();
+  return execute<int, 0>(extHandle, [&]() -> int {
+      *area = g->getArea();
       return 1;
     };
-
-    return excecute<int, 0>(extHandle, lambda, g, area);
 }
 
 int
@@ -1001,9 +957,9 @@ GEOSLength_r(GEOSContextHandle_t extHandle, const Geometry *g, double *length)
 {
   assert(0 != length);
   std::function<int(const Geometry*, double*)> lambda =
-    [](const Geometry *lg1, double * llength)->int
+    [](const Geometry *g1, double * llength)->int
     {
-      *llength = lg1->getLength();
+      *llength = g1->getLength();
       return 1;
     };
 
@@ -1014,10 +970,10 @@ CoordinateSequence *
 GEOSNearestPoints_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2)
 {
   std::function<CoordinateSequence *(const Geometry*, const Geometry *)> lambda =
-    [](const Geometry *lg1, const Geometry * lg2)->CoordinateSequence *
+    [](const Geometry *g1, const Geometry * g2)->CoordinateSequence *
     {
-      if (lg1->isEmpty() || lg2->isEmpty()) return 0;
-      return geos::operation::distance::DistanceOp::nearestPoints(lg1, lg2);
+      if (g1->isEmpty() || g2->isEmpty()) return 0;
+      return geos::operation::distance::DistanceOp::nearestPoints(g1, g2);
     };
 
   return excecute<CoordinateSequence *, nullptr>(extHandle, lambda, g1, g2);
@@ -1062,9 +1018,9 @@ char *
 GEOSGeomToWKT_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
   std::function<char *(const Geometry*)> lambda =
-    [](const Geometry *lg1)->char *
+    [](const Geometry *g1)->char *
     {
-        return gstrdup(lg1->toString());
+        return gstrdup(g1->toString());
     };
 
   return excecute<char *, nullptr>(extHandle, lambda, g1);
@@ -1246,9 +1202,9 @@ char
 GEOSisEmpty_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
   std::function<char(const Geometry*)> lambda =
-    [](const Geometry *lg1)->char
+    [](const Geometry *g1)->char
     {
-      return lg1->isEmpty();
+      return g1->isEmpty();
     };
 
   return excecute<char, 2>(extHandle, lambda, g1);
@@ -1258,9 +1214,9 @@ char
 GEOSisSimple_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
   std::function<char(const Geometry*)> lambda =
-    [](const Geometry *lg1)->char
+    [](const Geometry *g1)->char
     {
-      return lg1->isSimple();
+      return g1->isSimple();
     };
 
   return excecute<char, 2>(extHandle, lambda, g1);
@@ -1270,9 +1226,9 @@ char
 GEOSisRing_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   std::function<char(const Geometry*)> lambda =
-    [](const Geometry *lg1)->char
+    [](const Geometry *g1)->char
     {
-        const LineString *ls = dynamic_cast<const LineString *>(lg1);
+        const LineString *ls = dynamic_cast<const LineString *>(g1);
         return ( ls ) ?  ls->isRing() : 0;
     };
 
@@ -1285,9 +1241,9 @@ char *
 GEOSGeomType_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
   std::function<char*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->char*
+    [](const Geometry *g1)->char*
     {
-        std::string s = lg1->getGeometryType();
+        std::string s = g1->getGeometryType();
         return gstrdup(s);
     };
 
@@ -1299,9 +1255,9 @@ int
 GEOSGeomTypeId_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
   std::function<int(const Geometry*)> lambda =
-    [](const Geometry *lg1)->int
+    [](const Geometry *g1)->int
     {
-        return lg1->getGeometryTypeId();
+        return g1->getGeometryTypeId();
     };
 
   return excecute<int, -1>(extHandle, lambda, g1);
@@ -1316,9 +1272,9 @@ Geometry *
 GEOSEnvelope_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
   std::function<Geometry*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->Geometry*
+    [](const Geometry *g1)->Geometry*
     {
-      return lg1->getEnvelope();
+      return g1->getEnvelope();
     };
 
   return excecute<Geometry*, nullptr>(extHandle, lambda, g1);
@@ -1328,9 +1284,9 @@ Geometry *
 GEOSIntersection_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2)
 {
   std::function<Geometry*(const Geometry*, const Geometry *)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2)->Geometry*
+    [](const Geometry *g1, const Geometry *g2)->Geometry*
     {
-      return lg1->intersection(lg2);
+      return g1->intersection(g2);
     };
 
   return excecute<Geometry*, nullptr>(extHandle, lambda, g1, g2);
@@ -1517,9 +1473,9 @@ Geometry *
 GEOSConvexHull_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
   std::function<Geometry*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->Geometry*
+    [](const Geometry *g1)->Geometry*
     {
-      return  lg1->convexHull();
+      return  g1->convexHull();
     };
 
   return excecute<Geometry*, nullptr>(extHandle, lambda, g1);
@@ -1530,9 +1486,9 @@ Geometry *
 GEOSMinimumRotatedRectangle_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   std::function<Geometry*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->Geometry*
+    [](const Geometry *g1)->Geometry*
     {
-      geos::algorithm::MinimumDiameter m(lg1);
+      geos::algorithm::MinimumDiameter m(g1);
       return m.getMinimumRectangle();
     };
 
@@ -1543,9 +1499,9 @@ Geometry *
 GEOSMinimumWidth_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   std::function<Geometry*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->Geometry*
+    [](const Geometry *g1)->Geometry*
     {
-      geos::algorithm::MinimumDiameter m(lg1);
+      geos::algorithm::MinimumDiameter m(g1);
       return m.getDiameter();
     };
 
@@ -1556,9 +1512,9 @@ Geometry *
 GEOSMinimumClearanceLine_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   std::function<Geometry*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->Geometry*
+    [](const Geometry *g1)->Geometry*
     {
-      geos::precision::MinimumClearance mc(lg1);
+      geos::precision::MinimumClearance mc(g1);
       return mc.getLine().release();
     };
 
@@ -1584,9 +1540,9 @@ Geometry *
 GEOSDifference_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2)
 {
   std::function<Geometry*(const Geometry*, const Geometry*)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2)->Geometry*
+    [](const Geometry *g1, const Geometry *g2)->Geometry*
     {
-      return lg1->difference(lg2);
+      return g1->difference(g2);
     };
 
   return excecute<Geometry*, nullptr>(extHandle, lambda, g1, g2);
@@ -1596,9 +1552,9 @@ Geometry *
 GEOSBoundary_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
   std::function<Geometry*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->Geometry*
+    [](const Geometry *g1)->Geometry*
     {
-      return lg1->getBoundary();
+      return g1->getBoundary();
     };
 
   return excecute<Geometry*, nullptr>(extHandle, lambda, g1);
@@ -1608,9 +1564,9 @@ Geometry *
 GEOSSymDifference_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2)
 {
   std::function<Geometry*(const Geometry*, const Geometry*)> lambda =
-    [](const Geometry *lg1, const Geometry *lg2)->Geometry*
+    [](const Geometry *g1, const Geometry *g2)->Geometry*
     {
-      return lg1->symDifference(lg2);
+      return g1->symDifference(g2);
     };
 
   return excecute<Geometry*, nullptr>(extHandle, lambda, g1, g2);
@@ -1946,9 +1902,9 @@ GEOSGetNumCoordinates_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   assert(0 != g);
   std::function<int(const Geometry*)> lambda =
-    [](const Geometry *lg1)->int
+    [](const Geometry *g1)->int
     {
-      return static_cast<int>(lg1->getNumPoints());
+      return static_cast<int>(g1->getNumPoints());
     };
 
   return excecute<int, -1>(extHandle, lambda, g);
@@ -2954,9 +2910,9 @@ Geometry *
 GEOSReverse_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   std::function<Geometry*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->Geometry*
+    [](const Geometry *g1)->Geometry*
     {
-      return  lg1->reverse();
+      return  g1->reverse();
     };
 
   return excecute<Geometry*, nullptr>(extHandle, lambda, g);
@@ -2969,9 +2925,9 @@ GEOSGeom_getUserData_r(GEOSContextHandle_t extHandle, const Geometry *g)
     assert(0 != g);
 
   std::function<void*(const Geometry*)> lambda =
-    [](const Geometry *lg1)->void*
+    [](const Geometry *g1)->void*
     {
-      return  lg1->getUserData();
+      return  g1->getUserData();
     };
 
   return excecute<void*, nullptr>(extHandle, lambda, g);
@@ -4641,13 +4597,11 @@ GEOSWKBWriter_setIncludeSRID_r(GEOSContextHandle_t extHandle, GEOSWKBWriter* wri
 const geos::geom::prep::PreparedGeometry*
 GEOSPrepare_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-  std::function<const geos::geom::prep::PreparedGeometry* (const Geometry*)> lambda =
-    [](const Geometry *lg)->const geos::geom::prep::PreparedGeometry*
-    {
-      return geos::geom::prep::PreparedGeometryFactory::prepare(lg);
-    };
-
-  return excecute<const geos::geom::prep::PreparedGeometry*, nullptr>(extHandle, lambda, g);
+  return execute<const geos::geom::prep::PreparedGeometry*, nullptr>(extHandle,
+      [&]() -> const geos::geom::prep::PreparedGeometry*
+      {
+        return geos::geom::prep::PreparedGeometryFactory::prepare(g);
+      });
 }
 
 void
@@ -4695,160 +4649,100 @@ char
 GEOSPreparedContains_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->contains(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->contains(g); });
 }
 
 char
 GEOSPreparedContainsProperly_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->containsProperly(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->containsProperly(g); });
 }
 
 char
 GEOSPreparedCoveredBy_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->coveredBy(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->coveredBy(g); });
 }
 
 char
 GEOSPreparedCovers_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->covers(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->covers(g); });
 }
 
 char
 GEOSPreparedCrosses_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->crosses(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->crosses(g); });
 }
 
 char
 GEOSPreparedDisjoint_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->disjoint(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->disjoint(g); });
 }
 
 char
 GEOSPreparedIntersects_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->intersects(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->intersects(g); });
 }
 
 char
 GEOSPreparedOverlaps_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->overlaps(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->overlaps(g); });
 }
 
 char
 GEOSPreparedTouches_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->touches(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->touches(g); });
 }
 
 char
 GEOSPreparedWithin_r(GEOSContextHandle_t extHandle,
         const geos::geom::prep::PreparedGeometry *pg, const Geometry *g)
 {
-    assert(0 != pg);
-    assert(0 != g);
+  assert(0 != pg);
+  assert(0 != g);
 
-  std::function<char (const geos::geom::prep::PreparedGeometry*, const Geometry*)> lambda =
-    [](const geos::geom::prep::PreparedGeometry *lpg, const Geometry *lg)->char
-    {
-        return lpg->within(lg);
-    };
-
-  return excecute<char, 2>(extHandle, lambda, pg, g);
+  return execute<char, 2>(extHandle, [&]() -> char { return pg->within(g); });
 }
 
 //-----------------------------------------------------------------
@@ -5273,8 +5167,7 @@ GEOSGeometry*
 GEOSGeom_extractUniquePoints_r(GEOSContextHandle_t extHandle,
                               const GEOSGeometry* g)
 {
-  std::function<GEOSGeometry* (const GEOSGeometry*)> lambda =
-    [](const GEOSGeometry *lg)->GEOSGeometry*
+  return execute<GEOSGeometry*, nullptr>(extHandle, [&]() -> GEOSGeometry*
     {
       using namespace geos::geom;
       using namespace geos::util;
@@ -5282,12 +5175,12 @@ GEOSGeom_extractUniquePoints_r(GEOSContextHandle_t extHandle,
       /* 1: extract points */
       std::vector<const Coordinate*> coords;
       UniqueCoordinateArrayFilter filter(coords);
-      lg->apply_ro(&filter);
+      g->apply_ro(&filter);
 
       /* 2: for each point, create a geometry and put into a vector */
       std::vector<Geometry*>* points = new std::vector<Geometry*>();
       points->reserve(coords.size());
-      const GeometryFactory* factory = lg->getFactory();
+      const GeometryFactory* factory = g->getFactory();
       for (const auto c : coords)
       {
         Geometry* point = factory->createPoint(*c);
@@ -5296,9 +5189,7 @@ GEOSGeom_extractUniquePoints_r(GEOSContextHandle_t extHandle,
 
       /* 3: create a multipoint */
       return factory->createMultiPoint(points);
-    };
-
-  return excecute<GEOSGeometry*, nullptr>(extHandle, lambda, g);
+    });
 }
 
 int GEOSOrientationIndex_r(GEOSContextHandle_t extHandle,
@@ -5478,77 +5369,63 @@ int
 GEOSBufferParams_setEndCapStyle_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, int style)
 {
-  std::function<int(GEOSBufferParams*, int)> lambda =
-    [](GEOSBufferParams* lp, int lstyle)->int
+  return execute<int, 0>(extHandle, [&]() -> int
     {
-      if ( lstyle > BufferParameters::CAP_SQUARE )
+      if ( style > BufferParameters::CAP_SQUARE )
       {
         throw IllegalArgumentException("Invalid buffer endCap style");
       }
-      lp->setEndCapStyle(static_cast<BufferParameters::EndCapStyle>(lstyle));
+      p->setEndCapStyle(static_cast<BufferParameters::EndCapStyle>(style));
       return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, p, style);
+    });
 }
 
 int
 GEOSBufferParams_setJoinStyle_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, int style)
 {
-  std::function<int(GEOSBufferParams*, int)> lambda =
-    [](GEOSBufferParams* lp, int lstyle)->int
+  return execute<int, 0>(extHandle, [&]() -> int
     {
-      if ( lstyle > BufferParameters::JOIN_BEVEL ) {
+      if ( style > BufferParameters::JOIN_BEVEL ) {
         throw IllegalArgumentException("Invalid buffer join style");
       }
-      lp->setJoinStyle(static_cast<BufferParameters::JoinStyle>(lstyle));
+      p->setJoinStyle(static_cast<BufferParameters::JoinStyle>(style));
       return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, p, style);
+    });
 }
 
 int
 GEOSBufferParams_setMitreLimit_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, double limit)
 {
-  std::function<int(GEOSBufferParams*, double)> lambda =
-    [](GEOSBufferParams* lp, double llimit)->int
+  return execute<int, 0>(extHandle, [&]() -> int
     {
-        lp->setMitreLimit(llimit);
+        p->setMitreLimit(limit);
         return 1;
-    };
-
-        return excecute<int, 0>(extHandle, lambda, p, limit);
+    });
 }
 
 int
 GEOSBufferParams_setQuadrantSegments_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, int segs)
 {
-  std::function<int(GEOSBufferParams*, int)> lambda =
-    [](GEOSBufferParams* lp, int lsegs)->int
+  return execute<int, 0>(extHandle, [&]() -> int
     {
-        lp->setQuadrantSegments(lsegs);
+        p->setQuadrantSegments(segs);
         return 1;
-    };
-
-  return excecute<int, 0>(extHandle, lambda, p, segs);
+    });
 }
 
 int
 GEOSBufferParams_setSingleSided_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, int ss)
 {
-  std::function<int(GEOSBufferParams*, int)> lambda =
-    [](GEOSBufferParams* lp, int lss)->int
+  return execute<int, 0>(extHandle, [&]() -> int
     {
-        lp->setSingleSided( (lss != 0) );
+        p->setSingleSided( ss != 0 );
         return 1;
-    };
+    });
 
-  return excecute<int, 0>(extHandle, lambda, p, ss);
 }
 
 Geometry *
