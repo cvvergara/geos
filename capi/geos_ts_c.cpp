@@ -318,6 +318,39 @@ char* gstrdup(std::string const& str)
     return gstrdup_s(str.c_str(), str.size());
 }
 
+/*
+ *  with lambdas that use handle
+ *
+ *  RT = return type
+ *  HT = Handle Type
+ */
+template <typename RT, RT value, typename HT>
+RT
+execute(GEOSContextHandle_t &extHandle,
+    std::function<RT(HT)> lambda)
+{
+    if (!extHandle) return value;
+
+    auto handle = reinterpret_cast<HT>(extHandle);
+    if (!handle->initialized) return value;
+
+    try
+    {
+        return lambda(handle);
+    }
+
+    catch (const std::exception &e)
+    {
+        handle->ERROR_MESSAGE("%s", e.what());
+    }
+    catch (...)
+    {
+        handle->ERROR_MESSAGE("Unknown exception thrown");
+    }
+    return value;
+}
+
+
 
 template <typename RT, RT value>
 RT
@@ -350,6 +383,40 @@ execute(GEOSContextHandle_t &extHandle,
         handle->ERROR_MESSAGE("Unknown exception thrown");
     }
     return value;
+}
+
+
+
+void
+execute(GEOSContextHandle_t &extHandle,
+    std::function<void()> lambda)
+{
+    if ( 0 == extHandle )
+    {
+        return;
+    }
+
+    GEOSContextHandleInternal_t *handle = 0;
+    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
+    if ( handle->initialized == 0 )
+    {
+        return;
+    }
+
+    try
+    {
+        lambda();
+    }
+
+    catch (const std::exception &e)
+    {
+        handle->ERROR_MESSAGE("%s", e.what());
+    }
+    catch (...)
+    {
+        handle->ERROR_MESSAGE("Unknown exception thrown");
+    }
+    return;
 }
 
 
@@ -571,20 +638,7 @@ GEOSRelate_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *
 char *
 GEOSRelateBoundaryNodeRule_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, int bnr)
 {
-    if ( 0 == extHandle )
-    {
-        return NULL;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return NULL;
-    }
-
-    try
-    {
+  return execute<char*, nullptr, GEOSContextHandleInternal_t*>(extHandle, [&](GEOSContextHandleInternal_t * handle) -> char* {
         using geos::operation::relate::RelateOp;
         using geos::geom::IntersectionMatrix;
         using geos::algorithm::BoundaryNodeRule;
@@ -609,29 +663,19 @@ GEOSRelateBoundaryNodeRule_r(GEOSContextHandle_t extHandle, const Geometry *g1, 
             break;
           default:
             handle->ERROR_MESSAGE("Invalid boundary node rule %d", bnr);
-            return 0;
+            return nullptr;
             break;
         }
 
-        if (0 == im) return 0;
+        if (0 == im) return nullptr;
 
         char *result = gstrdup(im->toString());
 
         delete im;
-        im = 0;
+        im = nullptr;
 
         return result;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 
@@ -823,7 +867,7 @@ int
 GEOSHausdorffDistanceDensify_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double densifyFrac, double *dist)
 {
   assert(0 != dist);
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       *dist = DiscreteHausdorffDistance::distance(*g1, *g2, densifyFrac);
       return 1;
     });
@@ -833,7 +877,7 @@ int
 GEOSFrechetDistance_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double *dist)
 {
   assert(0 != dist);
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       *dist = DiscreteFrechetDistance::distance(*g1, *g2);
       return 1;
     });
@@ -843,7 +887,7 @@ int
 GEOSFrechetDistanceDensify_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *g2, double densifyFrac, double *dist)
 {
   assert(0 != dist);
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       *dist = DiscreteFrechetDistance::distance(*g1, *g2, densifyFrac);
       return 1;
     });
@@ -853,7 +897,7 @@ int
 GEOSArea_r(GEOSContextHandle_t extHandle, const Geometry *g, double *area)
 {
   assert(0 != area);
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       *area = g->getArea();
       return 1;
     });
@@ -863,7 +907,7 @@ int
 GEOSLength_r(GEOSContextHandle_t extHandle, const Geometry *g, double *length)
 {
   assert(0 != length);
-  return execute<int, 2>(extHandle, [&]() -> int {
+  return execute<int, 2>(extHandle, [&]() {
       *length = g->getLength();
       return 1;
     });
@@ -1375,7 +1419,7 @@ GEOSMinimumClearanceLine_r(GEOSContextHandle_t extHandle, const Geometry *g)
 int
 GEOSMinimumClearance_r(GEOSContextHandle_t extHandle, const Geometry *g, double *d)
 {
-  return execute<int, 2>(extHandle, [&]() -> int {
+  return execute<int, 2>(extHandle, [&]() {
         geos::precision::MinimumClearance mc(g);
         double res = mc.getDistance();
         *d = res;
@@ -1736,7 +1780,7 @@ int
 GEOSGetNumCoordinates_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   assert(0 != g);
-  return execute<int, -1>(extHandle, [&]() -> int {
+  return execute<int, -1>(extHandle, [&]() {
       return static_cast<int>(g->getNumPoints());
     });
 }
@@ -1749,7 +1793,7 @@ GEOSGetNumCoordinates_r(GEOSContextHandle_t extHandle, const Geometry *g)
 int
 GEOSNormalize_r(GEOSContextHandle_t extHandle, Geometry *g)
 {
-  return execute<int, -1>(extHandle, [&]() -> int {
+  return execute<int, -1>(extHandle, [&]() {
         g->normalize();
         return 0; // SUCCESS
     });
@@ -1797,7 +1841,7 @@ GEOSGetNumInteriorRings_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 int
 GEOSGetNumGeometries_r(GEOSContextHandle_t extHandle, const Geometry *g1)
 {
-  return execute<int, -1>(extHandle, [&]() -> int {
+  return execute<int, -1>(extHandle, [&]() {
         return static_cast<int>(g1->getNumGeometries());
     });
 }
@@ -2747,7 +2791,7 @@ int
 GEOSGetSRID_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   assert(0 != g);
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       return g->getSRID();
     });
 }
@@ -2769,7 +2813,7 @@ GEOSHasZ_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   assert(0 != g);
 
-  return execute<char, -1>(extHandle, [&]() -> char {
+  return execute<char, -1>(extHandle, [&]() {
       assert(0 != g->getCoordinate());
       double az = g->getCoordinate()->z;
       return static_cast<char>(FINITE(az));
@@ -3039,7 +3083,7 @@ GEOSCoordSeq_getSize_r(GEOSContextHandle_t extHandle, const CoordinateSequence *
   assert(0 != cs);
   assert(0 != size);
 
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
         const std::size_t sz = cs->getSize();
         *size = static_cast<unsigned int>(sz);
         return 1;
@@ -3052,7 +3096,7 @@ GEOSCoordSeq_getDimensions_r(GEOSContextHandle_t extHandle, const CoordinateSequ
   assert(0 != cs);
   assert(0 != dims);
 
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       const std::size_t dim = cs->getDimension();
       *dims = static_cast<unsigned int>(dim);
       return 1;
@@ -3065,7 +3109,7 @@ GEOSCoordSeq_isCCW_r(GEOSContextHandle_t extHandle, const CoordinateSequence *cs
   assert(cs != nullptr);
   assert(val != nullptr);
 
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
         *val = geos::algorithm::CGAlgorithms::isCCW(cs);
         return 1;
     });
@@ -3530,7 +3574,7 @@ GEOSGeom_getPrecision_r(GEOSContextHandle_t extHandle, const GEOSGeometry *g)
 int
 GEOSGeom_getDimensions_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       return (int) g->getDimension();
     });
 }
@@ -3538,7 +3582,7 @@ GEOSGeom_getDimensions_r(GEOSContextHandle_t extHandle, const Geometry *g)
 int
 GEOSGeom_getCoordinateDimension_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       return g->getCoordinateDimension();
     });
 }
@@ -3546,7 +3590,7 @@ GEOSGeom_getCoordinateDimension_r(GEOSContextHandle_t extHandle, const Geometry 
 int
 GEOSGeom_getXMin_r(GEOSContextHandle_t extHandle, const Geometry *g, double *value)
 {
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       if (g->isEmpty()) return 0;
 
       *value = g->getEnvelopeInternal()->getMinX();
@@ -3557,7 +3601,7 @@ GEOSGeom_getXMin_r(GEOSContextHandle_t extHandle, const Geometry *g, double *val
 int
 GEOSGeom_getXMax_r(GEOSContextHandle_t extHandle, const Geometry *g, double *value)
 {
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       if (g->isEmpty()) return 0;
 
       *value = g->getEnvelopeInternal()->getMaxX();
@@ -3568,7 +3612,7 @@ GEOSGeom_getXMax_r(GEOSContextHandle_t extHandle, const Geometry *g, double *val
 int
 GEOSGeom_getYMin_r(GEOSContextHandle_t extHandle, const Geometry *g, double *value)
 {
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       if (g->isEmpty()) return 0;
 
       *value = g->getEnvelopeInternal()->getMinY();
@@ -3579,7 +3623,7 @@ GEOSGeom_getYMin_r(GEOSContextHandle_t extHandle, const Geometry *g, double *val
 int
 GEOSGeom_getYMax_r(GEOSContextHandle_t extHandle, const Geometry *g, double *value)
 {
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       if (g->isEmpty()) return 0;
 
       *value = g->getEnvelopeInternal()->getMaxY();
@@ -3854,7 +3898,7 @@ GEOSWKTWriter_getOutputDimension_r(GEOSContextHandle_t extHandle, WKTWriter *wri
 {
   assert(0 != writer);
 
-  return execute<int, -1>(extHandle, [&]() -> int {
+  return execute<int, -1>(extHandle, [&]() {
       return writer->getOutputDimension();
       });
 }
@@ -4215,7 +4259,7 @@ GEOSWKBWriter_getOutputDimension_r(GEOSContextHandle_t extHandle, const GEOSWKBW
 {
   assert(0 != writer);
 
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       return writer->getOutputDimension();
     });
 }
@@ -4254,7 +4298,7 @@ GEOSWKBWriter_getByteOrder_r(GEOSContextHandle_t extHandle, const GEOSWKBWriter*
 {
     assert(0 != writer);
 
-  return execute<int, 0>(extHandle, [&]() -> int {
+  return execute<int, 0>(extHandle, [&]() {
       return writer->getByteOrder();
     });
 }
@@ -4293,8 +4337,7 @@ GEOSWKBWriter_getIncludeSRID_r(GEOSContextHandle_t extHandle, const GEOSWKBWrite
 {
     assert(0 != writer);
 
-  return execute<char, -1>(extHandle,
-      [&]() -> char {
+  return execute<char, -1>(extHandle, [&]() {
        return static_cast<char>(writer->getIncludeSRID());
     });
 }
@@ -4387,7 +4430,7 @@ GEOSPreparedContains_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->contains(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->contains(g); });
 }
 
 char
@@ -4397,7 +4440,7 @@ GEOSPreparedContainsProperly_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->containsProperly(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->containsProperly(g); });
 }
 
 char
@@ -4407,7 +4450,7 @@ GEOSPreparedCoveredBy_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->coveredBy(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->coveredBy(g); });
 }
 
 char
@@ -4417,7 +4460,7 @@ GEOSPreparedCovers_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->covers(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->covers(g); });
 }
 
 char
@@ -4427,7 +4470,7 @@ GEOSPreparedCrosses_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->crosses(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->crosses(g); });
 }
 
 char
@@ -4437,7 +4480,7 @@ GEOSPreparedDisjoint_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->disjoint(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->disjoint(g); });
 }
 
 char
@@ -4447,7 +4490,7 @@ GEOSPreparedIntersects_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->intersects(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->intersects(g); });
 }
 
 char
@@ -4457,7 +4500,7 @@ GEOSPreparedOverlaps_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->overlaps(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->overlaps(g); });
 }
 
 char
@@ -4467,7 +4510,7 @@ GEOSPreparedTouches_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->touches(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->touches(g); });
 }
 
 char
@@ -4477,7 +4520,7 @@ GEOSPreparedWithin_r(GEOSContextHandle_t extHandle,
   assert(0 != pg);
   assert(0 != g);
 
-  return execute<char, 2>(extHandle, [&]() -> char { return pg->within(g); });
+  return execute<char, 2>(extHandle, [&]() { return pg->within(g); });
 }
 
 //-----------------------------------------------------------------
@@ -4488,34 +4531,10 @@ geos::index::strtree::STRtree *
 GEOSSTRtree_create_r(GEOSContextHandle_t extHandle,
                                   size_t nodeCapacity)
 {
-    if ( 0 == extHandle )
-    {
-        return 0;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 0;
-    }
-
-    geos::index::strtree::STRtree *tree = 0;
-
-    try
-    {
-        tree = new geos::index::strtree::STRtree(nodeCapacity);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return tree;
+  return execute<geos::index::strtree::STRtree *, nullptr>(extHandle, [&]()
+     -> geos::index::strtree::STRtree * {
+        return new geos::index::strtree::STRtree(nodeCapacity);
+    });
 }
 
 void
@@ -4524,44 +4543,12 @@ GEOSSTRtree_insert_r(GEOSContextHandle_t extHandle,
                      const geos::geom::Geometry *g,
                      void *item)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-    assert(tree != 0);
-    assert(g != 0);
+  assert(tree != 0);
+  assert(g != 0);
 
-    try
-    {
+  execute(extHandle, [&]() -> void {
         tree->insert(g->getEnvelopeInternal(), item);
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+    });
 }
 
 void
@@ -4571,46 +4558,14 @@ GEOSSTRtree_query_r(GEOSContextHandle_t extHandle,
                     GEOSQueryCallback callback,
                     void *userdata)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-    assert(tree != 0);
-    assert(g != 0);
-    assert(callback != 0);
+  assert(tree != 0);
+  assert(g != 0);
+  assert(callback != 0);
 
-    try
-    {
+  execute(extHandle, [&]() -> void {
         CAPI_ItemVisitor visitor(callback, userdata);
         tree->query(g->getEnvelopeInternal(), visitor);
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+        });
 }
 
 const GEOSGeometry *
@@ -4703,45 +4658,13 @@ GEOSSTRtree_iterate_r(GEOSContextHandle_t extHandle,
                     GEOSQueryCallback callback,
                     void *userdata)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-    assert(tree != 0);
-    assert(callback != 0);
+  assert(tree != 0);
+  assert(callback != 0);
 
-    try
-    {
-        CAPI_ItemVisitor visitor(callback, userdata);
-        tree->iterate(visitor);
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+  execute(extHandle, [&]() -> void {
+      CAPI_ItemVisitor visitor(callback, userdata);
+      tree->iterate(visitor);
+    });
 }
 
 char
@@ -4753,75 +4676,18 @@ GEOSSTRtree_remove_r(GEOSContextHandle_t extHandle,
     assert(0 != tree);
     assert(0 != g);
 
-    if ( 0 == extHandle )
-    {
-        return 2;
-    }
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 2;
-    }
-
-    try
-    {
-        bool result = tree->remove(g->getEnvelopeInternal(), item);
-        return result;
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 2;
+    return execute<char, 2>(extHandle, [&]() -> char {
+        return tree->remove(g->getEnvelopeInternal(), item);
+    });
 }
 
 void
 GEOSSTRtree_destroy_r(GEOSContextHandle_t extHandle,
                       geos::index::strtree::STRtree *tree)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-
-    try
-    {
+  execute(extHandle, [&]() -> void {
         delete tree;
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+    });
 }
 
 double
@@ -5104,7 +4970,7 @@ int
 GEOSBufferParams_setEndCapStyle_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, int style)
 {
-  return execute<int, 0>(extHandle, [&]() -> int
+  return execute<int, 0>(extHandle, [&]()
     {
       if ( style > BufferParameters::CAP_SQUARE )
       {
@@ -5119,7 +4985,7 @@ int
 GEOSBufferParams_setJoinStyle_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, int style)
 {
-  return execute<int, 0>(extHandle, [&]() -> int
+  return execute<int, 0>(extHandle, [&]()
     {
       if ( style > BufferParameters::JOIN_BEVEL ) {
         throw IllegalArgumentException("Invalid buffer join style");
@@ -5133,7 +4999,7 @@ int
 GEOSBufferParams_setMitreLimit_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, double limit)
 {
-  return execute<int, 0>(extHandle, [&]() -> int
+  return execute<int, 0>(extHandle, [&]()
     {
         p->setMitreLimit(limit);
         return 1;
@@ -5144,7 +5010,7 @@ int
 GEOSBufferParams_setQuadrantSegments_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, int segs)
 {
-  return execute<int, 0>(extHandle, [&]() -> int
+  return execute<int, 0>(extHandle, [&]()
     {
         p->setQuadrantSegments(segs);
         return 1;
@@ -5155,7 +5021,7 @@ int
 GEOSBufferParams_setSingleSided_r(GEOSContextHandle_t extHandle,
   GEOSBufferParams* p, int ss)
 {
-  return execute<int, 0>(extHandle, [&]() -> int
+  return execute<int, 0>(extHandle, [&]()
     {
         p->setSingleSided( ss != 0 );
         return 1;
