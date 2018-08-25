@@ -2816,41 +2816,28 @@ GEOSLineMerge_r(GEOSContextHandle_t extHandle, const Geometry *g)
 Geometry *
 GEOSReverse_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-  std::function<Geometry*(const Geometry*)> lambda =
-    [](const Geometry *g1)->Geometry*
-    {
-      return  g1->reverse();
-    };
-
-  return excecute<Geometry*, nullptr>(extHandle, lambda, g);
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
+      return  g->reverse();
+    });
 }
 
 
 void*
 GEOSGeom_getUserData_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
-    assert(0 != g);
-
-  std::function<void*(const Geometry*)> lambda =
-    [](const Geometry *g1)->void*
-    {
-      return  g1->getUserData();
-    };
-
-  return excecute<void*, nullptr>(extHandle, lambda, g);
+  assert(0 != g);
+  return execute<void*, nullptr>(extHandle, [&]() -> void* {
+      return  g->getUserData();
+    });
 }
 
 int
 GEOSGetSRID_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   assert(0 != g);
-  std::function<int(const Geometry*)> lambda =
-    [](const Geometry *lg)->int
-    {
-      return lg->getSRID();
-    };
-
-  return excecute<int, 0>(extHandle, lambda, g);
+  return execute<int, 0>(extHandle, [&]() -> int {
+      return g->getSRID();
+    });
 }
 
 const char* GEOSversion()
@@ -2870,15 +2857,11 @@ GEOSHasZ_r(GEOSContextHandle_t extHandle, const Geometry *g)
 {
   assert(0 != g);
 
-  std::function<char(const Geometry*)> lambda =
-    [](const Geometry *lg)->char
-    {
-      assert(0 != lg->getCoordinate());
-      double az = lg->getCoordinate()->z;
+  return execute<char, -1>(extHandle, [&]() -> char {
+      assert(0 != g->getCoordinate());
+      double az = g->getCoordinate()->z;
       return static_cast<char>(FINITE(az));
-    };
-
-  return excecute<char, -1>(extHandle, lambda, g);
+    });
 }
 
 int
