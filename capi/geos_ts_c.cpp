@@ -2959,42 +2959,7 @@ GEOSPrepare_r(GEOSContextHandle_t extHandle, const Geometry *g)
 void
 GEOSPreparedGeom_destroy_r(GEOSContextHandle_t extHandle, const geos::geom::prep::PreparedGeometry *a)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-
-    try
-    {
-        delete a;
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
+  execute(extHandle, [&]() { delete a; });
 }
 
 char
@@ -3105,8 +3070,9 @@ geos::index::strtree::STRtree *
 GEOSSTRtree_create_r(GEOSContextHandle_t extHandle,
                                   size_t nodeCapacity)
 {
-  return execute<geos::index::strtree::STRtree *, nullptr>(extHandle, [&]()
-     -> geos::index::strtree::STRtree * {
+  return execute<geos::index::strtree::STRtree *, nullptr>(
+      extHandle,
+      [&]() -> geos::index::strtree::STRtree * {
         return new geos::index::strtree::STRtree(nodeCapacity);
     });
 }
@@ -3120,9 +3086,7 @@ GEOSSTRtree_insert_r(GEOSContextHandle_t extHandle,
   assert(tree != 0);
   assert(g != 0);
 
-  execute(extHandle, [&]() -> void {
-        tree->insert(g->getEnvelopeInternal(), item);
-    });
+  execute(extHandle, [&]() { tree->insert(g->getEnvelopeInternal(), item); });
 }
 
 void
@@ -3136,7 +3100,7 @@ GEOSSTRtree_query_r(GEOSContextHandle_t extHandle,
   assert(g != 0);
   assert(callback != 0);
 
-  execute(extHandle, [&]() -> void {
+  execute(extHandle, [&]() {
         CAPI_ItemVisitor visitor(callback, userdata);
         tree->query(g->getEnvelopeInternal(), visitor);
         });
@@ -3158,32 +3122,30 @@ GEOSSTRtree_nearest_generic_r(GEOSContextHandle_t extHandle,
                               GEOSDistanceCallback distancefn,
                               void* userdata)
 {
-    using namespace geos::index::strtree;
+  return execute<const void*, nullptr>(extHandle, [&]() -> const void* {
 
-    GEOSContextHandleInternal_t *handle = 0;
+        using namespace geos::index::strtree;
 
-		struct CustomItemDistance : public ItemDistance {
-				CustomItemDistance(GEOSDistanceCallback p_distancefn, void* p_userdata)
-								: m_distancefn(p_distancefn), m_userdata(p_userdata) {}
+        struct CustomItemDistance : public ItemDistance {
+            CustomItemDistance(GEOSDistanceCallback p_distancefn, void* p_userdata)
+                    : m_distancefn(p_distancefn), m_userdata(p_userdata) {}
 
-				GEOSDistanceCallback m_distancefn;
-				void* m_userdata;
+            GEOSDistanceCallback m_distancefn;
+            void* m_userdata;
 
-				double distance(const ItemBoundable* item1, const ItemBoundable* item2) override {
-						const void* a = item1->getItem();
-						const void* b = item2->getItem();
-						double d;
+            double distance(const ItemBoundable* item1, const ItemBoundable* item2) override {
+              const void* a = item1->getItem();
+              const void* b = item2->getItem();
+              double d;
 
-						if (!m_distancefn(a, b, &d, m_userdata)) {
-								throw std::runtime_error(std::string("Failed to compute distance."));
-						}
+              if (!m_distancefn(a, b, &d, m_userdata)) {
+                throw std::runtime_error(std::string("Failed to compute distance."));
+              }
 
-						return d;
-				}
-		};
+						  return d;
+				    }
+		    };
 
-    try
-    {
         if (distancefn) {
             CustomItemDistance itemDistance(distancefn, userdata);
             return tree->nearestNeighbour(itemEnvelope->getEnvelopeInternal(), item, &itemDistance);
@@ -3191,39 +3153,7 @@ GEOSSTRtree_nearest_generic_r(GEOSContextHandle_t extHandle,
             GeometryItemDistance itemDistance = GeometryItemDistance();
             return tree->nearestNeighbour(itemEnvelope->getEnvelopeInternal(), item, &itemDistance);
         }
-    }
-    catch (const std::exception &e)
-    {
-        if ( 0 == extHandle )
-        {
-            return NULL;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return NULL;
-        }
-
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch (...)
-    {
-        if ( 0 == extHandle )
-        {
-            return NULL;
-        }
-
-        handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-        if ( 0 == handle->initialized )
-        {
-            return NULL;
-        }
-
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return NULL;
+    });
 }
 
 void
@@ -3235,7 +3165,7 @@ GEOSSTRtree_iterate_r(GEOSContextHandle_t extHandle,
   assert(tree != 0);
   assert(callback != 0);
 
-  execute(extHandle, [&]() -> void {
+  execute(extHandle, [&]() {
       CAPI_ItemVisitor visitor(callback, userdata);
       tree->iterate(visitor);
     });
@@ -3264,6 +3194,7 @@ GEOSSTRtree_destroy_r(GEOSContextHandle_t extHandle,
     });
 }
 
+/* TODO can not use the template because of double */
 double
 GEOSProject_r(GEOSContextHandle_t extHandle,
               const Geometry *g,
@@ -3297,24 +3228,15 @@ GEOSProject_r(GEOSContextHandle_t extHandle,
 Geometry*
 GEOSInterpolate_r(GEOSContextHandle_t extHandle, const Geometry *g, double d)
 {
-    if ( 0 == extHandle ) return 0;
-    GEOSContextHandleInternal_t *handle =
-        reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( handle->initialized == 0 ) return 0;
-
-    try {
-    	geos::linearref::LengthIndexedLine lil(g);
-    	geos::geom::Coordinate coord = lil.extractPoint(d);
-    	const GeometryFactory *gf = handle->geomFactory;
-    	Geometry* point = gf->createPoint(coord);
-    	return point;
-    } catch (const std::exception &e) {
-        handle->ERROR_MESSAGE("%s", e.what());
-        return 0;
-    } catch (...) {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-        return 0;
-    }
+  return execute<Geometry*, nullptr, GEOSContextHandleInternal_t *>(
+      extHandle,
+      [&](GEOSContextHandleInternal_t *handle) -> Geometry* {
+        geos::linearref::LengthIndexedLine lil(g);
+        geos::geom::Coordinate coord = lil.extractPoint(d);
+        const GeometryFactory *gf = handle->geomFactory;
+        Geometry* point = gf->createPoint(coord);
+        return point;
+    });
 }
 
 
@@ -3368,115 +3290,70 @@ GEOSGeom_extractUniquePoints_r(GEOSContextHandle_t extHandle,
 }
 
 int GEOSOrientationIndex_r(GEOSContextHandle_t extHandle,
-	double Ax, double Ay, double Bx, double By, double Px, double Py)
+    double Ax, double Ay, double Bx, double By, double Px, double Py)
 {
-    GEOSContextHandleInternal_t *handle = 0;
-
-    using geos::geom::Coordinate;
-    using geos::algorithm::CGAlgorithms;
-
-    if ( 0 == extHandle )
-    {
-        return 2;
-    }
-
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized )
-    {
-        return 2;
-    }
-
-    try
-    {
-        Coordinate A(Ax, Ay);
-        Coordinate B(Bx, By);
-        Coordinate P(Px, Py);
-        return CGAlgorithms::orientationIndex(A, B, P);
-    }
-    catch (const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-        return 2;
-    }
-    catch (...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-        return 2;
-    }
+  return execute<int, 2>(extHandle, [&]() {
+      using geos::geom::Coordinate;
+      using geos::algorithm::CGAlgorithms;
+      Coordinate A(Ax, Ay);
+      Coordinate B(Bx, By);
+      Coordinate P(Px, Py);
+      return CGAlgorithms::orientationIndex(A, B, P);
+      });
 }
 
 GEOSGeometry *
 GEOSSharedPaths_r(GEOSContextHandle_t extHandle, const GEOSGeometry* g1, const GEOSGeometry* g2)
 {
-    using namespace geos::operation::sharedpaths;
+  return execute<GEOSGeometry*, nullptr>(extHandle, [&]() -> GEOSGeometry* {
+      using namespace geos::operation::sharedpaths;
 
-    if ( 0 == extHandle ) return 0;
-    GEOSContextHandleInternal_t *handle =
-      reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( handle->initialized == 0 ) return 0;
-
-    SharedPathsOp::PathList forw, back;
-    try {
+      SharedPathsOp::PathList forw, back;
       SharedPathsOp::sharedPathsOp(*g1, *g2, forw, back);
-    }
-    catch (const std::exception &e)
-    {
-        SharedPathsOp::clearEdges(forw);
-        SharedPathsOp::clearEdges(back);
-        handle->ERROR_MESSAGE("%s", e.what());
-        return 0;
-    }
-    catch (...)
-    {
-        SharedPathsOp::clearEdges(forw);
-        SharedPathsOp::clearEdges(back);
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-        return 0;
-    }
 
-    // Now forw and back have the geoms we want to use to construct
-    // our output GeometryCollections...
+      // Now forw and back have the geoms we want to use to construct
+      // our output GeometryCollections...
 
-    const GeometryFactory* factory = g1->getFactory();
-    size_t count;
+      const GeometryFactory* factory = g1->getFactory();
+      size_t count;
 
-    std::unique_ptr< std::vector<Geometry*> > out1(
-      new std::vector<Geometry*>()
-    );
-    count = forw.size();
-    out1->reserve(count);
-    for (size_t i=0; i<count; ++i) {
-        out1->push_back(forw[i]);
-    }
-    std::unique_ptr<Geometry> out1g (
-      factory->createMultiLineString(out1.release())
-    );
+      std::unique_ptr< std::vector<Geometry*> > out1(
+        new std::vector<Geometry*>()
+      );
+      count = forw.size();
+      out1->reserve(count);
+      for (size_t i=0; i<count; ++i) {
+          out1->push_back(forw[i]);
+      }
+      std::unique_ptr<Geometry> out1g (
+        factory->createMultiLineString(out1.release())
+      );
 
-    std::unique_ptr< std::vector<Geometry*> > out2(
-      new std::vector<Geometry*>()
-    );
-    count = back.size();
-    out2->reserve(count);
-    for (size_t i=0; i<count; ++i) {
-        out2->push_back(back[i]);
-    }
-    std::unique_ptr<Geometry> out2g (
-      factory->createMultiLineString(out2.release())
-    );
+      std::unique_ptr< std::vector<Geometry*> > out2(
+        new std::vector<Geometry*>()
+      );
+      count = back.size();
+      out2->reserve(count);
+      for (size_t i=0; i<count; ++i) {
+          out2->push_back(back[i]);
+      }
+      std::unique_ptr<Geometry> out2g (
+        factory->createMultiLineString(out2.release())
+      );
 
-    std::unique_ptr< std::vector<Geometry*> > out(
-      new std::vector<Geometry*>()
-    );
-    out->reserve(2);
-    out->push_back(out1g.release());
-    out->push_back(out2g.release());
+      std::unique_ptr< std::vector<Geometry*> > out(
+        new std::vector<Geometry*>()
+      );
+      out->reserve(2);
+      out->push_back(out1g.release());
+      out->push_back(out2g.release());
 
-    std::unique_ptr<Geometry> outg (
-      factory->createGeometryCollection(out.release())
-    );
+      std::unique_ptr<Geometry> outg (
+        factory->createGeometryCollection(out.release())
+      );
 
-    return outg.release();
-
+      return outg.release();
+  });
 }
 
 GEOSGeometry *
