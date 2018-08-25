@@ -3475,33 +3475,15 @@ GEOSDelaunayTriangulation_r(GEOSContextHandle_t extHandle, const Geometry *g1, d
 Geometry*
 GEOSVoronoiDiagram_r(GEOSContextHandle_t extHandle, const Geometry *g1, const Geometry *env, double tolerance ,int onlyEdges)
 {
-	if ( 0 == extHandle ) return NULL;
-
-	GEOSContextHandleInternal_t *handle = 0;
-	handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-	if ( 0 == handle->initialized ) return NULL;
-
-	using geos::triangulate::VoronoiDiagramBuilder;
-
-	try
-	{
+  return execute<Geometry*, nullptr>(extHandle, [&]() -> Geometry* {
+    using geos::triangulate::VoronoiDiagramBuilder;
 		VoronoiDiagramBuilder builder;
 		builder.setSites(*g1);
 		builder.setTolerance(tolerance);
     if(env) builder.setClipEnvelope(env->getEnvelopeInternal());
 		if(onlyEdges) return builder.getDiagramEdges(*g1->getFactory()).release();
 		else return builder.getDiagram(*g1->getFactory()).release();
-	}
-	catch(const std::exception &e)
-	{
-		handle->ERROR_MESSAGE("%s", e.what());
-	}
-	catch(...)
-	{
-		handle->ERROR_MESSAGE("Unknown exception thrown");
-	}
-
-	return NULL;
+	});
 }
 
 int
@@ -3510,40 +3492,20 @@ GEOSSegmentIntersection_r(GEOSContextHandle_t extHandle,
     double bx0, double by0, double bx1, double by1,
     double* cx, double* cy)
 {
-    if ( 0 == extHandle ) return 0;
-
-    GEOSContextHandleInternal_t *handle = 0;
-    handle = reinterpret_cast<GEOSContextHandleInternal_t*>(extHandle);
-    if ( 0 == handle->initialized ) return 0;
-
-    try
-    {
+  return execute<int, 0>(extHandle, [&]() {
         geos::geom::LineSegment a(ax0, ay0, ax1, ay1);
         geos::geom::LineSegment b(bx0, by0, bx1, by1);
         geos::geom::Coordinate isect;
 
         bool intersects = a.intersection(b, isect);
 
-        if (!intersects)
-        {
-            return -1;
-        }
+        if (!intersects) return -1;
 
         *cx = isect.x;
         *cy = isect.y;
 
         return 1;
-    }
-    catch(const std::exception &e)
-    {
-        handle->ERROR_MESSAGE("%s", e.what());
-    }
-    catch(...)
-    {
-        handle->ERROR_MESSAGE("Unknown exception thrown");
-    }
-
-    return 0;
+    });
 }
 
 } /* extern "C" */
