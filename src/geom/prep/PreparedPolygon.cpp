@@ -41,18 +41,18 @@ namespace prep { // geos.geom.prep
 PreparedPolygon::PreparedPolygon(const geom::Geometry * geom)
     : BasicPreparedGeometry(geom), segIntFinder(nullptr), ptOnGeomLoc(nullptr)
 {
-	isRectangle = getGeometry().isRectangle();
+    isRectangle = getGeometry().isRectangle();
 }
 
 PreparedPolygon::~PreparedPolygon()
 {
-	delete segIntFinder;
-	delete ptOnGeomLoc;
+    delete segIntFinder;
+    delete ptOnGeomLoc;
 
-	for ( std::size_t i = 0, ni = segStrings.size(); i < ni; i++ )
-	{
-		delete segStrings[ i ];
-	}
+    for ( std::size_t i = 0, ni = segStrings.size(); i < ni; i++ )
+    {
+        delete segStrings[ i ];
+    }
 }
 
 
@@ -60,22 +60,22 @@ noding::FastSegmentSetIntersectionFinder *
 PreparedPolygon::
 getIntersectionFinder() const
 {
-	if (! segIntFinder)
-	{
-		noding::SegmentStringUtil::extractSegmentStrings( &getGeometry(), segStrings );
-		segIntFinder = new noding::FastSegmentSetIntersectionFinder( &segStrings );
-	}
-	return segIntFinder;
+    if (! segIntFinder)
+    {
+        noding::SegmentStringUtil::extractSegmentStrings( &getGeometry(), segStrings );
+        segIntFinder = new noding::FastSegmentSetIntersectionFinder( &segStrings );
+    }
+    return segIntFinder;
 }
 
 algorithm::locate::PointOnGeometryLocator *
 PreparedPolygon::
 getPointLocator() const
 {
-	if (! ptOnGeomLoc)
-		ptOnGeomLoc = new algorithm::locate::IndexedPointInAreaLocator( getGeometry() );
+    if (! ptOnGeomLoc)
+        ptOnGeomLoc = new algorithm::locate::IndexedPointInAreaLocator( getGeometry() );
 
-	return ptOnGeomLoc;
+    return ptOnGeomLoc;
 }
 
 bool
@@ -84,7 +84,7 @@ contains( const geom::Geometry * g) const
 {
     // short-circuit test
     if ( !envelopeCovers( g) )
-		return false;
+        return false;
 
     // optimization for rectangles
     if ( isRectangle )
@@ -95,7 +95,7 @@ contains( const geom::Geometry * g) const
         return operation::predicate::RectangleContains::contains(poly, *g);
     }
 
-	return PreparedPolygonContains::contains(this, g);
+    return PreparedPolygonContains::contains(this, g);
 }
 
 bool
@@ -104,9 +104,9 @@ containsProperly( const geom::Geometry* g) const
 {
     // short-circuit test
     if ( !envelopeCovers( g) )
-		return false;
+        return false;
 
-	return PreparedPolygonContainsProperly::containsProperly( this, g);
+    return PreparedPolygonContainsProperly::containsProperly( this, g);
 }
 
 bool
@@ -115,22 +115,22 @@ covers( const geom::Geometry* g) const
 {
     // short-circuit test
     if ( !envelopeCovers( g) )
-		return false;
+        return false;
 
     // optimization for rectangle arguments
     if ( isRectangle)
-		return true;
+        return true;
 
-	return PreparedPolygonCovers::covers( this, g);
+    return PreparedPolygonCovers::covers( this, g);
 }
 
 bool
 PreparedPolygon::
 intersects( const geom::Geometry* g) const
 {
-  	// envelope test
-  	if ( !envelopesIntersect( g) )
-		return false;
+    // envelope test
+    if ( !envelopesIntersect( g) )
+        return false;
 
     // optimization for rectangles
     if ( isRectangle )
@@ -141,7 +141,7 @@ intersects( const geom::Geometry* g) const
         return operation::predicate::RectangleIntersects::intersects(poly, *g);
     }
 
-	return PreparedPolygonIntersects::intersects( this, g);
+    return PreparedPolygonIntersects::intersects( this, g);
 }
 
 } // namespace geos.geom.prep

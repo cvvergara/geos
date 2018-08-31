@@ -27,26 +27,26 @@ namespace index { // geos.index
 namespace sweepline { // geos.index.sweepline
 
 SweepLineIndex::SweepLineIndex()
-	:
-	indexBuilt(false),
-	nOverlaps(0)
+    :
+    indexBuilt(false),
+    nOverlaps(0)
 {
-	//events=new vector<SweepLineEvent*>();
-	//nOverlaps=0;
+    //events=new vector<SweepLineEvent*>();
+    //nOverlaps=0;
 }
 
 SweepLineIndex::~SweepLineIndex()
 {
-	//delete events;
+    //delete events;
 }
 
 void
 SweepLineIndex::add(SweepLineInterval *sweepInt)
 {
-	// FIXME: who's going to delete the newly-created events ?
-	SweepLineEvent *insertEvent=new SweepLineEvent(sweepInt->getMin(),nullptr,sweepInt);
-	events.push_back(insertEvent);
-	events.push_back(new SweepLineEvent(sweepInt->getMax(), insertEvent, sweepInt));
+    // FIXME: who's going to delete the newly-created events ?
+    SweepLineEvent *insertEvent=new SweepLineEvent(sweepInt->getMin(),nullptr,sweepInt);
+    events.push_back(insertEvent);
+    events.push_back(new SweepLineEvent(sweepInt->getMax(), insertEvent, sweepInt));
 }
 
 /*private*/
@@ -83,30 +83,30 @@ SweepLineIndex::computeOverlaps(SweepLineOverlapAction *action)
         if (ev->isInsert())
         {
             processOverlaps(i,
-                ev->getDeleteEventIndex(),
-                ev->getInterval(), action);
+                            ev->getDeleteEventIndex(),
+                            ev->getInterval(), action);
         }
     }
 }
 
 void
 SweepLineIndex::processOverlaps(size_t start, size_t end,
-		SweepLineInterval *s0, SweepLineOverlapAction *action)
+                                SweepLineInterval *s0, SweepLineOverlapAction *action)
 {
-	/**
-	 * Since we might need to test for self-intersections,
-	 * include current insert event object in list of event objects to test.
-	 * Last index can be skipped, because it must be a Delete event.
-	 */
-	for(auto i = start; i < end; i++)
-	{
-		SweepLineEvent *ev=events[i];
-		if (ev->isInsert()) {
-			SweepLineInterval *s1=ev->getInterval();
-			action->overlap(s0,s1);
-			nOverlaps++;
-		}
-	}
+    /**
+     * Since we might need to test for self-intersections,
+     * include current insert event object in list of event objects to test.
+     * Last index can be skipped, because it must be a Delete event.
+     */
+    for(auto i = start; i < end; i++)
+    {
+        SweepLineEvent *ev=events[i];
+        if (ev->isInsert()) {
+            SweepLineInterval *s1=ev->getInterval();
+            action->overlap(s0,s1);
+            nOverlaps++;
+        }
+    }
 }
 
 } // namespace geos.index.sweepline

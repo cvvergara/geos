@@ -88,7 +88,7 @@ __inline int gettimeofday(struct timeval *tv, struct timezone *tz)
 
 __inline int gettimeofday(struct timeval *tv, struct timezone *tz)
 {
-	SYSTEMTIME      st;
+    SYSTEMTIME      st;
     FILETIME        ft;
     LARGE_INTEGER   li;
     TIME_ZONE_INFORMATION tzi;
@@ -97,8 +97,8 @@ __inline int gettimeofday(struct timeval *tv, struct timezone *tz)
 
     if (tv)
     {
-		GetSystemTime(&st);
-		SystemTimeToFileTime(&st, &ft);
+        GetSystemTime(&st);
+        SystemTimeToFileTime(&st, &ft);
         li.LowPart  = ft.dwLowDateTime;
         li.HighPart = ft.dwHighDateTime;
         t  = li.QuadPart;       /* In 100-nanosecond intervals */
@@ -113,9 +113,9 @@ __inline int gettimeofday(struct timeval *tv, struct timezone *tz)
         GetTimeZoneInformation(&tzi);
 
         tz->tz_minuteswest = tzi.Bias;
-		if (tzi.StandardDate.wMonth != 0)
+        if (tzi.StandardDate.wMonth != 0)
         {
-			tz->tz_minuteswest += tzi.StandardBias * 60;
+            tz->tz_minuteswest += tzi.StandardBias * 60;
         }
 
         if (tzi.DaylightDate.wMonth != 0)

@@ -26,11 +26,11 @@
 
 //forward declarations
 namespace geos {
-	namespace noding {
-		class SegmentIntersectionDetector;
-		class SegmentSetMutualIntersector;
-		//class MCIndexSegmentSetMutualIntersector : public SegmentSetMutualIntersector;
-	}
+namespace noding {
+class SegmentIntersectionDetector;
+class SegmentSetMutualIntersector;
+//class MCIndexSegmentSetMutualIntersector : public SegmentSetMutualIntersector;
+}
 }
 
 
@@ -49,28 +49,28 @@ namespace noding { // geos::noding
 class FastSegmentSetIntersectionFinder
 {
 private:
-	MCIndexSegmentSetMutualIntersector * segSetMutInt;
-	geos::algorithm::LineIntersector * lineIntersector;
+    MCIndexSegmentSetMutualIntersector * segSetMutInt;
+    geos::algorithm::LineIntersector * lineIntersector;
 
 protected:
 public:
-	FastSegmentSetIntersectionFinder( SegmentString::ConstVect * baseSegStrings);
+    FastSegmentSetIntersectionFinder( SegmentString::ConstVect * baseSegStrings);
 
-	~FastSegmentSetIntersectionFinder();
+    ~FastSegmentSetIntersectionFinder();
 
-	/**
-	 * Gets the segment set intersector used by this class.
-	 * This allows other uses of the same underlying indexed structure.
-	 *
-	 * @return the segment set intersector used
-	 */
-	SegmentSetMutualIntersector * getSegmentSetIntersector()
-	{
-		return segSetMutInt;
-	}
+    /**
+     * Gets the segment set intersector used by this class.
+     * This allows other uses of the same underlying indexed structure.
+     *
+     * @return the segment set intersector used
+     */
+    SegmentSetMutualIntersector * getSegmentSetIntersector()
+    {
+        return segSetMutInt;
+    }
 
-	bool intersects( SegmentString::ConstVect * segStrings);
-	bool intersects( SegmentString::ConstVect * segStrings, SegmentIntersectionDetector * intDetector);
+    bool intersects( SegmentString::ConstVect * segStrings);
+    bool intersects( SegmentString::ConstVect * segStrings, SegmentIntersectionDetector * intDetector);
 
 };
 

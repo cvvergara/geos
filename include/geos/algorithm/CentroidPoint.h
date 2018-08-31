@@ -21,9 +21,9 @@
 
 // Forward declarations
 namespace geos {
-	namespace geom {
-		class Geometry;
-	}
+namespace geom {
+class Geometry;
+}
 }
 
 
@@ -35,35 +35,35 @@ class GEOS_DLL CentroidPoint {
 
 private:
 
-	int ptCount;
+    int ptCount;
 
-	geom::Coordinate centSum;
+    geom::Coordinate centSum;
 
 public:
 
-	CentroidPoint()
-		:
-		ptCount(0),
-		centSum(0.0, 0.0)
-	{}
+    CentroidPoint()
+        :
+        ptCount(0),
+        centSum(0.0, 0.0)
+    {}
 
-	~CentroidPoint()
-	{}
+    ~CentroidPoint()
+    {}
 
-	/**
-	 * Adds the point(s) defined by a Geometry to the centroid total.
-	 * If the geometry is not of dimension 0 it does not contribute to the
-	 * centroid.
-	 * @param geom the geometry to add
-	 */
-	void add(const geom::Geometry *geom);
+    /**
+     * Adds the point(s) defined by a Geometry to the centroid total.
+     * If the geometry is not of dimension 0 it does not contribute to the
+     * centroid.
+     * @param geom the geometry to add
+     */
+    void add(const geom::Geometry *geom);
 
-	void add(const geom::Coordinate *pt);
+    void add(const geom::Coordinate *pt);
 
-	geom::Coordinate* getCentroid() const;
+    geom::Coordinate* getCentroid() const;
 
-	/// Return false if centroid could not be computed
-	bool getCentroid(geom::Coordinate& ret) const;
+    /// Return false if centroid could not be computed
+    bool getCentroid(geom::Coordinate& ret) const;
 };
 
 } // namespace geos::algorithm

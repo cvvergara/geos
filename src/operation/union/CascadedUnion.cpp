@@ -82,7 +82,7 @@ geom::Geometry* CascadedUnion::binaryUnion(GeometryListHolder* geoms)
 }
 
 geom::Geometry* CascadedUnion::binaryUnion(GeometryListHolder* geoms,
-    std::size_t start, std::size_t end)
+        std::size_t start, std::size_t end)
 {
     if (end - start <= 1) {
         return unionSafe(geoms->getGeometry(start), nullptr);
@@ -156,7 +156,7 @@ CascadedUnion::unionOptimized(geom::Geometry* g0, geom::Geometry* g1)
 
 geom::Geometry*
 CascadedUnion::unionUsingEnvelopeIntersection(geom::Geometry* g0,
-    geom::Geometry* g1, geom::Envelope const& common)
+        geom::Geometry* g1, geom::Envelope const& common)
 {
     std::vector<geom::Geometry*> disjointPolys;
 
@@ -171,7 +171,7 @@ CascadedUnion::unionUsingEnvelopeIntersection(geom::Geometry* g0,
 
 geom::Geometry*
 CascadedUnion::extractByEnvelope(geom::Envelope const& env,
-    geom::Geometry* geom, std::vector<geom::Geometry*>& disjointGeoms)
+                                 geom::Geometry* geom, std::vector<geom::Geometry*>& disjointGeoms)
 {
     std::vector<geom::Geometry*> intersectingGeoms;
 

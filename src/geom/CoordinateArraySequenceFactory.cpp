@@ -28,7 +28,7 @@ static CoordinateArraySequenceFactory defaultCoordinateSequenceFactory;
 const CoordinateSequenceFactory *
 CoordinateArraySequenceFactory::instance()
 {
-	return &defaultCoordinateSequenceFactory;
+    return &defaultCoordinateSequenceFactory;
 }
 
 } // namespace geos::geom

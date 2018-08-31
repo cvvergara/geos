@@ -39,56 +39,56 @@ namespace locate { // geos.algorithm
 int
 SimplePointInAreaLocator::locate(const Coordinate& p, const Geometry *geom)
 {
-	if (geom->isEmpty()) return Location::EXTERIOR;
-	if (containsPoint(p,geom))
-		return Location::INTERIOR;
-	return Location::EXTERIOR;
+    if (geom->isEmpty()) return Location::EXTERIOR;
+    if (containsPoint(p,geom))
+        return Location::INTERIOR;
+    return Location::EXTERIOR;
 }
 
 bool
 SimplePointInAreaLocator::containsPoint(const Coordinate& p,const Geometry *geom)
 {
-	if (const Polygon *poly = dynamic_cast<const Polygon*>(geom))
-	{
-		return containsPointInPolygon(p, poly);
-	}
+    if (const Polygon *poly = dynamic_cast<const Polygon*>(geom))
+    {
+        return containsPointInPolygon(p, poly);
+    }
 
-	if (const GeometryCollection *col = dynamic_cast<const GeometryCollection*>(geom))
-	{
-		for (GeometryCollection::const_iterator
-				it=col->begin(), endIt=col->end();
-				it != endIt;
-				++it)
-		{
-			const Geometry *g2=*it;
-			assert (g2!=geom);
-			if (containsPoint(p,g2)) return true;
-		}
-	}
-	return false;
+    if (const GeometryCollection *col = dynamic_cast<const GeometryCollection*>(geom))
+    {
+        for (GeometryCollection::const_iterator
+                it=col->begin(), endIt=col->end();
+                it != endIt;
+                ++it)
+        {
+            const Geometry *g2=*it;
+            assert (g2!=geom);
+            if (containsPoint(p,g2)) return true;
+        }
+    }
+    return false;
 }
 
 bool
 SimplePointInAreaLocator::containsPointInPolygon(const Coordinate& p, const Polygon *poly)
 {
-	if (poly->isEmpty()) return false;
-	const LineString *shell=poly->getExteriorRing();
-	const CoordinateSequence *cl;
-	cl = shell->getCoordinatesRO();
-	if (!CGAlgorithms::isPointInRing(p,cl)) {
-		return false;
-	}
+    if (poly->isEmpty()) return false;
+    const LineString *shell=poly->getExteriorRing();
+    const CoordinateSequence *cl;
+    cl = shell->getCoordinatesRO();
+    if (!CGAlgorithms::isPointInRing(p,cl)) {
+        return false;
+    }
 
-	// now test if the point lies in or on the holes
-	for(size_t i=0, n=poly->getNumInteriorRing(); i<n; i++)
-	{
-		const LineString *hole = poly->getInteriorRingN(i);
-		cl = hole->getCoordinatesRO();
-		if (CGAlgorithms::isPointInRing(p,cl)) {
-			return false;
-		}
-	}
-	return true;
+    // now test if the point lies in or on the holes
+    for(size_t i=0, n=poly->getNumInteriorRing(); i<n; i++)
+    {
+        const LineString *hole = poly->getInteriorRingN(i);
+        cl = hole->getCoordinatesRO();
+        if (CGAlgorithms::isPointInRing(p,cl)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 } // namespace geos.algorithm.locate

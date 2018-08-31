@@ -49,12 +49,12 @@ template<>
 void object::test<1>()
 {
     GeomPtr g1(reader.read(
-        "POINT (0 0)"
-        ));
+                   "POINT (0 0)"
+               ));
 
     GeomPtr g2(reader.read(
-        "POINT (0 0)"
-        ));
+                   "POINT (0 0)"
+               ));
 
     ensure(!g1->touches(g2.get()));
     ensure(!g2->touches(g1.get()));
@@ -66,12 +66,12 @@ template<>
 void object::test<2>()
 {
     GeomPtr g1(reader.read(
-        "LINESTRING(0 0, 1 1, 0 2)"
-        ));
+                   "LINESTRING(0 0, 1 1, 0 2)"
+               ));
 
     GeomPtr g2(reader.read(
-        "POINT (1 1)"
-        ));
+                   "POINT (1 1)"
+               ));
 
     ensure(!g1->touches(g2.get()));
     ensure(!g2->touches(g1.get()));
@@ -83,12 +83,12 @@ template<>
 void object::test<3>()
 {
     GeomPtr g1(reader.read(
-        "LINESTRING(0 0, 1 1, 0 2)"
-        ));
+                   "LINESTRING(0 0, 1 1, 0 2)"
+               ));
 
     GeomPtr g2(reader.read(
-        "POINT (0 2)"
-        ));
+                   "POINT (0 2)"
+               ));
 
     ensure(g1->touches(g2.get()));
     ensure(g2->touches(g1.get()));
@@ -100,12 +100,12 @@ template<>
 void object::test<4>()
 {
     GeomPtr g1(reader.read(
-        "LINESTRING (-612844.96290006 279079.117329031,-257704.820935236 574364.179187424)"
-        ));
+                   "LINESTRING (-612844.96290006 279079.117329031,-257704.820935236 574364.179187424)"
+               ));
 
     GeomPtr g2(reader.read(
-        "POINT (-257704.820935236 574364.179187424)"
-        ));
+                   "POINT (-257704.820935236 574364.179187424)"
+               ));
 
     ensure(g1->touches(g2.get()));
     ensure(g2->touches(g1.get()));

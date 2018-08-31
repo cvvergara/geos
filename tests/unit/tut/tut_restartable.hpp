@@ -351,7 +351,7 @@ private:
         if (!ojournal.good())
         {
             throw std::runtime_error("unable to register test result in file "
-                + jrn_);
+                                     + jrn_);
         }
     }
 
@@ -366,7 +366,7 @@ private:
         if (!olog.good())
         {
             throw std::runtime_error("unable to register execution in file "
-                + log_);
+                                     + log_);
         }
     }
 

@@ -41,9 +41,9 @@ namespace linemerge { // geos.operation.linemerge
  * this EdgeString to a LineString
  */
 EdgeString::EdgeString(const GeometryFactory *newFactory):
-	factory(newFactory),
-	directedEdges(),
-	coordinates(nullptr)
+    factory(newFactory),
+    directedEdges(),
+    coordinates(nullptr)
 {
 }
 
@@ -56,36 +56,36 @@ EdgeString::~EdgeString() {
 void
 EdgeString::add(LineMergeDirectedEdge *directedEdge)
 {
-	directedEdges.push_back(directedEdge);
+    directedEdges.push_back(directedEdge);
 }
 
 CoordinateSequence *
 EdgeString::getCoordinates()
 {
-	if (coordinates==nullptr) {
-		int forwardDirectedEdges = 0;
-		int reverseDirectedEdges = 0;
-		coordinates=factory->getCoordinateSequenceFactory()->create();
-		for (std::size_t i=0, e=directedEdges.size(); i<e; ++i) {
-			LineMergeDirectedEdge* directedEdge = directedEdges[i];
-			if (directedEdge->getEdgeDirection()) {
-				forwardDirectedEdges++;
-			} else {
-				reverseDirectedEdges++;
-			}
+    if (coordinates==nullptr) {
+        int forwardDirectedEdges = 0;
+        int reverseDirectedEdges = 0;
+        coordinates=factory->getCoordinateSequenceFactory()->create();
+        for (std::size_t i=0, e=directedEdges.size(); i<e; ++i) {
+            LineMergeDirectedEdge* directedEdge = directedEdges[i];
+            if (directedEdge->getEdgeDirection()) {
+                forwardDirectedEdges++;
+            } else {
+                reverseDirectedEdges++;
+            }
 
-			assert(dynamic_cast<LineMergeEdge*>(directedEdge->getEdge()));
-			LineMergeEdge* lme=static_cast<LineMergeEdge*>( directedEdge->getEdge());
+            assert(dynamic_cast<LineMergeEdge*>(directedEdge->getEdge()));
+            LineMergeEdge* lme=static_cast<LineMergeEdge*>( directedEdge->getEdge());
 
-			coordinates->add(lme->getLine()->getCoordinatesRO(),
-					false,
-					directedEdge->getEdgeDirection());
-		}
-		if (reverseDirectedEdges > forwardDirectedEdges) {
-			CoordinateSequence::reverse(coordinates);
-		}
-	}
-	return coordinates;
+            coordinates->add(lme->getLine()->getCoordinatesRO(),
+                             false,
+                             directedEdge->getEdgeDirection());
+        }
+        if (reverseDirectedEdges > forwardDirectedEdges) {
+            CoordinateSequence::reverse(coordinates);
+        }
+    }
+    return coordinates;
 }
 
 /*
@@ -94,7 +94,7 @@ EdgeString::getCoordinates()
 LineString*
 EdgeString::toLineString()
 {
-	return factory->createLineString(getCoordinates());
+    return factory->createLineString(getCoordinates());
 }
 
 } // namespace geos.operation.linemerge

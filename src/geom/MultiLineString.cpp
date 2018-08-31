@@ -42,86 +42,86 @@ namespace geom { // geos::geom
 
 /*protected*/
 MultiLineString::MultiLineString(vector<Geometry *> *newLines,
-		const GeometryFactory *factory)
-	:
-	Geometry(factory),
-	GeometryCollection(newLines,factory)
+                                 const GeometryFactory *factory)
+    :
+    Geometry(factory),
+    GeometryCollection(newLines,factory)
 {
 }
 
-MultiLineString::~MultiLineString(){}
+MultiLineString::~MultiLineString() {}
 
 Dimension::DimensionType
 MultiLineString::getDimension() const {
-	return Dimension::L; // line
+    return Dimension::L; // line
 }
 
 int MultiLineString::getBoundaryDimension() const {
-	if (isClosed()) {
-		return Dimension::False;
-	}
-	return 0;
+    if (isClosed()) {
+        return Dimension::False;
+    }
+    return 0;
 }
 
 string MultiLineString::getGeometryType() const {
-	return "MultiLineString";
+    return "MultiLineString";
 }
 
 bool MultiLineString::isClosed() const {
-	if (isEmpty()) {
-		return false;
-	}
-	for (size_t i = 0, n = geometries->size(); i < n; ++i) {
-		LineString *ls = dynamic_cast<LineString*>((*geometries)[i]);
-		if ( ! ls->isClosed() ) {
-			return false;
-		}
-	}
-	return true;
+    if (isEmpty()) {
+        return false;
+    }
+    for (size_t i = 0, n = geometries->size(); i < n; ++i) {
+        LineString *ls = dynamic_cast<LineString*>((*geometries)[i]);
+        if ( ! ls->isClosed() ) {
+            return false;
+        }
+    }
+    return true;
 }
 
 Geometry*
 MultiLineString::getBoundary() const
 {
-	if (isEmpty()) {
-		return getFactory()->createGeometryCollection(nullptr);
-	}
-	//Geometry *in = toInternalGeometry(this);
-	GeometryGraph gg(0, this);
-	CoordinateSequence *pts=gg.getBoundaryPoints();
-	Geometry *ret = getFactory()->createMultiPoint(*pts);
-	return ret;
+    if (isEmpty()) {
+        return getFactory()->createGeometryCollection(nullptr);
+    }
+    //Geometry *in = toInternalGeometry(this);
+    GeometryGraph gg(0, this);
+    CoordinateSequence *pts=gg.getBoundaryPoints();
+    Geometry *ret = getFactory()->createMultiPoint(*pts);
+    return ret;
 }
 
 bool
 MultiLineString::equalsExact(const Geometry *other, double tolerance) const
 {
     if (!isEquivalentClass(other)) {
-      return false;
+        return false;
     }
-	return GeometryCollection::equalsExact(other, tolerance);
+    return GeometryCollection::equalsExact(other, tolerance);
 }
 GeometryTypeId
 MultiLineString::getGeometryTypeId() const {
-	return GEOS_MULTILINESTRING;
+    return GEOS_MULTILINESTRING;
 }
 
 Geometry*
 MultiLineString::reverse() const
 {
-	if (isEmpty()) {
-		return clone();
-	}
+    if (isEmpty()) {
+        return clone();
+    }
 
-	size_t nLines = geometries->size();
-	Geometry::NonConstVect *revLines = new Geometry::NonConstVect(nLines);
-	for (size_t i=0; i<nLines; ++i)
-	{
-		LineString *iLS = dynamic_cast<LineString*>((*geometries)[i]);
-		assert(iLS);
-		(*revLines)[nLines-1-i] = iLS->reverse();
-	}
-	return getFactory()->createMultiLineString(revLines);
+    size_t nLines = geometries->size();
+    Geometry::NonConstVect *revLines = new Geometry::NonConstVect(nLines);
+    for (size_t i=0; i<nLines; ++i)
+    {
+        LineString *iLS = dynamic_cast<LineString*>((*geometries)[i]);
+        assert(iLS);
+        (*revLines)[nLines-1-i] = iLS->reverse();
+    }
+    return getFactory()->createMultiLineString(revLines);
 }
 
 } // namespace geos::geom

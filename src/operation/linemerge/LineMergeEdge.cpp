@@ -29,9 +29,9 @@ namespace linemerge { // geos.operation.linemerge
 * Constructs a LineMergeEdge with vertices given by the specified LineString.
 */
 LineMergeEdge::LineMergeEdge(const LineString *newLine):
-	line(newLine)
+    line(newLine)
 {
-	//line=newLine;
+    //line=newLine;
 }
 
 /**
@@ -39,7 +39,7 @@ LineMergeEdge::LineMergeEdge(const LineString *newLine):
  */
 const LineString *
 LineMergeEdge::getLine() const {
-	return line;
+    return line;
 }
 
 } // namespace geos.operation.linemerge

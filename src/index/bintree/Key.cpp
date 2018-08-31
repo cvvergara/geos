@@ -26,42 +26,42 @@ namespace bintree { // geos.index.bintree
 int
 Key::computeLevel(Interval *newInterval)
 {
-	using geos::index::quadtree::DoubleBits;
-	double dx=newInterval->getWidth();
-	//int level = BinaryPower.exponent(dx) + 1;
-	int level=DoubleBits::exponent(dx)+1;
-	return level;
+    using geos::index::quadtree::DoubleBits;
+    double dx=newInterval->getWidth();
+    //int level = BinaryPower.exponent(dx) + 1;
+    int level=DoubleBits::exponent(dx)+1;
+    return level;
 }
 
 Key::Key(Interval *newInterval)
 {
-	interval=nullptr;
-	pt=0.0;
-	level=0;
-	computeKey(newInterval);
+    interval=nullptr;
+    pt=0.0;
+    level=0;
+    computeKey(newInterval);
 }
 
 Key::~Key()
 {
-	delete interval;
+    delete interval;
 }
 
 double
 Key::getPoint()
 {
-	return pt;
+    return pt;
 }
 
 int
 Key::getLevel()
 {
-	return level;
+    return level;
 }
 
 Interval*
 Key::getInterval()
 {
-	return interval;
+    return interval;
 }
 
 /**
@@ -71,26 +71,26 @@ Key::getInterval()
 void
 Key::computeKey(Interval *itemInterval)
 {
-	level=computeLevel(itemInterval);
-	delete interval;
-	interval=new Interval();
-	computeInterval(level,itemInterval);
-	// MD - would be nice to have a non-iterative form of this algorithm
-	while (!interval->contains(itemInterval)) {
-		level+=1;
-		computeInterval(level,itemInterval);
-	}
+    level=computeLevel(itemInterval);
+    delete interval;
+    interval=new Interval();
+    computeInterval(level,itemInterval);
+    // MD - would be nice to have a non-iterative form of this algorithm
+    while (!interval->contains(itemInterval)) {
+        level+=1;
+        computeInterval(level,itemInterval);
+    }
 }
 
 void
 Key::computeInterval(int p_level, Interval *itemInterval)
 {
-	using geos::index::quadtree::DoubleBits;
+    using geos::index::quadtree::DoubleBits;
 
-	double size=DoubleBits::powerOf2(p_level);
-	//double size = pow2.power(p_level);
-	pt=std::floor(itemInterval->getMin()/size)*size;
-	interval->init(pt,pt+size);
+    double size=DoubleBits::powerOf2(p_level);
+    //double size = pow2.power(p_level);
+    pt=std::floor(itemInterval->getMin()/size)*size;
+    interval->init(pt,pt+size);
 }
 
 } // namespace geos.index.bintree

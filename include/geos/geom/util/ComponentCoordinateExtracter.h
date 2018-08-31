@@ -38,28 +38,28 @@ namespace util { // geos::geom::util
 class ComponentCoordinateExtracter : public GeometryComponentFilter
 {
 public:
-	/**
-	 * Push the linear components from a single geometry into
-	 * the provided vector.
-	 * If more than one geometry is to be processed, it is more
-	 * efficient to create a single ComponentCoordinateFilter instance
-	 * and pass it to multiple geometries.
-	 */
-	static void getCoordinates(const Geometry &geom, std::vector<const Coordinate*> &ret);
+    /**
+     * Push the linear components from a single geometry into
+     * the provided vector.
+     * If more than one geometry is to be processed, it is more
+     * efficient to create a single ComponentCoordinateFilter instance
+     * and pass it to multiple geometries.
+     */
+    static void getCoordinates(const Geometry &geom, std::vector<const Coordinate*> &ret);
 
-	/**
-	 * Constructs a ComponentCoordinateFilter with a list in which
-	 * to store Coordinates found.
-	 */
-	ComponentCoordinateExtracter( std::vector<const Coordinate*> &newComps);
+    /**
+     * Constructs a ComponentCoordinateFilter with a list in which
+     * to store Coordinates found.
+     */
+    ComponentCoordinateExtracter( std::vector<const Coordinate*> &newComps);
 
-	void filter_rw( Geometry * geom) override;
+    void filter_rw( Geometry * geom) override;
 
-	void filter_ro( const Geometry * geom) override;
+    void filter_ro( const Geometry * geom) override;
 
 private:
 
-	Coordinate::ConstVect &comps;
+    Coordinate::ConstVect &comps;
 
     // Declare type as noncopyable
     ComponentCoordinateExtracter(const ComponentCoordinateExtracter& other) = delete;

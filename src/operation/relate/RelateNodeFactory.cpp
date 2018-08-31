@@ -31,14 +31,14 @@ namespace relate { // geos.operation.relate
 Node*
 RelateNodeFactory::createNode(const Coordinate &coord) const
 {
-	return new RelateNode(coord, new EdgeEndBundleStar());
+    return new RelateNode(coord, new EdgeEndBundleStar());
 }
 
 const NodeFactory &
 RelateNodeFactory::instance()
 {
-	static const RelateNodeFactory rnf;
-	return rnf;
+    static const RelateNodeFactory rnf;
+    return rnf;
 }
 
 

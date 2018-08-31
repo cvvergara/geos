@@ -40,17 +40,17 @@ namespace distance { // geos.operation.distance
 vector<const Coordinate*>*
 ConnectedElementPointFilter::getCoordinates(const Geometry *geom)
 {
-	vector<const Coordinate*> *points=new vector<const Coordinate*>();
-	ConnectedElementPointFilter c(points);
-	geom->apply_ro(&c);
-	return points;
+    vector<const Coordinate*> *points=new vector<const Coordinate*>();
+    ConnectedElementPointFilter c(points);
+    geom->apply_ro(&c);
+    return points;
 }
 
 void ConnectedElementPointFilter::filter_ro(const Geometry *geom) {
-	if ((typeid(*geom)==typeid(Point)) ||
-		(typeid(*geom)==typeid(LineString)) ||
-		(typeid(*geom)==typeid(Polygon)))
-			pts->push_back(geom->getCoordinate());
+    if ((typeid(*geom)==typeid(Point)) ||
+            (typeid(*geom)==typeid(LineString)) ||
+            (typeid(*geom)==typeid(Polygon)))
+        pts->push_back(geom->getCoordinate());
 }
 
 } // namespace geos.operation.distance

@@ -37,8 +37,8 @@
 
 namespace geos
 {
-    template<class T>
-    void ignore_unused_variable_warning(T const& ) {}
+template<class T>
+void ignore_unused_variable_warning(T const& ) {}
 }
 
 

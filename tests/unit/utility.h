@@ -119,7 +119,7 @@ inline void ensure_equals_geometry(T const* lhs, T const* rhs)
                   lhs->isEmpty(), rhs->isEmpty());
 
     if (!isInstanceOf<GeometryCollection>(lhs)
-         && !isInstanceOf<GeometryCollection>(rhs))
+            && !isInstanceOf<GeometryCollection>(rhs))
     {
         ensure_equals("is-simple do not match",
                       lhs->isSimple(), rhs->isSimple());
@@ -144,16 +144,16 @@ inline void ensure_equals_geometry(T const* lhs, T const* rhs)
 
     // Dispatch to run more specific testes
     if (isInstanceOf<Polygon>(lhs)
-        && isInstanceOf<Polygon>(rhs))
+            && isInstanceOf<Polygon>(rhs))
     {
         ensure_equals_geometry(instanceOf<Polygon>(lhs),
-                        instanceOf<Polygon>(rhs));
+                               instanceOf<Polygon>(rhs));
     }
     else if (isInstanceOf<GeometryCollection>(lhs)
              && isInstanceOf<GeometryCollection>(rhs))
     {
         ensure_equals_geometry(instanceOf<GeometryCollection>(lhs),
-                        instanceOf<GeometryCollection>(rhs));
+                               instanceOf<GeometryCollection>(rhs));
     }
 }
 

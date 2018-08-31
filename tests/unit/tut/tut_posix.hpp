@@ -53,10 +53,10 @@ private:
         {
             std::ostringstream ss;
             ss << int(tr.result) << "\n"
-                << tr.group << "\n"
-                << tr.test << "\n"
-                << tr.name << "\n"
-                << tr.exception_typeid << "\n";
+               << tr.group << "\n"
+               << tr.test << "\n"
+               << tr.name << "\n"
+               << tr.exception_typeid << "\n";
             std::copy( tr.message.begin(), tr.message.end(), std::ostreambuf_iterator<char>(ss.rdbuf()) );
 
             int size = ss.str().length();
@@ -397,7 +397,7 @@ private:
         {
             std::ostringstream ss;
             ss << "child killed by signal " << WTERMSIG(status)
-                << ": expected exit with code " << exit_status;
+               << ": expected exit with code " << exit_status;
 
             throw failure(ss.str().c_str());
         }
@@ -408,10 +408,10 @@ private:
             {
                 std::ostringstream ss;
                 ss << "child exited, expected '"
-                    << exit_status
-                    << "' actual '"
-                    << WEXITSTATUS(status)
-                    << '\'';
+                   << exit_status
+                   << "' actual '"
+                   << WEXITSTATUS(status)
+                   << '\'';
 
                 throw failure(ss.str().c_str());
             }
@@ -421,7 +421,7 @@ private:
         {
             std::ostringstream ss;
             ss << "child stopped by signal " << WTERMSIG(status)
-                << ": expected exit with code " << exit_status;
+               << ": expected exit with code " << exit_status;
             throw failure(ss.str().c_str());
         }
     }
@@ -434,10 +434,10 @@ private:
             {
                 std::ostringstream ss;
                 ss << "child killed by signal, expected '"
-                    << signal
-                    << "' actual '"
-                    << WTERMSIG(status)
-                    << '\'';
+                   << signal
+                   << "' actual '"
+                   << WTERMSIG(status)
+                   << '\'';
                 throw failure(ss.str().c_str());
             }
         }
@@ -446,7 +446,7 @@ private:
         {
             std::ostringstream ss;
             ss << "child exited with code " << WEXITSTATUS(status)
-                << ": expected signal " << signal;
+               << ": expected signal " << signal;
 
             throw failure(ss.str().c_str());
         }
@@ -455,7 +455,7 @@ private:
         {
             std::ostringstream ss;
             ss << "child stopped by signal " << WTERMSIG(status)
-                << ": expected kill by signal " << signal;
+               << ": expected kill by signal " << signal;
 
             throw failure(ss.str().c_str());
         }

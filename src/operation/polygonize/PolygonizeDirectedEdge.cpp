@@ -39,15 +39,15 @@ namespace polygonize { // geos.operation.polygonize
  *        opposite to that of the parent Edge (if any)
  */
 PolygonizeDirectedEdge::PolygonizeDirectedEdge(Node *newFrom,
-		Node *newTo, const Coordinate& newDirectionPt,
-		bool nEdgeDirection)
-	:
-	DirectedEdge(newFrom, newTo,
-		newDirectionPt, nEdgeDirection)
+        Node *newTo, const Coordinate& newDirectionPt,
+        bool nEdgeDirection)
+    :
+    DirectedEdge(newFrom, newTo,
+                newDirectionPt, nEdgeDirection)
 {
-	edgeRing=nullptr;
-	next=nullptr;
-	label=-1;
+    edgeRing=nullptr;
+    next=nullptr;
+    label=-1;
 }
 
 /*
@@ -56,14 +56,14 @@ PolygonizeDirectedEdge::PolygonizeDirectedEdge(Node *newFrom,
 long
 PolygonizeDirectedEdge::getLabel() const
 {
-	return label;
+    return label;
 }
 
 /*
  * Attaches an identifier to this directed edge.
  */
 void PolygonizeDirectedEdge::setLabel(long newLabel) {
-	label=newLabel;
+    label=newLabel;
 }
 
 /*
@@ -73,7 +73,7 @@ void PolygonizeDirectedEdge::setLabel(long newLabel) {
 PolygonizeDirectedEdge *
 PolygonizeDirectedEdge::getNext() const
 {
-	return next;
+    return next;
 }
 
 /*
@@ -83,7 +83,7 @@ PolygonizeDirectedEdge::getNext() const
 void
 PolygonizeDirectedEdge::setNext(PolygonizeDirectedEdge *newNext)
 {
-	next=newNext;
+    next=newNext;
 }
 
 /*
@@ -94,7 +94,7 @@ PolygonizeDirectedEdge::setNext(PolygonizeDirectedEdge *newNext)
 bool
 PolygonizeDirectedEdge::isInRing() const
 {
-	return edgeRing!=nullptr;
+    return edgeRing!=nullptr;
 }
 
 /*
@@ -104,7 +104,7 @@ PolygonizeDirectedEdge::isInRing() const
 void
 PolygonizeDirectedEdge::setRing(EdgeRing *newEdgeRing)
 {
-	edgeRing=newEdgeRing;
+    edgeRing=newEdgeRing;
 }
 
 } // namespace geos.operation.polygonize

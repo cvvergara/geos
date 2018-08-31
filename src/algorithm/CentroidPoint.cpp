@@ -30,39 +30,39 @@ namespace algorithm { // geos.algorithm
 void
 CentroidPoint::add(const Geometry *geom)
 {
-  if ( const Point *p = dynamic_cast<const Point*>(geom) )
-  {
-		add(p->getCoordinate());
-  }
-  else if ( const GeometryCollection *gc =
-            dynamic_cast<const GeometryCollection*>(geom) )
-  {
-    for(std::size_t i=0, n=gc->getNumGeometries(); i<n; ++i) {
-      add(gc->getGeometryN(i));
+    if ( const Point *p = dynamic_cast<const Point*>(geom) )
+    {
+        add(p->getCoordinate());
     }
-  }
+    else if ( const GeometryCollection *gc =
+                  dynamic_cast<const GeometryCollection*>(geom) )
+    {
+        for(std::size_t i=0, n=gc->getNumGeometries(); i<n; ++i) {
+            add(gc->getGeometryN(i));
+        }
+    }
 }
 
 void
 CentroidPoint::add(const Coordinate *pt)
 {
-	ptCount+=1;
-	centSum.x += pt->x;
-	centSum.y += pt->y;
+    ptCount+=1;
+    centSum.x += pt->x;
+    centSum.y += pt->y;
 }
 
 Coordinate*
 CentroidPoint::getCentroid() const
 {
-	return new Coordinate(centSum.x/ptCount, centSum.y/ptCount);
+    return new Coordinate(centSum.x/ptCount, centSum.y/ptCount);
 }
 
 bool
 CentroidPoint::getCentroid(Coordinate& ret) const
 {
-	if ( ptCount == 0.0 ) return false;
-	ret=Coordinate(centSum.x/ptCount, centSum.y/ptCount);
-	return true;
+    if ( ptCount == 0.0 ) return false;
+    ret=Coordinate(centSum.x/ptCount, centSum.y/ptCount);
+    return true;
 }
 
 } // namespace geos.algorithm

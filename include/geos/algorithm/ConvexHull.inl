@@ -29,10 +29,10 @@ namespace algorithm { // geos::algorithm
 
 INLINE
 ConvexHull::ConvexHull(const geom::Geometry *newGeometry)
-	:
-	geomFactory(newGeometry->getFactory())
+    :
+    geomFactory(newGeometry->getFactory())
 {
-	extractCoordinates(newGeometry);
+    extractCoordinates(newGeometry);
 }
 
 INLINE
@@ -43,8 +43,8 @@ ConvexHull::~ConvexHull()
 INLINE void
 ConvexHull::extractCoordinates(const geom::Geometry *geom)
 {
-	util::UniqueCoordinateArrayFilter filter(inputPts);
-	geom->apply_ro(&filter);
+    util::UniqueCoordinateArrayFilter filter(inputPts);
+    geom->apply_ro(&filter);
 }
 
 } // namespace geos::algorithm

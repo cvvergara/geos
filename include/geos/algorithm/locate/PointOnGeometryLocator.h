@@ -17,9 +17,9 @@
 #define GEOS_ALGORITHM_LOCATE_POINTONGEOMETRYLOCATOR_H
 
 namespace geos {
-	namespace geom {
-		class Coordinate;
-	}
+namespace geom {
+class Coordinate;
+}
 }
 
 namespace geos {
@@ -37,16 +37,16 @@ class PointOnGeometryLocator
 private:
 protected:
 public:
-	virtual ~PointOnGeometryLocator()
-	{ }
+    virtual ~PointOnGeometryLocator()
+    { }
 
-	/**
-	 * Determines the {@link Location} of a point in an areal {@link Geometry}.
-	 *
-	 * @param p the point to test
-	 * @return the location of the point in the geometry
-	 */
-	virtual int locate( const geom::Coordinate * /*const*/ p) =0;
+    /**
+     * Determines the {@link Location} of a point in an areal {@link Geometry}.
+     *
+     * @param p the point to test
+     * @return the location of the point in the geometry
+     */
+    virtual int locate( const geom::Coordinate * /*const*/ p) =0;
 };
 
 } // geos::algorithm::locate

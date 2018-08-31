@@ -64,7 +64,7 @@ public:
     {
         assert(tr.result != test_result::dummy );
         if ( (tr.result == test_result::ok) ||
-             (tr.result == test_result::skipped) )
+                (tr.result == test_result::skipped) )
         {
             passed_tests_.push_back(tr);
         }
@@ -92,53 +92,53 @@ public:
             {
                 switch (failed_tests_[i].result)
                 {
-                    case test_result::fail:
-                        failure_type = "Assertion";
-                        failure_msg  = "";
-                        failures++;
-                        break;
-                    case test_result::ex:
-                        failure_type = "Assertion";
-                        failure_msg  = "Thrown exception: " + failed_tests_[i].exception_typeid + '\n';
-                        failures++;
-                        break;
-                    case test_result::warn:
-                        failure_type = "Assertion";
-                        failure_msg  = "Destructor failed\n";
-                        failures++;
-                        break;
-                    case test_result::term:
-                        failure_type = "Error";
-                        failure_msg  = "Test application terminated abnormally\n";
-                        errors++;
-                        break;
-                    case test_result::ex_ctor:
-                        failure_type = "Error";
-                        failure_msg  = "Constructor has thrown an exception: " + failed_tests_[i].exception_typeid + '\n';
-                        errors++;
-                        break;
-                    case test_result::rethrown:
-                        failure_type = "Assertion";
-                        failure_msg  = "Child failed\n";
-                        failures++;
-                        break;
-                    default: // ok, skipped, dummy
-                        failure_type = "Error";
-                        failure_msg  = "Unknown test status, this should have never happened. "
-                                       "You may just have found a bug in TUT, please report it immediately.\n";
-                        errors++;
-                        break;
+                case test_result::fail:
+                    failure_type = "Assertion";
+                    failure_msg  = "";
+                    failures++;
+                    break;
+                case test_result::ex:
+                    failure_type = "Assertion";
+                    failure_msg  = "Thrown exception: " + failed_tests_[i].exception_typeid + '\n';
+                    failures++;
+                    break;
+                case test_result::warn:
+                    failure_type = "Assertion";
+                    failure_msg  = "Destructor failed\n";
+                    failures++;
+                    break;
+                case test_result::term:
+                    failure_type = "Error";
+                    failure_msg  = "Test application terminated abnormally\n";
+                    errors++;
+                    break;
+                case test_result::ex_ctor:
+                    failure_type = "Error";
+                    failure_msg  = "Constructor has thrown an exception: " + failed_tests_[i].exception_typeid + '\n';
+                    errors++;
+                    break;
+                case test_result::rethrown:
+                    failure_type = "Assertion";
+                    failure_msg  = "Child failed\n";
+                    failures++;
+                    break;
+                default: // ok, skipped, dummy
+                    failure_type = "Error";
+                    failure_msg  = "Unknown test status, this should have never happened. "
+                                   "You may just have found a bug in TUT, please report it immediately.\n";
+                    errors++;
+                    break;
                 }
 
                 *stream_ << "    <FailedTest id=\"" << failed_tests_[i].test << "\">" << std::endl
-                            << "      <Name>" << encode(failed_tests_[i].group) + "::" + encode(failed_tests_[i].name) << "</Name>" << std::endl
-                            << "      <FailureType>" << failure_type << "</FailureType>" << std::endl
-                            << "      <Location>" << std::endl
-                            << "        <File>Unknown</File>" << std::endl
-                            << "        <Line>Unknown</Line>" << std::endl
-                            << "      </Location>" << std::endl
-                            << "      <Message>" << encode(failure_msg + failed_tests_[i].message) << "</Message>" << std::endl
-                            << "    </FailedTest>" << std::endl;
+                         << "      <Name>" << encode(failed_tests_[i].group) + "::" + encode(failed_tests_[i].name) << "</Name>" << std::endl
+                         << "      <FailureType>" << failure_type << "</FailureType>" << std::endl
+                         << "      <Location>" << std::endl
+                         << "        <File>Unknown</File>" << std::endl
+                         << "        <Line>Unknown</Line>" << std::endl
+                         << "      </Location>" << std::endl
+                         << "      <Message>" << encode(failure_msg + failed_tests_[i].message) << "</Message>" << std::endl
+                         << "    </FailedTest>" << std::endl;
             }
 
             *stream_ << "  </FailedTests>" << std::endl;
@@ -151,8 +151,8 @@ public:
             for (unsigned int i=0; i<passed_tests_.size(); i++)
             {
                 *stream_ << "    <Test id=\"" << passed_tests_[i].test << "\">" << std::endl
-                            << "      <Name>" << encode(passed_tests_[i].group) + "::" + encode(passed_tests_[i].name) << "</Name>" << std::endl
-                            << "    </Test>" << std::endl;
+                         << "      <Name>" << encode(passed_tests_[i].group) + "::" + encode(passed_tests_[i].name) << "</Name>" << std::endl
+                         << "    </Test>" << std::endl;
             }
 
             *stream_ << "  </SuccessfulTests>" << std::endl;
@@ -160,11 +160,11 @@ public:
 
         /* *********************** statistics ***************************** */
         *stream_ << "  <Statistics>" << std::endl
-                    << "    <Tests>" << (failed_tests_.size() + passed_tests_.size()) << "</Tests>" << std::endl
-                    << "    <FailuresTotal>" << failed_tests_.size() << "</FailuresTotal>" << std::endl
-                    << "    <Errors>" << errors << "</Errors>" << std::endl
-                    << "    <Failures>" << failures << "</Failures>" << std::endl
-                    << "  </Statistics>" << std::endl;
+                 << "    <Tests>" << (failed_tests_.size() + passed_tests_.size()) << "</Tests>" << std::endl
+                 << "    <FailuresTotal>" << failed_tests_.size() << "</FailuresTotal>" << std::endl
+                 << "    <Errors>" << errors << "</Errors>" << std::endl
+                 << "    <Failures>" << failures << "</Failures>" << std::endl
+                 << "  </Statistics>" << std::endl;
 
         /* *********************** footer ***************************** */
         *stream_ << "</TestRun>" << std::endl;
@@ -188,23 +188,23 @@ public:
         for (unsigned int i=0; i<text.length(); ++i) {
             char c = text[i];
             switch (c) {
-                case '<':
-                    out += "&lt;";
-                    break;
-                case '>':
-                    out += "&gt;";
-                    break;
-                case '&':
-                    out += "&amp;";
-                    break;
-                case '\'':
-                    out += "&apos;";
-                    break;
-                case '"':
-                    out += "&quot;";
-                    break;
-                default:
-                    out += c;
+            case '<':
+                out += "&lt;";
+                break;
+            case '>':
+                out += "&gt;";
+                break;
+            case '&':
+                out += "&amp;";
+                break;
+            case '\'':
+                out += "&apos;";
+                break;
+            case '"':
+                out += "&quot;";
+                break;
+            default:
+                out += c;
             }
         }
 

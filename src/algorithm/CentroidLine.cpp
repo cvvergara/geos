@@ -33,54 +33,54 @@ namespace algorithm { // geos.algorithm
 void
 CentroidLine::add(const Geometry *geom)
 {
-	const LineString* ls = dynamic_cast<const LineString*>(geom);
-	if ( ls )
-	{
-		add(ls->getCoordinatesRO());
-		return;
-	}
+    const LineString* ls = dynamic_cast<const LineString*>(geom);
+    if ( ls )
+    {
+        add(ls->getCoordinatesRO());
+        return;
+    }
 
-	const GeometryCollection* gc = dynamic_cast<const GeometryCollection*>(geom);
-	if (gc)
-	{
+    const GeometryCollection* gc = dynamic_cast<const GeometryCollection*>(geom);
+    if (gc)
+    {
         for(std::size_t i=0, n=gc->getNumGeometries(); i<n; i++) {
-			add(gc->getGeometryN(i));
-		}
-	}
+            add(gc->getGeometryN(i));
+        }
+    }
 }
 
 /*public*/
 void
 CentroidLine::add(const CoordinateSequence *pts)
 {
-	std::size_t const npts=pts->getSize();
+    std::size_t const npts=pts->getSize();
 
-	for(std::size_t i=1; i<npts; ++i)
-	{
-		const Coordinate &p1=pts->getAt(i-1);
-		const Coordinate &p2=pts->getAt(i);
+    for(std::size_t i=1; i<npts; ++i)
+    {
+        const Coordinate &p1=pts->getAt(i-1);
+        const Coordinate &p2=pts->getAt(i);
 
-		double segmentLen=p1.distance(p2);
-		totalLength+=segmentLen;
-		double midx=(p1.x+p2.x)/2;
-		centSum.x+=segmentLen*midx;
-		double midy=(p1.y+p2.y)/2;
-		centSum.y+=segmentLen*midy;
-	}
+        double segmentLen=p1.distance(p2);
+        totalLength+=segmentLen;
+        double midx=(p1.x+p2.x)/2;
+        centSum.x+=segmentLen*midx;
+        double midy=(p1.y+p2.y)/2;
+        centSum.y+=segmentLen*midy;
+    }
 }
 
 Coordinate *
 CentroidLine::getCentroid() const
 {
-	return new Coordinate(centSum.x/totalLength, centSum.y/totalLength);
+    return new Coordinate(centSum.x/totalLength, centSum.y/totalLength);
 }
 
 bool
 CentroidLine::getCentroid(Coordinate& c) const
 {
-	if ( totalLength == 0.0 ) return false;
-	c=Coordinate(centSum.x/totalLength, centSum.y/totalLength);
-	return true;
+    if ( totalLength == 0.0 ) return false;
+    c=Coordinate(centSum.x/totalLength, centSum.y/totalLength);
+    return true;
 }
 
 } // namespace geos.algorithm

@@ -54,7 +54,7 @@ Geometry* GeometryCombiner::combine(const Geometry* g0, const Geometry* g1,
 }
 
 GeometryCombiner::GeometryCombiner(std::vector<Geometry*> const& geoms)
-  : geomFactory(extractFactory(geoms)), skipEmpty(false), inputGeoms(geoms)
+    : geomFactory(extractFactory(geoms)), skipEmpty(false), inputGeoms(geoms)
 {
 }
 
@@ -70,7 +70,7 @@ Geometry* GeometryCombiner::combine()
 
     std::vector<Geometry*>::const_iterator end = inputGeoms.end();
     for (std::vector<Geometry*>::const_iterator i = inputGeoms.begin();
-         i != end; ++i)
+            i != end; ++i)
     {
         extractElements(*i, elems);
     }

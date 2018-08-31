@@ -31,24 +31,24 @@ namespace geom { // geos::geom
  *      an <code>IntersectionMatrix</code>. Possible values are <code>{T, F, * , 0, 1, 2}</code>.
  */
 char Dimension::toDimensionSymbol(int dimensionValue) {
-	switch (dimensionValue) {
-		case False:
-			return 'F';
-		case True:
-			return 'T';
-		case DONTCARE:
-			return '*';
-		case P:
-			return '0';
-		case L:
-			return '1';
-		case A:
-			return '2';
-		default:
-			ostringstream s;
-			s<<"Unknown dimension value: "<<dimensionValue<<endl;
-			throw  util::IllegalArgumentException(s.str());
-	}
+    switch (dimensionValue) {
+    case False:
+        return 'F';
+    case True:
+        return 'T';
+    case DONTCARE:
+        return '*';
+    case P:
+        return '0';
+    case L:
+        return '1';
+    case A:
+        return '2';
+    default:
+        ostringstream s;
+        s<<"Unknown dimension value: "<<dimensionValue<<endl;
+        throw  util::IllegalArgumentException(s.str());
+    }
 }
 
 /**
@@ -60,26 +60,26 @@ char Dimension::toDimensionSymbol(int dimensionValue) {
  *				Possible values are <code>{TRUE, FALSE, DONTCARE, 0, 1, 2}</code>.
  */
 int Dimension::toDimensionValue(char dimensionSymbol) {
-	switch (dimensionSymbol) {
-		case 'F':
-		case 'f':
-			return False;
-		case 'T':
-		case 't':
-			return True;
-		case '*':
-			return DONTCARE;
-		case '0':
-			return P;
-		case '1':
-			return L;
-		case '2':
-			return A;
-		default:
-			ostringstream s;
-			s<<"Unknown dimension symbol: "<<dimensionSymbol<<endl;
-			throw  util::IllegalArgumentException(s.str());
-	}
+    switch (dimensionSymbol) {
+    case 'F':
+    case 'f':
+        return False;
+    case 'T':
+    case 't':
+        return True;
+    case '*':
+        return DONTCARE;
+    case '0':
+        return P;
+    case '1':
+        return L;
+    case '2':
+        return A;
+    default:
+        ostringstream s;
+        s<<"Unknown dimension symbol: "<<dimensionSymbol<<endl;
+        throw  util::IllegalArgumentException(s.str());
+    }
 }
 
 } // namespace geos::geom

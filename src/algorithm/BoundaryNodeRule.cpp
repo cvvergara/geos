@@ -44,11 +44,11 @@ namespace {
 class Mod2BoundaryNodeRule : public BoundaryNodeRule
 {
 public:
-	bool isInBoundary(int boundaryCount) const override
-	{
-		// the "Mod-2 Rule"
-		return boundaryCount % 2 == 1;
-	}
+    bool isInBoundary(int boundaryCount) const override
+    {
+        // the "Mod-2 Rule"
+        return boundaryCount % 2 == 1;
+    }
 };
 
 
@@ -81,10 +81,10 @@ public:
  */
 class EndPointBoundaryNodeRule : public BoundaryNodeRule
 {
-	bool isInBoundary(int boundaryCount) const override
-	{
-		return boundaryCount > 0;
-	}
+    bool isInBoundary(int boundaryCount) const override
+    {
+        return boundaryCount > 0;
+    }
 };
 
 /**
@@ -99,10 +99,10 @@ class EndPointBoundaryNodeRule : public BoundaryNodeRule
  */
 class MultiValentEndPointBoundaryNodeRule : public BoundaryNodeRule
 {
-	bool isInBoundary(int boundaryCount) const override
-	{
-		return boundaryCount > 1;
-	}
+    bool isInBoundary(int boundaryCount) const override
+    {
+        return boundaryCount > 1;
+    }
 };
 
 /**
@@ -116,10 +116,10 @@ class MultiValentEndPointBoundaryNodeRule : public BoundaryNodeRule
  */
 class MonoValentEndPointBoundaryNodeRule : public BoundaryNodeRule
 {
-	bool isInBoundary(int boundaryCount) const override
-	{
-		return boundaryCount == 1;
-	}
+    bool isInBoundary(int boundaryCount) const override
+    {
+        return boundaryCount == 1;
+    }
 };
 
 Mod2BoundaryNodeRule mod2Rule;

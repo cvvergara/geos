@@ -26,11 +26,11 @@
 
 // Forward declarations
 namespace geos {
-	namespace geom {
-		class CoordinateSequence;
-		class Geometry;
-		class Polygon;
-	}
+namespace geom {
+class CoordinateSequence;
+class Geometry;
+class Polygon;
+}
 }
 
 namespace geos {
@@ -61,82 +61,82 @@ class GEOS_DLL CentroidArea {
 
 public:
 
-	CentroidArea()
-		:
-		basePt(0.0, 0.0),
-		areasum2(0.0),
-		totalLength(0.0)
-	{}
+    CentroidArea()
+        :
+        basePt(0.0, 0.0),
+        areasum2(0.0),
+        totalLength(0.0)
+    {}
 
-	~CentroidArea() {}
+    ~CentroidArea() {}
 
-	/**
-	 * Adds the area defined by a Geometry to the centroid total.
-	 * If the geometry has no area it does not contribute to the centroid.
-	 *
-	 * @param geom the geometry to add
-	 */
-	void add(const geom::Geometry *geom);
+    /**
+     * Adds the area defined by a Geometry to the centroid total.
+     * If the geometry has no area it does not contribute to the centroid.
+     *
+     * @param geom the geometry to add
+     */
+    void add(const geom::Geometry *geom);
 
-	/**
-	 * Adds the area defined by an array of
-	 * coordinates.  The array must be a ring;
-	 * i.e. end with the same coordinate as it starts with.
-	 * @param ring an array of {@link Coordinate}s
-	 */
-	void add(const geom::CoordinateSequence *ring);
+    /**
+     * Adds the area defined by an array of
+     * coordinates.  The array must be a ring;
+     * i.e. end with the same coordinate as it starts with.
+     * @param ring an array of {@link Coordinate}s
+     */
+    void add(const geom::CoordinateSequence *ring);
 
-	// TODO: deprecate
-	geom::Coordinate* getCentroid() const;
+    // TODO: deprecate
+    geom::Coordinate* getCentroid() const;
 
-	/// Return false if a centroid couldn't be computed ( empty polygon )
-	bool getCentroid(geom::Coordinate& ret) const;
+    /// Return false if a centroid couldn't be computed ( empty polygon )
+    bool getCentroid(geom::Coordinate& ret) const;
 
 private:
 
-	/// the point all triangles are based at
-	geom::Coordinate basePt;
+    /// the point all triangles are based at
+    geom::Coordinate basePt;
 
-	// temporary variable to hold centroid of triangle
-	geom::Coordinate triangleCent3;
+    // temporary variable to hold centroid of triangle
+    geom::Coordinate triangleCent3;
 
-	/// Partial area sum
-	double areasum2;
+    /// Partial area sum
+    double areasum2;
 
-	/// partial centroid sum
-	geom::Coordinate cg3;
+    /// partial centroid sum
+    geom::Coordinate cg3;
 
-	// data for linear centroid computation, if needed
-	geom::Coordinate centSum;
-	double totalLength;
+    // data for linear centroid computation, if needed
+    geom::Coordinate centSum;
+    double totalLength;
 
-	void setBasePoint(const geom::Coordinate &newbasePt);
+    void setBasePoint(const geom::Coordinate &newbasePt);
 
-	void add(const geom::Polygon *poly);
+    void add(const geom::Polygon *poly);
 
-	void addShell(const geom::CoordinateSequence *pts);
+    void addShell(const geom::CoordinateSequence *pts);
 
-	void addHole(const geom::CoordinateSequence *pts);
+    void addHole(const geom::CoordinateSequence *pts);
 
-	void addTriangle(const geom::Coordinate &p0, const geom::Coordinate &p1,
-			const geom::Coordinate &p2,bool isPositiveArea);
+    void addTriangle(const geom::Coordinate &p0, const geom::Coordinate &p1,
+                     const geom::Coordinate &p2,bool isPositiveArea);
 
-	static void centroid3(const geom::Coordinate &p1, const geom::Coordinate &p2,
-			const geom::Coordinate &p3, geom::Coordinate &c);
+    static void centroid3(const geom::Coordinate &p1, const geom::Coordinate &p2,
+                          const geom::Coordinate &p3, geom::Coordinate &c);
 
-	static double area2(const geom::Coordinate &p1, const geom::Coordinate &p2,
-			const geom::Coordinate &p3);
+    static double area2(const geom::Coordinate &p1, const geom::Coordinate &p2,
+                        const geom::Coordinate &p3);
 
-	/**
-	 * Adds the linear segments defined by an array of coordinates
-	 * to the linear centroid accumulators.
-	 *
-	 * This is done in case the polygon(s) have zero-area,
-	 * in which case the linear centroid is computed instead.
-	 *
-	 * @param pts an array of {@link Coordinate}s
-	 */
-	void addLinearSegments(const geom::CoordinateSequence& pts);
+    /**
+     * Adds the linear segments defined by an array of coordinates
+     * to the linear centroid accumulators.
+     *
+     * This is done in case the polygon(s) have zero-area,
+     * in which case the linear centroid is computed instead.
+     *
+     * @param pts an array of {@link Coordinate}s
+     */
+    void addLinearSegments(const geom::CoordinateSequence& pts);
 
 };
 

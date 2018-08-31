@@ -30,14 +30,14 @@ namespace overlay { // geos.operation.overlay
 Node*
 OverlayNodeFactory::createNode(const geom::Coordinate &coord) const
 {
-	return new Node(coord, new DirectedEdgeStar());
+    return new Node(coord, new DirectedEdgeStar());
 }
 
 const NodeFactory &
 OverlayNodeFactory::instance()
 {
-  static OverlayNodeFactory onf;
-	return onf;
+    static OverlayNodeFactory onf;
+    return onf;
 }
 
 } // namespace geos.operation.overlay

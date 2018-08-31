@@ -38,7 +38,7 @@ struct test_lengthindexedline_data
     test_lengthindexedline_data()
         : reader(), writer()
     {
-      writer.setTrim(true);
+        writer.setTrim(true);
     }
 
     geos::io::WKTReader reader;
@@ -52,8 +52,8 @@ struct test_lengthindexedline_data
 
     void checkExpected(Geometry* result, const Geometry* expected)
     {
-      bool isEqual = result->equalsExact(expected, 1.0e-5);
-      ensure_equals("Expect: "+writer.write(expected)+" Obtained: "+writer.write(result), isEqual, true);
+        bool isEqual = result->equalsExact(expected, 1.0e-5);
+        ensure_equals("Expect: "+writer.write(expected)+" Obtained: "+writer.write(result), isEqual, true);
     }
 
     void runIndicesOfThenExtract(string const& inputStr, string const& subLineStr)
@@ -269,10 +269,10 @@ template<>
 template<>
 void object::test<13>()
 {
-  checkExtractLine(
-    "MULTILINESTRING ((0 0, 10 0), (20 0, 25 0, 30 0))",
-    -10, 10, "LINESTRING (10 0, 10 0)"
-  );
+    checkExtractLine(
+        "MULTILINESTRING ((0 0, 10 0), (20 0, 25 0, 30 0))",
+        -10, 10, "LINESTRING (10 0, 10 0)"
+    );
 }
 
 
@@ -410,11 +410,11 @@ template<>
 template<>
 void object::test<26>()
 {
-  GeomPtr linearGeom(reader.read("MULTILINESTRING ((0 2, 0 0), (-1 1, 1 1))"));
-  LengthIndexedLine indexedLine(linearGeom.get());
-  double index = indexedLine.project(Coordinate(1, 0));
-  Coordinate pt = indexedLine.extractPoint(index);
-  ensure_equals(pt, Coordinate(0, 0));
+    GeomPtr linearGeom(reader.read("MULTILINESTRING ((0 2, 0 0), (-1 1, 1 1))"));
+    LengthIndexedLine indexedLine(linearGeom.get());
+    double index = indexedLine.project(Coordinate(1, 0));
+    Coordinate pt = indexedLine.extractPoint(index);
+    ensure_equals(pt, Coordinate(0, 0));
 }
 
 /**
@@ -426,21 +426,21 @@ void object::test<26>()
 template<> template<>
 void object::test<27>()
 {
-  checkExtractLine(
-    "MULTILINESTRING ((0 0, 10 0), (10 0, 10 0), (20 0, 25 0, 30 0))",
-    10, -1, "LINESTRING (20 0, 25 0, 29 0)");
+    checkExtractLine(
+        "MULTILINESTRING ((0 0, 10 0), (10 0, 10 0), (20 0, 25 0, 30 0))",
+        10, -1, "LINESTRING (20 0, 25 0, 29 0)");
 
-  checkExtractLine(
-    "MULTILINESTRING ((0 0, 10 0), (10 0, 10 0), (20 0, 25 0, 30 0))",
-    5, 10, "LINESTRING (5 0, 10 0)");
+    checkExtractLine(
+        "MULTILINESTRING ((0 0, 10 0), (10 0, 10 0), (20 0, 25 0, 30 0))",
+        5, 10, "LINESTRING (5 0, 10 0)");
 
-  checkExtractLine(
-    "MULTILINESTRING ((0 0,10 0),(10 0,10 0),(10 0,10 0),(20 0,25 0,30 0))",
-    10, 10, "LINESTRING (10 0, 10 0)");
+    checkExtractLine(
+        "MULTILINESTRING ((0 0,10 0),(10 0,10 0),(10 0,10 0),(20 0,25 0,30 0))",
+        10, 10, "LINESTRING (10 0, 10 0)");
 
-  checkExtractLine(
-    "MULTILINESTRING((0 0,10 0),(10 0,10 0),(10 0,10 0),(10 0,10 0),(20 0,25 0,30 0))",
-    10, -10, "LINESTRING (10 0, 10 0)");
+    checkExtractLine(
+        "MULTILINESTRING((0 0,10 0),(10 0,10 0),(10 0,10 0),(10 0,10 0),(20 0,25 0,30 0))",
+        10, -10, "LINESTRING (10 0, 10 0)");
 }
 
 
@@ -453,20 +453,20 @@ template<>
 void object::test<28>()
 {
 
-  GeomPtr linearGeom(reader.read(
-"MULTILINESTRING ((0 -2, 0 2),(-2 0, 2 0))"
-));
-  LengthIndexedLine indexedLine(linearGeom.get());
+    GeomPtr linearGeom(reader.read(
+                           "MULTILINESTRING ((0 -2, 0 2),(-2 0, 2 0))"
+                       ));
+    LengthIndexedLine indexedLine(linearGeom.get());
 
-  double projIndex = indexedLine.project(Coordinate(2, 1.9));
-  ensure_equals(projIndex, 8);
-  Coordinate projPt = indexedLine.extractPoint(projIndex);
-  ensure_equals(projPt, Coordinate(2, 0));
+    double projIndex = indexedLine.project(Coordinate(2, 1.9));
+    ensure_equals(projIndex, 8);
+    Coordinate projPt = indexedLine.extractPoint(projIndex);
+    ensure_equals(projPt, Coordinate(2, 0));
 
-  projIndex = indexedLine.project(Coordinate(2, 2.1));
-  ensure_equals(projIndex, 4);
-  projPt = indexedLine.extractPoint(projIndex);
-  ensure_equals(projPt, Coordinate(0, 2));
+    projIndex = indexedLine.project(Coordinate(2, 2.1));
+    ensure_equals(projIndex, 4);
+    projPt = indexedLine.extractPoint(projIndex);
+    ensure_equals(projPt, Coordinate(0, 2));
 }
 #endif
 

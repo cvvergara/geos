@@ -48,7 +48,7 @@ namespace polygonize { // geos.operation.polygonize
 /*public*/
 EdgeRing *
 EdgeRing::findEdgeRingContaining(EdgeRing *testEr,
-    vector<EdgeRing*> *shellList)
+                                 vector<EdgeRing*> *shellList)
 {
     const LinearRing *testRing=testEr->getRingInternal();
     if ( ! testRing ) return nullptr;
@@ -81,7 +81,7 @@ EdgeRing::findEdgeRingContaining(EdgeRing *testEr,
                 isContained=true;
             }
 
-    }
+        }
 
         // check if this new containing ring is smaller
         // than the current minimum ring
@@ -154,13 +154,13 @@ EdgeRing::~EdgeRing()
 
 /*public*/
 void
-EdgeRing::add(const DirectedEdge *de){
+EdgeRing::add(const DirectedEdge *de) {
     deList.push_back(de);
 }
 
 /*public*/
 bool
-EdgeRing::isHole(){
+EdgeRing::isHole() {
     getRingInternal();
     return CGAlgorithms::isCCW(ring->getCoordinatesRO());
 }
@@ -204,7 +204,7 @@ EdgeRing::getCoordinates()
             assert(dynamic_cast<PolygonizeEdge*>(de->getEdge()));
             PolygonizeEdge *edge=static_cast<PolygonizeEdge*>(de->getEdge());
             addEdge(edge->getLine()->getCoordinatesRO(),
-                de->getEdgeDirection(), ringPts);
+                    de->getEdgeDirection(), ringPts);
         }
     }
     return ringPts;

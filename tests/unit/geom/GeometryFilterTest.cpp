@@ -44,10 +44,10 @@ void object::test<1>()
 {
     // collection of 4 geometries
     GeometryPtr g(reader.read("GEOMETRYCOLLECTION("
-        "POINT(0 0),"
-        "LINESTRING(0 0,1 1,1 2),"
-        "POLYGON((0 0,4 0,4 4,0 4,0 0)),"
-        "MULTILINESTRING((0 0,1 1,1 2),(2 3,3 2,5 4)))"));
+                              "POINT(0 0),"
+                              "LINESTRING(0 0,1 1,1 2),"
+                              "POLYGON((0 0,4 0,4 4,0 4,0 0)),"
+                              "MULTILINESTRING((0 0,1 1,1 2),(2 3,3 2,5 4)))"));
 
     struct GeometrySplitter : public geos::geom::GeometryFilter
     {

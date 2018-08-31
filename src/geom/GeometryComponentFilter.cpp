@@ -24,14 +24,14 @@ namespace geom { // geos::geom
 
 void GeometryComponentFilter::filter_rw(Geometry *geom)
 {
-	::geos::ignore_unused_variable_warning(geom);
-	assert(0);
+    ::geos::ignore_unused_variable_warning(geom);
+    assert(0);
 }
 
 void GeometryComponentFilter::filter_ro(const Geometry *geom)
 {
-	::geos::ignore_unused_variable_warning(geom);
-	assert(0);
+    ::geos::ignore_unused_variable_warning(geom);
+    assert(0);
 }
 
 

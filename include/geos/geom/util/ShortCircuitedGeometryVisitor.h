@@ -20,9 +20,9 @@
 
 // Forward declarations
 namespace geos {
-	namespace geom {
-		class Geometry;
-	}
+namespace geom {
+class Geometry;
+}
 }
 
 
@@ -41,23 +41,23 @@ class GEOS_DLL ShortCircuitedGeometryVisitor
 
 private:
 
-	bool done;
+    bool done;
 
 protected:
 
-	virtual void visit(const Geometry &element)=0;
-	virtual bool isDone()=0;
+    virtual void visit(const Geometry &element)=0;
+    virtual bool isDone()=0;
 
 public:
 
-	ShortCircuitedGeometryVisitor()
-		:
-		done(false)
-		{}
+    ShortCircuitedGeometryVisitor()
+        :
+        done(false)
+    {}
 
-	void applyTo(const Geometry &geom);
+    void applyTo(const Geometry &geom);
 
-	virtual ~ShortCircuitedGeometryVisitor() {}
+    virtual ~ShortCircuitedGeometryVisitor() {}
 
 };
 

@@ -28,7 +28,7 @@ namespace triangulate { //geos.triangulate
 using namespace quadedge;
 
 IncrementalDelaunayTriangulator::IncrementalDelaunayTriangulator(
-        QuadEdgeSubdivision *p_subdiv) :
+    QuadEdgeSubdivision *p_subdiv) :
     subdiv(p_subdiv), isUsingTolerance(p_subdiv->getTolerance() > 0.0)
 {
 }

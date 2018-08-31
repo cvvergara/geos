@@ -18,9 +18,9 @@
 
 // Forward declarations
 namespace geos {
-  namespace geom {
-    class Geometry;
-  }
+namespace geom {
+class Geometry;
+}
 }
 
 namespace geos {
@@ -41,7 +41,7 @@ public:
     ~GeometryListHolder()
     {
         std::for_each(ownedItems.begin(), ownedItems.end(),
-            &GeometryListHolder::deleteItem);
+                      &GeometryListHolder::deleteItem);
     }
 
     // items need to be deleted in the end
@@ -53,9 +53,9 @@ public:
 
     geom::Geometry* getGeometry(std::size_t index)
     {
-      if (index >= this->base_type::size())
-          return nullptr;
-      return (*this)[index];
+        if (index >= this->base_type::size())
+            return nullptr;
+        return (*this)[index];
     }
 
 private:

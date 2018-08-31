@@ -32,13 +32,13 @@ namespace chain { // geos.index.chain
 
 MonotoneChain::MonotoneChain(const geom::CoordinateSequence& newPts,
                              size_t nstart, size_t nend, void* nContext)
-	:
-	pts(newPts),
-	env(nullptr),
-	context(nContext),
-	start(nstart),
-	end(nend),
-	id(-1)
+    :
+    pts(newPts),
+    env(nullptr),
+    context(nContext),
+    start(nstart),
+    end(nend),
+    id(-1)
 {
 }
 

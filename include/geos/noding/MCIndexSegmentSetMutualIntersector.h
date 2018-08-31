@@ -24,20 +24,20 @@
 #include <geos/index/chain/MonotoneChainOverlapAction.h> // inherited
 
 namespace geos {
-	namespace index {
-		class SpatialIndex;
+namespace index {
+class SpatialIndex;
 
-		namespace chain {
-			class MonotoneChain;
-		}
-		namespace strtree {
-			//class STRtree;
-		}
-	}
-	namespace noding {
-		class SegmentString;
-		class SegmentIntersector;
-	}
+namespace chain {
+class MonotoneChain;
+}
+namespace strtree {
+//class STRtree;
+}
+}
+namespace noding {
+class SegmentString;
+class SegmentIntersector;
+}
 }
 
 //using namespace geos::index::strtree;
@@ -55,28 +55,28 @@ class MCIndexSegmentSetMutualIntersector : public SegmentSetMutualIntersector
 {
 public:
 
-	MCIndexSegmentSetMutualIntersector();
+    MCIndexSegmentSetMutualIntersector();
 
-	~MCIndexSegmentSetMutualIntersector() override;
+    ~MCIndexSegmentSetMutualIntersector() override;
 
-	/* Returns a reference to a vector of MonotoneChain objects owned
-	 * by this class and destroyed on next call to ::process.
-	 * Copy them if you need them alive for longer.
-	 */
-	std::vector<index::chain::MonotoneChain *>& getMonotoneChains()
-	{
-		return monoChains;
-	}
+    /* Returns a reference to a vector of MonotoneChain objects owned
+     * by this class and destroyed on next call to ::process.
+     * Copy them if you need them alive for longer.
+     */
+    std::vector<index::chain::MonotoneChain *>& getMonotoneChains()
+    {
+        return monoChains;
+    }
 
-	index::SpatialIndex* getIndex()
-	{
-		return index;
-	}
+    index::SpatialIndex* getIndex()
+    {
+        return index;
+    }
 
-	void setBaseSegments(SegmentString::ConstVect* segStrings) override;
+    void setBaseSegments(SegmentString::ConstVect* segStrings) override;
 
-	// NOTE: re-populates the MonotoneChain vector with newly created chains
-	void process(SegmentString::ConstVect* segStrings) override;
+    // NOTE: re-populates the MonotoneChain vector with newly created chains
+    void process(SegmentString::ConstVect* segStrings) override;
 
     class SegmentOverlapAction : public index::chain::MonotoneChainOverlapAction
     {
@@ -89,39 +89,39 @@ public:
 
     public:
         SegmentOverlapAction(SegmentIntersector & p_si) :
-          index::chain::MonotoneChainOverlapAction(), si(p_si)
-          {}
+            index::chain::MonotoneChainOverlapAction(), si(p_si)
+        {}
 
-          void overlap(index::chain::MonotoneChain& mc1, std::size_t start1,
-              index::chain::MonotoneChain& mc2, std::size_t start2) override;
+        void overlap(index::chain::MonotoneChain& mc1, std::size_t start1,
+                     index::chain::MonotoneChain& mc2, std::size_t start2) override;
     };
 
 private:
 
-	typedef std::vector<index::chain::MonotoneChain *> MonoChains;
-	MonoChains monoChains;
+    typedef std::vector<index::chain::MonotoneChain *> MonoChains;
+    MonoChains monoChains;
 
-	/*
-	 * The {@link SpatialIndex} used should be something that supports
-	 * envelope (range) queries efficiently (such as a {@link Quadtree}
-	 * or {@link STRtree}.
-	 */
-	index::SpatialIndex * index;
-	int indexCounter;
-	int processCounter;
-	// statistics
-	int nOverlaps;
+    /*
+     * The {@link SpatialIndex} used should be something that supports
+     * envelope (range) queries efficiently (such as a {@link Quadtree}
+     * or {@link STRtree}.
+     */
+    index::SpatialIndex * index;
+    int indexCounter;
+    int processCounter;
+    // statistics
+    int nOverlaps;
 
-	/* memory management helper, holds MonotoneChain objects used
-	 * in the SpatialIndex. It's cleared when the SpatialIndex is
-	 */
-	MonoChains chainStore;
+    /* memory management helper, holds MonotoneChain objects used
+     * in the SpatialIndex. It's cleared when the SpatialIndex is
+     */
+    MonoChains chainStore;
 
-	void addToIndex( SegmentString * segStr);
+    void addToIndex( SegmentString * segStr);
 
-	void intersectChains();
+    void intersectChains();
 
-	void addToMonoChains( SegmentString * segStr);
+    void addToMonoChains( SegmentString * segStr);
 
 };
 

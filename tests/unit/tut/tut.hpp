@@ -232,7 +232,7 @@ class test_group : public group_base, public test_group_posix
                 if (delete_obj() == false)
                 {
                     throw warning("destructor of test object raised"
-                        " an SEH exception");
+                                  " an SEH exception");
                 }
 #else
                 bool d = delete_obj();
@@ -244,7 +244,7 @@ class test_group : public group_base, public test_group_posix
                 if (permit_throw_in_dtor)
                 {
                     std::string msg = "destructor of test object raised"
-                        " exception: ";
+                                      " exception: ";
                     msg += ex.what();
                     throw warning(msg);
                 }
@@ -254,7 +254,7 @@ class test_group : public group_base, public test_group_posix
                 if (permit_throw_in_dtor)
                 {
                     throw warning("destructor of test object raised an"
-                        " exception");
+                                  " exception");
                 }
             }
         }
@@ -324,7 +324,7 @@ public:
 
         // register all tests
         tests_registerer<test_object<Data>, test_group,
-            MaxTestsInGroup>::reg(*this);
+                         MaxTestsInGroup>::reg(*this);
     };
 
     /**
@@ -374,7 +374,7 @@ public:
     bool run_test(int n, test_result &tr) override
     {
         if (tests_.rbegin() == tests_.rend() ||
-            tests_.rbegin()->first < n)
+                tests_.rbegin()->first < n)
         {
             return false;
         }
@@ -405,21 +405,21 @@ public:
             switch (run_test_seh_(ti->second, obj, current_test_name, ti->first))
             {
 #if defined(TUT_USE_SEH)
-                case SEH_CTOR:
-                    throw bad_ctor("seh");
-                    break;
+            case SEH_CTOR:
+                throw bad_ctor("seh");
+                break;
 
-                case SEH_TEST:
-                    throw seh("seh");
-                    break;
+            case SEH_TEST:
+                throw seh("seh");
+                break;
 #endif
-                case SEH_DUMMY:
-                    tr.result = test_result::dummy;
-                    break;
+            case SEH_DUMMY:
+                tr.result = test_result::dummy;
+                break;
 
-                case SEH_OK:
-                    // ok
-                    break;
+            case SEH_OK:
+                // ok
+                break;
             }
         }
         catch (const rethrown& ex)
@@ -526,7 +526,7 @@ public:
         catch (...)
         {
             throw bad_ctor("test constructor has generated an exception;"
-                " group execution is terminated");
+                           " group execution is terminated");
         }
     }
 };

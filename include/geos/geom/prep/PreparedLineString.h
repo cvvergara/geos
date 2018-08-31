@@ -24,9 +24,9 @@
 #include <geos/noding/SegmentString.h>
 
 namespace geos {
-	namespace noding {
-		class FastSegmentSetIntersectionFinder;
-	}
+namespace noding {
+class FastSegmentSetIntersectionFinder;
+}
 }
 
 namespace geos {
@@ -43,22 +43,22 @@ namespace prep { // geos::geom::prep
 class PreparedLineString : public BasicPreparedGeometry
 {
 private:
-	noding::FastSegmentSetIntersectionFinder * segIntFinder;
-	mutable noding::SegmentString::ConstVect segStrings;
+    noding::FastSegmentSetIntersectionFinder * segIntFinder;
+    mutable noding::SegmentString::ConstVect segStrings;
 
 protected:
 public:
-	PreparedLineString(const Geometry * geom)
-		:
-		BasicPreparedGeometry( geom),
-		segIntFinder( nullptr)
-	{ }
+    PreparedLineString(const Geometry * geom)
+        :
+        BasicPreparedGeometry( geom),
+        segIntFinder( nullptr)
+    { }
 
-	~PreparedLineString() override;
+    ~PreparedLineString() override;
 
-	noding::FastSegmentSetIntersectionFinder * getIntersectionFinder();
+    noding::FastSegmentSetIntersectionFinder * getIntersectionFinder();
 
-	bool intersects(const geom::Geometry * g) const override;
+    bool intersects(const geom::Geometry * g) const override;
 
 };
 

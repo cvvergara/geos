@@ -33,47 +33,47 @@ namespace geom { // geos::geom
 
 /*protected*/
 MultiPoint::MultiPoint(vector<Geometry *> *newPoints, const GeometryFactory *factory)
-	:
-	Geometry(factory),
-	GeometryCollection(newPoints,factory)
+    :
+    Geometry(factory),
+    GeometryCollection(newPoints,factory)
 {
 }
 
 
-MultiPoint::~MultiPoint(){}
+MultiPoint::~MultiPoint() {}
 
 Dimension::DimensionType
 MultiPoint::getDimension() const {
-	return Dimension::P; // point
+    return Dimension::P; // point
 }
 
 int MultiPoint::getBoundaryDimension() const {
-	return Dimension::False;
+    return Dimension::False;
 }
 
 string MultiPoint::getGeometryType() const {
-	return "MultiPoint";
+    return "MultiPoint";
 }
 
 Geometry* MultiPoint::getBoundary() const {
-	return getFactory()->createGeometryCollection();
+    return getFactory()->createGeometryCollection();
 }
 
 bool
 MultiPoint::equalsExact(const Geometry *other, double tolerance) const
 {
     if (!isEquivalentClass(other)) {
-      return false;
+        return false;
     }
-	return GeometryCollection::equalsExact(other,tolerance);
-  }
+    return GeometryCollection::equalsExact(other,tolerance);
+}
 
 const Coordinate* MultiPoint::getCoordinateN(size_t n) const {
-	return ((*geometries)[n])->getCoordinate();
+    return ((*geometries)[n])->getCoordinate();
 }
 GeometryTypeId
 MultiPoint::getGeometryTypeId() const {
-	return GEOS_MULTIPOINT;
+    return GEOS_MULTIPOINT;
 }
 
 } // namespace geos::geom

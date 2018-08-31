@@ -35,8 +35,8 @@ namespace prep { // geos.geom.prep
 bool
 PreparedPolygonCovers::fullTopologicalPredicate( const geom::Geometry * geom)
 {
-	bool result = prepPoly->getGeometry().covers( geom);
-	return result;
+    bool result = prepPoly->getGeometry().covers( geom);
+    return result;
 }
 
 //

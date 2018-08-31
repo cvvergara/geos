@@ -28,14 +28,14 @@ namespace geomgraph { // geos.geomgraph
 Node *
 NodeFactory::createNode(const Coordinate &coord) const
 {
-	return new Node(coord,nullptr);
+    return new Node(coord,nullptr);
 }
 
 const NodeFactory &
 NodeFactory::instance()
 {
-	static const NodeFactory nf;
-	return nf;
+    static const NodeFactory nf;
+    return nf;
 }
 
 

@@ -28,15 +28,15 @@ using namespace geos;
 
 int main(int argc, char** argv)
 {
-	try {
-	cout << "Start:" << endl;
+    try {
+        cout << "Start:" << endl;
 
 
-	cout << "End" << endl;
-	} catch (const GEOSException& ge) {
-		cout << ge->toString() << endl;
-	}
+        cout << "End" << endl;
+    } catch (const GEOSException& ge) {
+        cout << ge->toString() << endl;
+    }
 
-	return 0;
+    return 0;
 }
 

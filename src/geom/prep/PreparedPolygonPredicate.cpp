@@ -57,7 +57,7 @@ PreparedPolygonPredicate::isAllTestComponentsInTarget(const geom::Geometry* test
 
 bool
 PreparedPolygonPredicate::isAllTestComponentsInTargetInterior(
-		const geom::Geometry* testGeom) const
+    const geom::Geometry* testGeom) const
 {
     geom::Coordinate::ConstVect pts;
     geom::util::ComponentCoordinateExtracter::getCoordinates(*testGeom, pts);
@@ -76,7 +76,7 @@ PreparedPolygonPredicate::isAllTestComponentsInTargetInterior(
 
 bool
 PreparedPolygonPredicate::isAnyTestComponentInTarget(
-		const geom::Geometry* testGeom) const
+    const geom::Geometry* testGeom) const
 {
     geom::Coordinate::ConstVect pts;
     geom::util::ComponentCoordinateExtracter::getCoordinates(*testGeom, pts);
@@ -95,7 +95,7 @@ PreparedPolygonPredicate::isAnyTestComponentInTarget(
 
 bool
 PreparedPolygonPredicate::isAnyTestComponentInTargetInterior(
-	const geom::Geometry * testGeom) const
+    const geom::Geometry * testGeom) const
 {
     geom::Coordinate::ConstVect pts;
     geom::util::ComponentCoordinateExtracter::getCoordinates(*testGeom, pts);
@@ -114,8 +114,8 @@ PreparedPolygonPredicate::isAnyTestComponentInTargetInterior(
 
 bool
 PreparedPolygonPredicate::isAnyTargetComponentInAreaTest(
-	const geom::Geometry* testGeom,
-	const geom::Coordinate::ConstVect* targetRepPts) const
+    const geom::Geometry* testGeom,
+    const geom::Coordinate::ConstVect* targetRepPts) const
 {
     algorithm::locate::SimplePointInAreaLocator piaLoc(testGeom);
 

@@ -40,7 +40,7 @@ class xml_reporter : public tut::callback
      * @return string with \<testcase\> entity
      */
     std::string xml_build_testcase(const tut::test_result & tr, const std::string & failure_type,
-                                           const std::string & failure_msg, int pid = 0)
+                                   const std::string & failure_msg, int pid = 0)
     {
         using std::endl;
         using std::string;
@@ -48,7 +48,7 @@ class xml_reporter : public tut::callback
         std::ostringstream out;
 
         if ( (tr.result == test_result::ok) ||
-             (tr.result == test_result::skipped) )
+                (tr.result == test_result::skipped) )
         {
             out << "    <testcase classname=\"" << cppunit_reporter::encode(tr.group) << "\" name=\"" << cppunit_reporter::encode(tr.name) << "\"/>";
         }
@@ -58,7 +58,7 @@ class xml_reporter : public tut::callback
 
             string tag; // determines tag name: "failure" or "error"
             if ( tr.result == test_result::fail || tr.result == test_result::warn ||
-                 tr.result == test_result::ex || tr.result == test_result::ex_ctor || tr.result == test_result::rethrown )
+                    tr.result == test_result::ex || tr.result == test_result::ex_ctor || tr.result == test_result::rethrown )
             {
                 tag = "failure";
             }
@@ -95,7 +95,7 @@ class xml_reporter : public tut::callback
      * @return string with \<testsuite\> entity
      */
     std::string xml_build_testsuite(int errors, int failures, int total,
-                                            const std::string & name, const std::string & testcases)
+                                    const std::string & name, const std::string & testcases)
     {
         std::ostringstream out;
 
@@ -174,26 +174,26 @@ public:
     {
         // update global statistics
         switch (tr.result) {
-            case test_result::ok:
-            case test_result::skipped:
-                ok_count++;
-                break;
-            case test_result::fail:
-            case test_result::rethrown:
-                failures_count++;
-                break;
-            case test_result::ex:
-            case test_result::ex_ctor:
-                exceptions_count++;
-                break;
-            case test_result::warn:
-                warnings_count++;
-                break;
-            case test_result::term:
-                terminations_count++;
-                break;
-            case tut::test_result::dummy:
-                assert(!"Should never be called");
+        case test_result::ok:
+        case test_result::skipped:
+            ok_count++;
+            break;
+        case test_result::fail:
+        case test_result::rethrown:
+            failures_count++;
+            break;
+        case test_result::ex:
+        case test_result::ex_ctor:
+            exceptions_count++;
+            break;
+        case test_result::warn:
+            warnings_count++;
+            break;
+        case test_result::term:
+            terminations_count++;
+            break;
+        case tut::test_result::dummy:
+            assert(!"Should never be called");
         } // switch
 
         // add test result to results table
@@ -236,46 +236,46 @@ public:
 
                 switch (tri->result)
                 {
-                    case test_result::ok:
-                    case test_result::skipped:
-                        passed++;
-                        break;
-                    case test_result::fail:
-                        failure_type = "Assertion";
-                        failure_msg  = "";
-                        failures++;
-                        break;
-                    case test_result::ex:
-                        failure_type = "Assertion";
-                        failure_msg  = "Thrown exception: " + tri->exception_typeid + '\n';
-                        exceptions++;
-                        break;
-                    case test_result::warn:
-                        failure_type = "Assertion";
-                        failure_msg  = "Destructor failed.\n";
-                        warnings++;
-                        break;
-                    case test_result::term:
-                        failure_type = "Error";
-                        failure_msg  = "Test application terminated abnormally.\n";
-                        terminations++;
-                        break;
-                    case test_result::ex_ctor:
-                        failure_type = "Assertion";
-                        failure_msg  = "Constructor has thrown an exception: " + tri->exception_typeid + ".\n";
-                        exceptions++;
-                        break;
-                    case test_result::rethrown:
-                        failure_type = "Assertion";
-                        failure_msg  = "Child failed.\n";
-                        failures++;
-                        break;
-                    default:
-                        failure_type = "Error";
-                        failure_msg  = "Unknown test status, this should have never happened. "
-                                       "You may just have found a bug in TUT, please report it immediately.\n";
-                        errors++;
-                        break;
+                case test_result::ok:
+                case test_result::skipped:
+                    passed++;
+                    break;
+                case test_result::fail:
+                    failure_type = "Assertion";
+                    failure_msg  = "";
+                    failures++;
+                    break;
+                case test_result::ex:
+                    failure_type = "Assertion";
+                    failure_msg  = "Thrown exception: " + tri->exception_typeid + '\n';
+                    exceptions++;
+                    break;
+                case test_result::warn:
+                    failure_type = "Assertion";
+                    failure_msg  = "Destructor failed.\n";
+                    warnings++;
+                    break;
+                case test_result::term:
+                    failure_type = "Error";
+                    failure_msg  = "Test application terminated abnormally.\n";
+                    terminations++;
+                    break;
+                case test_result::ex_ctor:
+                    failure_type = "Assertion";
+                    failure_msg  = "Constructor has thrown an exception: " + tri->exception_typeid + ".\n";
+                    exceptions++;
+                    break;
+                case test_result::rethrown:
+                    failure_type = "Assertion";
+                    failure_msg  = "Child failed.\n";
+                    failures++;
+                    break;
+                default:
+                    failure_type = "Error";
+                    failure_msg  = "Unknown test status, this should have never happened. "
+                                   "You may just have found a bug in TUT, please report it immediately.\n";
+                    errors++;
+                    break;
                 } // switch
 
 #if defined(TUT_USE_POSIX)

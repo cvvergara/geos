@@ -7,32 +7,32 @@
 
 namespace tut
 {
-    //
-    // Test Group
-    //
+//
+// Test Group
+//
 
-    // Common data used by tests
-    struct test_multilinestring_data
-    {
-        test_multilinestring_data() {}
-    };
+// Common data used by tests
+struct test_multilinestring_data
+{
+    test_multilinestring_data() {}
+};
 
-    typedef test_group<test_multilinestring_data> group;
-    typedef group::object object;
+typedef test_group<test_multilinestring_data> group;
+typedef group::object object;
 
-    group test_multilinestring_group("geos::geom::MultiLineString");
+group test_multilinestring_group("geos::geom::MultiLineString");
 
-    //
-    // Test Cases
-    //
+//
+// Test Cases
+//
 
-    // Test of default constructor
-    template<>
-    template<>
-    void object::test<1>()
-    {
-	    //inform("Test not implemented!");
-    }
+// Test of default constructor
+template<>
+template<>
+void object::test<1>()
+{
+    //inform("Test not implemented!");
+}
 
 } // namespace tut
 

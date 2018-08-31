@@ -19,7 +19,7 @@
 
 namespace tut
 {
-    test_runner_singleton runner;
+test_runner_singleton runner;
 }
 
 void usage()
@@ -31,25 +31,25 @@ void usage()
 
     //[list] | [ group] [test]
     cout << "Usage: " << module << " [OPTION] [TARGET]\n"
-        << endl
-        << "Targets:\n"
-        << "  <none>                          run all tests in all groups\n"
-        << "  <group name>                    run all tests from given group\n"
-        << "  <group name> <test nr>          run single test with given number from given group\n"
-        << endl
-        << "Options:\n"
-        << "  --list                          list all registered test groups\n"
-        << "  --verbose                       run unit tests verbosely; displays non-error information\n"
-        << "  --version                       print version information and exit\n"
-        << "  --help                          print this message and exit\n"
-        << endl
-        << "Examples:\n"
-        << "  " << module << " -v\n"
-        << "  " << module << " list\n"
-        << "  " << module << " geos::geom::Envelope\n"
-        << "  " << module << " geos::geom::Envelope 2\n"
-        << endl
-        << "GEOS homepage: http://geos.osgeo.org" << endl;
+         << endl
+         << "Targets:\n"
+         << "  <none>                          run all tests in all groups\n"
+         << "  <group name>                    run all tests from given group\n"
+         << "  <group name> <test nr>          run single test with given number from given group\n"
+         << endl
+         << "Options:\n"
+         << "  --list                          list all registered test groups\n"
+         << "  --verbose                       run unit tests verbosely; displays non-error information\n"
+         << "  --version                       print version information and exit\n"
+         << "  --help                          print this message and exit\n"
+         << endl
+         << "Examples:\n"
+         << "  " << module << " -v\n"
+         << "  " << module << " list\n"
+         << "  " << module << " geos::geom::Envelope\n"
+         << "  " << module << " geos::geom::Envelope 2\n"
+         << endl
+         << "GEOS homepage: http://geos.osgeo.org" << endl;
 }
 
 int main(int argc, const char* argv[])

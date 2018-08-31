@@ -22,12 +22,12 @@
 
 // Forward declarations
 namespace geos {
-	namespace algorithm {
-		class LineIntersector;
-	}
-	namespace noding {
-		class SegmentString;
-	}
+namespace algorithm {
+class LineIntersector;
+}
+namespace noding {
+class SegmentString;
+}
 }
 
 namespace geos {
@@ -45,72 +45,72 @@ class SingleInteriorIntersectionFinder: public SegmentIntersector
 
 public:
 
-	/** \brief
-	 * Creates an intersection finder which finds an interior intersection
-	 * if one exists
-	 *
-	 * @param li the LineIntersector to use
-	 */
-	SingleInteriorIntersectionFinder(algorithm::LineIntersector& newLi)
-		:
-		li(newLi),
-		interiorIntersection(geom::Coordinate::getNull())
-	{
-	}
+    /** \brief
+     * Creates an intersection finder which finds an interior intersection
+     * if one exists
+     *
+     * @param li the LineIntersector to use
+     */
+    SingleInteriorIntersectionFinder(algorithm::LineIntersector& newLi)
+        :
+        li(newLi),
+        interiorIntersection(geom::Coordinate::getNull())
+    {
+    }
 
-	/** \brief
-	 * Tests whether an intersection was found.
-	 *
-	 * @return true if an intersection was found
-	 */
-	bool hasIntersection() const
-	{
-		return !interiorIntersection.isNull();
-	}
+    /** \brief
+     * Tests whether an intersection was found.
+     *
+     * @return true if an intersection was found
+     */
+    bool hasIntersection() const
+    {
+        return !interiorIntersection.isNull();
+    }
 
-	/** \brief
-	 * Gets the computed location of the intersection.
-	 * Due to round-off, the location may not be exact.
-	 *
-	 * @return the coordinate for the intersection location
-	 */
-	const geom::Coordinate& getInteriorIntersection() const
-	{
-		return interiorIntersection;
-	}
+    /** \brief
+     * Gets the computed location of the intersection.
+     * Due to round-off, the location may not be exact.
+     *
+     * @return the coordinate for the intersection location
+     */
+    const geom::Coordinate& getInteriorIntersection() const
+    {
+        return interiorIntersection;
+    }
 
-	/** \brief
-	 * Gets the endpoints of the intersecting segments.
-	 *
-	 * @return an array of the segment endpoints (p00, p01, p10, p11)
-	 */
-	const std::vector<geom::Coordinate>& getIntersectionSegments() const
-	{
-		return intSegments;
-	}
+    /** \brief
+     * Gets the endpoints of the intersecting segments.
+     *
+     * @return an array of the segment endpoints (p00, p01, p10, p11)
+     */
+    const std::vector<geom::Coordinate>& getIntersectionSegments() const
+    {
+        return intSegments;
+    }
 
-	/** \brief
-	 * This method is called by clients
-	 * of the {@link SegmentIntersector} class to process
-	 * intersections for two segments of the {@link SegmentStrings} being intersected.
-	 *
-	 * Note that some clients (such as {@link MonotoneChain}s) may optimize away
-	 * this call for segment pairs which they have determined do not intersect
-	 * (e.g. by an disjoint envelope test).
-	 */
-	void processIntersections(
-		SegmentString* e0,  size_t segIndex0,
-		SegmentString* e1,  size_t segIndex1) override;
+    /** \brief
+     * This method is called by clients
+     * of the {@link SegmentIntersector} class to process
+     * intersections for two segments of the {@link SegmentStrings} being intersected.
+     *
+     * Note that some clients (such as {@link MonotoneChain}s) may optimize away
+     * this call for segment pairs which they have determined do not intersect
+     * (e.g. by an disjoint envelope test).
+     */
+    void processIntersections(
+        SegmentString* e0,  size_t segIndex0,
+        SegmentString* e1,  size_t segIndex1) override;
 
-	bool isDone() const override
-	{
-		return !interiorIntersection.isNull();
-	}
+    bool isDone() const override
+    {
+        return !interiorIntersection.isNull();
+    }
 
 private:
-	algorithm::LineIntersector& li;
-	geom::Coordinate interiorIntersection;
-	std::vector<geom::Coordinate> intSegments;
+    algorithm::LineIntersector& li;
+    geom::Coordinate interiorIntersection;
+    std::vector<geom::Coordinate> intSegments;
 
     // Declare type as noncopyable
     SingleInteriorIntersectionFinder(const SingleInteriorIntersectionFinder& other) = delete;

@@ -39,8 +39,8 @@ PreparedPolygonContains::PreparedPolygonContains(const PreparedPolygon * const p
 bool
 PreparedPolygonContains::fullTopologicalPredicate( const geom::Geometry * geom)
 {
-	bool isContained = prepPoly->getGeometry().contains( geom);
-	return isContained;
+    bool isContained = prepPoly->getGeometry().contains( geom);
+    return isContained;
 }
 
 //

@@ -23,16 +23,16 @@
 
 // Forward declarations
 namespace geos {
-	namespace geom {
-		class Coordinate;
-		class LineSegment;
-		class LinearRing;
-	}
-	namespace index {
-		namespace strtree {
-			class SIRtree;
-		}
-	}
+namespace geom {
+class Coordinate;
+class LineSegment;
+class LinearRing;
+}
+namespace index {
+namespace strtree {
+class SIRtree;
+}
+}
 }
 
 
@@ -41,16 +41,16 @@ namespace algorithm { // geos::algorithm
 
 class GEOS_DLL SIRtreePointInRing: public PointInRing {
 private:
-	geom::LinearRing *ring;
-	index::strtree::SIRtree *sirTree;
-	int crossings;  // number of segment/ray crossings
-	void buildIndex();
-	void testLineSegment(const geom::Coordinate& p,
-			geom::LineSegment *seg);
+    geom::LinearRing *ring;
+    index::strtree::SIRtree *sirTree;
+    int crossings;  // number of segment/ray crossings
+    void buildIndex();
+    void testLineSegment(const geom::Coordinate& p,
+                         geom::LineSegment *seg);
 public:
-	SIRtreePointInRing(geom::LinearRing *newRing);
-	~SIRtreePointInRing() override;
-	bool isInside(const geom::Coordinate& pt) override;
+    SIRtreePointInRing(geom::LinearRing *newRing);
+    ~SIRtreePointInRing() override;
+    bool isInside(const geom::Coordinate& pt) override;
 };
 
 } // namespace geos::algorithm

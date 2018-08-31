@@ -43,18 +43,18 @@ static Profiler *profiler = Profiler::instance();
 void
 EdgeList::add(Edge *e)
 {
-	edges.push_back(e);
-	OrientedCoordinateArray* oca = new OrientedCoordinateArray(*(e->getCoordinates()));
-	ocaMap[oca] = e;
+    edges.push_back(e);
+    OrientedCoordinateArray* oca = new OrientedCoordinateArray(*(e->getCoordinates()));
+    ocaMap[oca] = e;
 }
 
 void
 EdgeList::addAll(const vector<Edge*> &edgeColl)
 {
     for (std::size_t i=0, s=edgeColl.size(); i<s ; ++i)
-	{
-		add(edgeColl[i]);
-	}
+    {
+        add(edgeColl[i]);
+    }
 }
 
 /**
@@ -67,26 +67,26 @@ Edge *
 EdgeList::findEqualEdge(Edge *e)
 {
 #if PROFILE
-	static Profile *prof = profiler->get("EdgeList::findEqualEdge(Edge *e)");
-	prof->start();
+    static Profile *prof = profiler->get("EdgeList::findEqualEdge(Edge *e)");
+    prof->start();
 #endif
 
-	OrientedCoordinateArray oca(*(e->getCoordinates()));
+    OrientedCoordinateArray oca(*(e->getCoordinates()));
 
-	EdgeMap::iterator it = ocaMap.find(&oca);
+    EdgeMap::iterator it = ocaMap.find(&oca);
 
 #if PROFILE
-	prof->stop();
+    prof->stop();
 #endif
 
-	if ( it != ocaMap.end() ) return it->second;
-	return nullptr;
+    if ( it != ocaMap.end() ) return it->second;
+    return nullptr;
 }
 
 Edge*
 EdgeList::get(int i)
 {
-	return edges[i];
+    return edges[i];
 }
 
 /**
@@ -97,59 +97,59 @@ EdgeList::get(int i)
 int
 EdgeList::findEdgeIndex(Edge *e)
 {
-	for (int i=0, s=(int)edges.size(); i<s; ++i)
-	{
-		if ( edges[i]->equals(e) ) return i;
-	}
-	return -1;
+    for (int i=0, s=(int)edges.size(); i<s; ++i)
+    {
+        if ( edges[i]->equals(e) ) return i;
+    }
+    return -1;
 }
 
 string
 EdgeList::print()
 {
-	ostringstream ss;
-	ss << *this;
-	return ss.str();
+    ostringstream ss;
+    ss << *this;
+    return ss.str();
 #if 0
-	string out="EdgeList( ";
-	for(unsigned int j=0, s=edges.size(); j<s; ++j)
-	{
-       		Edge *e=edges[j];
-		if (j) out+=",";
-		out += e->print();
-	}
-	out+=")  ";
-	return out;
+    string out="EdgeList( ";
+    for(unsigned int j=0, s=edges.size(); j<s; ++j)
+    {
+        Edge *e=edges[j];
+        if (j) out+=",";
+        out += e->print();
+    }
+    out+=")  ";
+    return out;
 #endif
 }
 
 void
 EdgeList::clearList()
 {
-        for (unsigned int pos=0; pos < edges.size(); pos++)
-                delete *(&edges[pos]);
+    for (unsigned int pos=0; pos < edges.size(); pos++)
+        delete *(&edges[pos]);
 
-        edges.clear();
+    edges.clear();
 }
 
 std::ostream&
 operator<< (std::ostream&os, const EdgeList& el)
 {
-	os << "EdgeList: " << std::endl;
-	for(std::size_t j=0, s=el.edges.size(); j<s; ++j)
-	{
-       		Edge *e=el.edges[j];
-		os << "  " << *e << std::endl;
-	}
-	return os;
+    os << "EdgeList: " << std::endl;
+    for(std::size_t j=0, s=el.edges.size(); j<s; ++j)
+    {
+        Edge *e=el.edges[j];
+        os << "  " << *e << std::endl;
+    }
+    return os;
 }
 
 EdgeList::~EdgeList()
 {
-	for (EdgeMap::iterator i=ocaMap.begin(), e=ocaMap.end(); i!=e; ++i)
-	{
-		delete i->first; // OrientedCoordinateArray
-	}
+    for (EdgeMap::iterator i=ocaMap.begin(), e=ocaMap.end(); i!=e; ++i)
+    {
+        delete i->first; // OrientedCoordinateArray
+    }
 }
 
 } // namespace geos.geomgraph

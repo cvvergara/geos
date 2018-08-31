@@ -47,9 +47,9 @@
 
 typedef enum eAllocCheckOutput
 {
-  ACOutput_Simple,
-  ACOutput_Advanced,
-  ACOutput_XML
+    ACOutput_Simple,
+    ACOutput_Advanced,
+    ACOutput_XML
 };
 
 // Make extern "C", so it will also work with normal C-Programs

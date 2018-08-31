@@ -33,26 +33,26 @@ Coordinate Coordinate::_nullCoord=Coordinate(DoubleNotANumber,DoubleNotANumber,D
 Coordinate&
 Coordinate::getNull()
 {
-	return _nullCoord;
+    return _nullCoord;
 }
 
 string
 Coordinate::toString() const
 {
-	ostringstream s;
-	s << std::setprecision(17) << *this;
-	return s.str();
+    ostringstream s;
+    s << std::setprecision(17) << *this;
+    return s.str();
 }
 
 std::ostream& operator<< (std::ostream& os, const Coordinate& c)
 {
-	if ( ISNAN(c.z) )
-	{
-		os << c.x << " " << c.y;
-	} else {
-		os << c.x << " " << c.y << " " << c.z;
-	}
-	return os;
+    if ( ISNAN(c.z) )
+    {
+        os << c.x << " " << c.y;
+    } else {
+        os << c.x << " " << c.y << " " << c.z;
+    }
+    return os;
 }
 
 } // namespace geos::geom

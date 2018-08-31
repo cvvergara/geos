@@ -30,22 +30,22 @@ namespace util { // geos.geom.util
 void
 ShortCircuitedGeometryVisitor::applyTo(const Geometry &geom)
 {
-	for (std::size_t i=0, n=geom.getNumGeometries(); i<n; ++i)
-	{
-		const Geometry *element = geom.getGeometryN(i);
-		if (dynamic_cast<const GeometryCollection*>(element))
-		{
-			applyTo(*element);
-		}
-		else
-		{
-			// calls the abstract virtual
-			visit(*element);
-			if (isDone()) done = true;
-		}
+    for (std::size_t i=0, n=geom.getNumGeometries(); i<n; ++i)
+    {
+        const Geometry *element = geom.getGeometryN(i);
+        if (dynamic_cast<const GeometryCollection*>(element))
+        {
+            applyTo(*element);
+        }
+        else
+        {
+            // calls the abstract virtual
+            visit(*element);
+            if (isDone()) done = true;
+        }
 
-		if ( done ) return;
-	}
+        if ( done ) return;
+    }
 }
 
 

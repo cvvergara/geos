@@ -22,32 +22,32 @@ std::ostream& operator<<(std::ostream& os, const tut::test_result& tr)
 {
     switch(tr.result)
     {
-        case tut::test_result::ok:
-            os << '.';
-            break;
-        case tut::test_result::fail:
-            os << '[' << tr.test << "=F]";
-            break;
-        case tut::test_result::ex_ctor:
-            os << '[' << tr.test << "=C]";
-            break;
-        case tut::test_result::ex:
-            os << '[' << tr.test << "=X]";
-            break;
-        case tut::test_result::warn:
-            os << '[' << tr.test << "=W]";
-            break;
-        case tut::test_result::term:
-            os << '[' << tr.test << "=T]";
-            break;
-        case tut::test_result::rethrown:
-            os << '[' << tr.test << "=P]";
-            break;
-        case tut::test_result::skipped:
-            os << '[' << tr.test << "=S]";
-            break;
-        case tut::test_result::dummy:
-            throw tut::tut_error("console reporter called for dummy test result");
+    case tut::test_result::ok:
+        os << '.';
+        break;
+    case tut::test_result::fail:
+        os << '[' << tr.test << "=F]";
+        break;
+    case tut::test_result::ex_ctor:
+        os << '[' << tr.test << "=C]";
+        break;
+    case tut::test_result::ex:
+        os << '[' << tr.test << "=X]";
+        break;
+    case tut::test_result::warn:
+        os << '[' << tr.test << "=W]";
+        break;
+    case tut::test_result::term:
+        os << '[' << tr.test << "=T]";
+        break;
+    case tut::test_result::rethrown:
+        os << '[' << tr.test << "=P]";
+        break;
+    case tut::test_result::skipped:
+        os << '[' << tr.test << "=S]";
+        break;
+    case tut::test_result::dummy:
+        throw tut::tut_error("console reporter called for dummy test result");
     }
 
     return os;
@@ -125,32 +125,32 @@ public:
 
         // update global statistics
         switch (tr.result) {
-            case test_result::ok:
-                ok_count++;
-                break;
-            case test_result::fail:
-            case test_result::rethrown:
-                failures_count++;
-                break;
-            case test_result::ex:
-            case test_result::ex_ctor:
-                exceptions_count++;
-                break;
-            case test_result::warn:
-                warnings_count++;
-                break;
-            case test_result::term:
-                terminations_count++;
-                break;
-            case test_result::skipped:
-                skipped_count++;
-                break;
-            case tut::test_result::dummy:
-                assert( (tr.result != tut::test_result::dummy) && "Should never be called");
+        case test_result::ok:
+            ok_count++;
+            break;
+        case test_result::fail:
+        case test_result::rethrown:
+            failures_count++;
+            break;
+        case test_result::ex:
+        case test_result::ex_ctor:
+            exceptions_count++;
+            break;
+        case test_result::warn:
+            warnings_count++;
+            break;
+        case test_result::term:
+            terminations_count++;
+            break;
+        case test_result::skipped:
+            skipped_count++;
+            break;
+        case tut::test_result::dummy:
+            assert( (tr.result != tut::test_result::dummy) && "Should never be called");
         } // switch
 
         if ( (tr.result != tut::test_result::ok) &&
-             (tr.result != tut::test_result::skipped) )
+                (tr.result != tut::test_result::skipped) )
         {
             not_passed.push_back(tr);
         }
@@ -170,9 +170,9 @@ public:
                 os << std::endl;
 
                 os << "---> " << "group: " << tr.group
-                << ", test: test<" << tr.test << ">"
-                << (!tr.name.empty() ? (std::string(" : ") + tr.name) : std::string())
-                << std::endl;
+                   << ", test: test<" << tr.test << ">"
+                   << (!tr.name.empty() ? (std::string(" : ") + tr.name) : std::string())
+                   << std::endl;
 
 #if defined(TUT_USE_POSIX)
                 if(tr.pid != getpid())
@@ -195,7 +195,7 @@ public:
                     if( tr.exception_typeid != "" )
                     {
                         os << "     exception typeid: "
-                        << tr.exception_typeid << std::endl;
+                           << tr.exception_typeid << std::endl;
                     }
                     break;
                 case test_result::term:
@@ -203,7 +203,7 @@ public:
                     break;
                 case test_result::warn:
                     os << "test passed, but cleanup code (destructor) raised"
-                        " an exception" << std::endl;
+                       " an exception" << std::endl;
                     break;
                 default:
                     break;
@@ -214,12 +214,12 @@ public:
                     if (tr.result == test_result::fail)
                     {
                         os << "     failed assertion: `" << tr.message << "`"
-                            << std::endl;
+                           << std::endl;
                     }
                     else
                     {
                         os << "     message: `" << tr.message << "`"
-                            << std::endl;
+                           << std::endl;
                     }
                 }
 

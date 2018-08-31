@@ -87,7 +87,9 @@ typedef std::unique_ptr<Geometry> GeomPtr;
 // NOTE: SRID will have to be changed after geometry creation
 GEOSContextHandle_t handle = NULL;
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 
 void
 initGEOS (GEOSMessageHandler nf, GEOSMessageHandler ef)
@@ -117,19 +119,19 @@ finishGEOS ()
 GEOSInterruptCallback*
 GEOS_interruptRegisterCallback(GEOSInterruptCallback* cb)
 {
-  return geos::util::Interrupt::registerCallback(cb);
+    return geos::util::Interrupt::registerCallback(cb);
 }
 
 void
 GEOS_interruptRequest()
 {
-  geos::util::Interrupt::request();
+    geos::util::Interrupt::request();
 }
 
 void
 GEOS_interruptCancel()
 {
-  geos::util::Interrupt::cancel();
+    geos::util::Interrupt::cancel();
 }
 
 void
@@ -250,7 +252,7 @@ GEOSisValidReason(const Geometry *g)
 
 char
 GEOSisValidDetail(const Geometry *g, int flags,
-	char** reason, Geometry ** location)
+                  char** reason, Geometry ** location)
 {
     return GEOSisValidDetail_r( handle, g, flags, reason, location );
 }
@@ -425,26 +427,26 @@ GEOSBuffer(const Geometry *g, double width, int quadrantsegments)
 
 Geometry *
 GEOSBufferWithStyle(const Geometry *g, double width, int quadsegs,
-	int endCapStyle, int joinStyle, double mitreLimit)
+                    int endCapStyle, int joinStyle, double mitreLimit)
 {
     return GEOSBufferWithStyle_r( handle, g, width, quadsegs, endCapStyle,
-                               joinStyle, mitreLimit );
+                                  joinStyle, mitreLimit );
 }
 
 Geometry *
 GEOSSingleSidedBuffer(const Geometry *g, double width, int quadsegs,
-	int joinStyle, double mitreLimit, int leftSide)
+                      int joinStyle, double mitreLimit, int leftSide)
 {
     return GEOSSingleSidedBuffer_r( handle, g, width, quadsegs,
-                               joinStyle, mitreLimit, leftSide );
+                                    joinStyle, mitreLimit, leftSide );
 }
 
 Geometry *
 GEOSOffsetCurve(const Geometry *g, double width, int quadsegs,
-	int joinStyle, double mitreLimit)
+                int joinStyle, double mitreLimit)
 {
     return GEOSOffsetCurve_r( handle, g, width, quadsegs,
-                               joinStyle, mitreLimit );
+                              joinStyle, mitreLimit );
 }
 
 Geometry *
@@ -516,7 +518,7 @@ GEOSNode(const Geometry *g)
 Geometry *
 GEOSUnionCascaded(const Geometry *g)
 {
-	return GEOSUnionCascaded_r( handle, g );
+    return GEOSUnionCascaded_r( handle, g );
 }
 
 Geometry *
@@ -594,7 +596,7 @@ GEOSGetGeometryN(const Geometry *g, int n)
 Geometry *
 GEOSGeomGetPointN(const Geometry *g, int n)
 {
-	return GEOSGeomGetPointN_r(handle, g, n);
+    return GEOSGeomGetPointN_r(handle, g, n);
 }
 
 /*
@@ -603,7 +605,7 @@ GEOSGeomGetPointN(const Geometry *g, int n)
 Geometry *
 GEOSGeomGetStartPoint(const Geometry *g)
 {
-	return GEOSGeomGetStartPoint_r(handle, g);
+    return GEOSGeomGetStartPoint_r(handle, g);
 }
 
 /*
@@ -612,7 +614,7 @@ GEOSGeomGetStartPoint(const Geometry *g)
 Geometry *
 GEOSGeomGetEndPoint(const Geometry *g)
 {
-	return GEOSGeomGetEndPoint_r(handle, g);
+    return GEOSGeomGetEndPoint_r(handle, g);
 }
 
 /*
@@ -622,7 +624,7 @@ GEOSGeomGetEndPoint(const Geometry *g)
 char
 GEOSisClosed(const Geometry *g)
 {
-	return GEOSisClosed_r(handle, g);
+    return GEOSisClosed_r(handle, g);
 }
 
 /*
@@ -632,7 +634,7 @@ GEOSisClosed(const Geometry *g)
 int
 GEOSGeomGetLength(const Geometry *g, double *length)
 {
-	return GEOSGeomGetLength_r(handle, g, length);
+    return GEOSGeomGetLength_r(handle, g, length);
 }
 
 /*
@@ -642,7 +644,7 @@ GEOSGeomGetLength(const Geometry *g, double *length)
 int
 GEOSGeomGetNumPoints(const Geometry *g)
 {
-	return GEOSGeomGetNumPoints_r(handle, g);
+    return GEOSGeomGetNumPoints_r(handle, g);
 }
 
 /*
@@ -652,7 +654,7 @@ GEOSGeomGetNumPoints(const Geometry *g)
 int
 GEOSGeomGetX(const Geometry *g, double *x)
 {
-	return GEOSGeomGetX_r(handle, g, x);
+    return GEOSGeomGetX_r(handle, g, x);
 }
 
 /*
@@ -662,7 +664,7 @@ GEOSGeomGetX(const Geometry *g, double *x)
 int
 GEOSGeomGetY(const Geometry *g, double *y)
 {
-	return GEOSGeomGetY_r(handle, g, y);
+    return GEOSGeomGetY_r(handle, g, y);
 }
 
 /*
@@ -672,7 +674,7 @@ GEOSGeomGetY(const Geometry *g, double *y)
 int
 GEOSGeomGetZ(const Geometry *g1, double *z)
 {
-	return GEOSGeomGetZ_r(handle, g1, z);
+    return GEOSGeomGetZ_r(handle, g1, z);
 }
 
 /*
@@ -721,7 +723,7 @@ GEOSPolygonizer_getCutEdges(const Geometry * const * g, unsigned int ngeoms)
 
 GEOSGeometry *
 GEOSPolygonize_full(const GEOSGeometry* input,
-	GEOSGeometry** cuts, GEOSGeometry** dangles, GEOSGeometry** invalid)
+                    GEOSGeometry** cuts, GEOSGeometry** dangles, GEOSGeometry** invalid)
 {
     return GEOSPolygonize_full_r(handle, input, cuts, dangles, invalid );
 }
@@ -783,13 +785,13 @@ GEOS_setWKBOutputDims(int newdims)
 int
 GEOS_getWKBByteOrder()
 {
-	return GEOS_getWKBByteOrder_r( handle );
+    return GEOS_getWKBByteOrder_r( handle );
 }
 
 int
 GEOS_setWKBByteOrder(int byteOrder)
 {
-	return GEOS_setWKBByteOrder_r( handle, byteOrder );
+    return GEOS_setWKBByteOrder_r( handle, byteOrder );
 }
 
 
@@ -808,19 +810,19 @@ GEOSCoordSeq_setOrdinate(CoordinateSequence *s, unsigned int idx, unsigned int d
 int
 GEOSCoordSeq_setX(CoordinateSequence *s, unsigned int idx, double val)
 {
-	return GEOSCoordSeq_setOrdinate(s, idx, 0, val);
+    return GEOSCoordSeq_setOrdinate(s, idx, 0, val);
 }
 
 int
 GEOSCoordSeq_setY(CoordinateSequence *s, unsigned int idx, double val)
 {
-	return GEOSCoordSeq_setOrdinate(s, idx, 1, val);
+    return GEOSCoordSeq_setOrdinate(s, idx, 1, val);
 }
 
 int
 GEOSCoordSeq_setZ(CoordinateSequence *s, unsigned int idx, double val)
 {
-	return GEOSCoordSeq_setOrdinate(s, idx, 2, val);
+    return GEOSCoordSeq_setOrdinate(s, idx, 2, val);
 }
 
 CoordinateSequence *
@@ -838,19 +840,19 @@ GEOSCoordSeq_getOrdinate(const CoordinateSequence *s, unsigned int idx, unsigned
 int
 GEOSCoordSeq_getX(const CoordinateSequence *s, unsigned int idx, double *val)
 {
-	return GEOSCoordSeq_getOrdinate(s, idx, 0, val);
+    return GEOSCoordSeq_getOrdinate(s, idx, 0, val);
 }
 
 int
 GEOSCoordSeq_getY(const CoordinateSequence *s, unsigned int idx, double *val)
 {
-	return GEOSCoordSeq_getOrdinate(s, idx, 1, val);
+    return GEOSCoordSeq_getOrdinate(s, idx, 1, val);
 }
 
 int
 GEOSCoordSeq_getZ(const CoordinateSequence *s, unsigned int idx, double *val)
 {
-	return GEOSCoordSeq_getOrdinate(s, idx, 2, val);
+    return GEOSCoordSeq_getOrdinate(s, idx, 2, val);
 }
 
 int
@@ -916,13 +918,13 @@ GEOSGeom_clone(const Geometry *g)
 GEOSGeometry *
 GEOSGeom_setPrecision(const GEOSGeometry *g, double gridSize, int flags)
 {
-	return GEOSGeom_setPrecision_r(handle, g, gridSize, flags);
+    return GEOSGeom_setPrecision_r(handle, g, gridSize, flags);
 }
 
 double
 GEOSGeom_getPrecision(const GEOSGeometry *g)
 {
-	return GEOSGeom_getPrecision_r(handle, g);
+    return GEOSGeom_getPrecision_r(handle, g);
 }
 
 int
@@ -1012,31 +1014,31 @@ GEOSWKTWriter_write(WKTWriter *writer, const Geometry *geom)
 void
 GEOSWKTWriter_setTrim(WKTWriter *writer, char trim)
 {
-	GEOSWKTWriter_setTrim_r(handle, writer, trim);
+    GEOSWKTWriter_setTrim_r(handle, writer, trim);
 }
 
 void
 GEOSWKTWriter_setRoundingPrecision(WKTWriter *writer, int precision)
 {
-	return GEOSWKTWriter_setRoundingPrecision_r(handle, writer, precision);
+    return GEOSWKTWriter_setRoundingPrecision_r(handle, writer, precision);
 }
 
 void
 GEOSWKTWriter_setOutputDimension(WKTWriter *writer, int dim)
 {
-	GEOSWKTWriter_setOutputDimension_r(handle, writer, dim);
+    GEOSWKTWriter_setOutputDimension_r(handle, writer, dim);
 }
 
 int
 GEOSWKTWriter_getOutputDimension(WKTWriter *writer)
 {
-	return GEOSWKTWriter_getOutputDimension_r(handle, writer);
+    return GEOSWKTWriter_getOutputDimension_r(handle, writer);
 }
 
 void
 GEOSWKTWriter_setOld3D(WKTWriter *writer, int useOld3D)
 {
-	GEOSWKTWriter_setOld3D_r(handle, writer, useOld3D);
+    GEOSWKTWriter_setOld3D_r(handle, writer, useOld3D);
 }
 
 /* WKB Reader */
@@ -1327,7 +1329,7 @@ GEOSGeom_createEmptyPolygon()
 
 int
 GEOSOrientationIndex(double Ax, double Ay, double Bx, double By,
-	double Px, double Py)
+                     double Px, double Py)
 {
     return GEOSOrientationIndex_r(handle, Ax, Ay, Bx, By, Px, Py);
 }
@@ -1341,67 +1343,67 @@ GEOSSharedPaths(const GEOSGeometry* g1, const GEOSGeometry* g2)
 GEOSGeometry *
 GEOSSnap(const GEOSGeometry* g1, const GEOSGeometry* g2, double tolerance)
 {
-  return GEOSSnap_r(handle, g1, g2, tolerance);
+    return GEOSSnap_r(handle, g1, g2, tolerance);
 }
 
 GEOSBufferParams*
 GEOSBufferParams_create()
 {
-  return GEOSBufferParams_create_r(handle);
+    return GEOSBufferParams_create_r(handle);
 }
 
 void
 GEOSBufferParams_destroy(GEOSBufferParams* p)
 {
-  return GEOSBufferParams_destroy_r(handle, p);
+    return GEOSBufferParams_destroy_r(handle, p);
 }
 
 int
 GEOSBufferParams_setEndCapStyle(GEOSBufferParams* p, int style)
 {
-  return GEOSBufferParams_setEndCapStyle_r(handle, p, style);
+    return GEOSBufferParams_setEndCapStyle_r(handle, p, style);
 }
 
 int
 GEOSBufferParams_setJoinStyle(GEOSBufferParams* p, int joinStyle)
 {
-  return GEOSBufferParams_setJoinStyle_r(handle, p, joinStyle);
+    return GEOSBufferParams_setJoinStyle_r(handle, p, joinStyle);
 }
 
 int
 GEOSBufferParams_setMitreLimit(GEOSBufferParams* p, double l)
 {
-  return GEOSBufferParams_setMitreLimit_r(handle, p, l);
+    return GEOSBufferParams_setMitreLimit_r(handle, p, l);
 }
 
 int
 GEOSBufferParams_setQuadrantSegments(GEOSBufferParams* p, int joinStyle)
 {
-  return GEOSBufferParams_setQuadrantSegments_r(handle, p, joinStyle);
+    return GEOSBufferParams_setQuadrantSegments_r(handle, p, joinStyle);
 }
 
 int
 GEOSBufferParams_setSingleSided(GEOSBufferParams* p, int singleSided)
 {
-  return GEOSBufferParams_setSingleSided_r(handle, p, singleSided);
+    return GEOSBufferParams_setSingleSided_r(handle, p, singleSided);
 }
 
 Geometry*
 GEOSBufferWithParams(const Geometry* g, const GEOSBufferParams* p, double w)
 {
-  return GEOSBufferWithParams_r(handle, g, p, w);
+    return GEOSBufferWithParams_r(handle, g, p, w);
 }
 
 Geometry *
 GEOSDelaunayTriangulation(const Geometry *g, double tolerance, int onlyEdges)
 {
-  return GEOSDelaunayTriangulation_r(handle, g, tolerance, onlyEdges);
+    return GEOSDelaunayTriangulation_r(handle, g, tolerance, onlyEdges);
 }
 
 Geometry*
 GEOSVoronoiDiagram(const Geometry *g, const Geometry *env, double tolerance, int onlyEdges)
 {
-  return GEOSVoronoiDiagram_r(handle, g, env, tolerance, onlyEdges);
+    return GEOSVoronoiDiagram_r(handle, g, env, tolerance, onlyEdges);
 }
 
 int
@@ -1410,9 +1412,10 @@ GEOSSegmentIntersection(double ax0, double ay0, double ax1, double ay1,
                         double* cx, double* cy)
 {
     return GEOSSegmentIntersection_r(handle,
-        ax0, ay0, ax1, ay1,
-        bx0, by0, bx1, by1,
-        cx, cy);
+                                     ax0, ay0, ax1, ay1,
+                                     bx0, by0, bx1, by1,
+                                     cx, cy);
 }
-
+#ifdef __cplusplus
 } /* extern "C" */
+#endif

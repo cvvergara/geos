@@ -41,89 +41,89 @@ namespace geom { // geos::geom
 
 /*protected*/
 MultiPolygon::MultiPolygon(vector<Geometry *> *newPolys, const GeometryFactory *factory)
-	: Geometry(factory),
-	  GeometryCollection(newPolys,factory)
+    : Geometry(factory),
+      GeometryCollection(newPolys,factory)
 {}
 
-MultiPolygon::~MultiPolygon(){}
+MultiPolygon::~MultiPolygon() {}
 
 Dimension::DimensionType
 MultiPolygon::getDimension() const {
-	return Dimension::A; // area
+    return Dimension::A; // area
 }
 
 int MultiPolygon::getBoundaryDimension() const {
-	return 1;
+    return 1;
 }
 
 string MultiPolygon::getGeometryType() const {
-	return "MultiPolygon";
+    return "MultiPolygon";
 }
 
 bool MultiPolygon::isSimple() const {
-	return true;
+    return true;
 }
 
 Geometry* MultiPolygon::getBoundary() const {
-	if (isEmpty()) {
-		return getFactory()->createMultiLineString();
-	}
-	vector<Geometry *>* allRings=new vector<Geometry *>();
-	for (size_t i = 0; i < geometries->size(); i++) {
-		Polygon *pg=dynamic_cast<Polygon *>((*geometries)[i]);
-		assert(pg);
-		Geometry *g=pg->getBoundary();
-		if ( LineString *ls=dynamic_cast<LineString *>(g) )
-		{
-			allRings->push_back(ls);
-		}
-		else
-		{
-			GeometryCollection* rings=dynamic_cast<GeometryCollection*>(g);
-			for (size_t j=0, jn=rings->getNumGeometries();
-					j<jn; ++j)
-			{
-				//allRings->push_back(new LineString(*(LineString*)rings->getGeometryN(j)));
-				allRings->push_back(rings->getGeometryN(j)->clone());
-			}
-			delete g;
-		}
-	}
+    if (isEmpty()) {
+        return getFactory()->createMultiLineString();
+    }
+    vector<Geometry *>* allRings=new vector<Geometry *>();
+    for (size_t i = 0; i < geometries->size(); i++) {
+        Polygon *pg=dynamic_cast<Polygon *>((*geometries)[i]);
+        assert(pg);
+        Geometry *g=pg->getBoundary();
+        if ( LineString *ls=dynamic_cast<LineString *>(g) )
+        {
+            allRings->push_back(ls);
+        }
+        else
+        {
+            GeometryCollection* rings=dynamic_cast<GeometryCollection*>(g);
+            for (size_t j=0, jn=rings->getNumGeometries();
+                    j<jn; ++j)
+            {
+                //allRings->push_back(new LineString(*(LineString*)rings->getGeometryN(j)));
+                allRings->push_back(rings->getGeometryN(j)->clone());
+            }
+            delete g;
+        }
+    }
 
-	Geometry *ret=getFactory()->createMultiLineString(allRings);
-	//for (int i=0; i<allRings->size(); i++) delete (*allRings)[i];
-	//delete allRings;
-	return ret;
+    Geometry *ret=getFactory()->createMultiLineString(allRings);
+    //for (int i=0; i<allRings->size(); i++) delete (*allRings)[i];
+    //delete allRings;
+    return ret;
 }
 
 bool
 MultiPolygon::equalsExact(const Geometry *other, double tolerance) const
 {
     if (!isEquivalentClass(other)) {
-      return false;
+        return false;
     }
-	return GeometryCollection::equalsExact(other, tolerance);
+    return GeometryCollection::equalsExact(other, tolerance);
 }
 GeometryTypeId
 MultiPolygon::getGeometryTypeId() const {
-	return GEOS_MULTIPOLYGON;
+    return GEOS_MULTIPOLYGON;
 }
 
 Geometry*
 MultiPolygon::reverse() const
 {
-	if (isEmpty()) {
-		return clone();
-	}
+    if (isEmpty()) {
+        return clone();
+    }
 
-    auto* reversed = new std::vector<Geometry*>{geometries->size()};
+    auto* reversed = new std::vector<Geometry*> {geometries->size()};
 
     std::transform(geometries->begin(),
                    geometries->end(),
                    reversed->begin(),
-                   [](const Geometry* g) {
-                       return g->reverse();
-                   });
+    [](const Geometry* g) {
+        return g->reverse();
+    });
 
     return getFactory()->createMultiPolygon(reversed);
 }

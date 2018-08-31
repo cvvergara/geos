@@ -33,45 +33,45 @@ namespace noding { // geos.noding
 void
 FastNodingValidator::checkInteriorIntersections()
 {
-	isValidVar = true;
-	segInt.reset(new SingleInteriorIntersectionFinder(li));
-	MCIndexNoder noder;
-	noder.setSegmentIntersector(segInt.get());
-	noder.computeNodes(&segStrings);
-	if (segInt->hasIntersection()) {
-		isValidVar = false;
-		return;
-	}
+    isValidVar = true;
+    segInt.reset(new SingleInteriorIntersectionFinder(li));
+    MCIndexNoder noder;
+    noder.setSegmentIntersector(segInt.get());
+    noder.computeNodes(&segStrings);
+    if (segInt->hasIntersection()) {
+        isValidVar = false;
+        return;
+    }
 }
 
 /*public*/
 std::string
 FastNodingValidator::getErrorMessage() const
 {
-	using geos::io::WKTWriter;
-	using geos::geom::Coordinate;
+    using geos::io::WKTWriter;
+    using geos::geom::Coordinate;
 
-	if (isValidVar) return std::string("no intersections found");
+    if (isValidVar) return std::string("no intersections found");
 
-	//return std::string("found non-noded intersection etc etc");
+    //return std::string("found non-noded intersection etc etc");
 
-	const std::vector<Coordinate>& intSegs = segInt->getIntersectionSegments();
-	assert(intSegs.size() == 4);
-	return "found non-noded intersection between "
-		+ WKTWriter::toLineString(intSegs[0], intSegs[1])
-		+ " and "
-		+ WKTWriter::toLineString(intSegs[2], intSegs[3]);
+    const std::vector<Coordinate>& intSegs = segInt->getIntersectionSegments();
+    assert(intSegs.size() == 4);
+    return "found non-noded intersection between "
+           + WKTWriter::toLineString(intSegs[0], intSegs[1])
+           + " and "
+           + WKTWriter::toLineString(intSegs[2], intSegs[3]);
 }
 
 void
 FastNodingValidator::checkValid()
 {
-	execute();
-	if (! isValidVar)
-	{
-		//std::cerr << "Not valid: " << getErrorMessage() << " interior intersection: " << segInt->getInteriorIntersection() << std::endl;
-		throw util::TopologyException(getErrorMessage(), segInt->getInteriorIntersection());
-	}
+    execute();
+    if (! isValidVar)
+    {
+        //std::cerr << "Not valid: " << getErrorMessage() << " interior intersection: " << segInt->getInteriorIntersection() << std::endl;
+        throw util::TopologyException(getErrorMessage(), segInt->getInteriorIntersection());
+    }
 }
 
 } // namespace geos.noding

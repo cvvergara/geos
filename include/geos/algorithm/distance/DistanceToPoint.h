@@ -22,17 +22,17 @@
 #include <geos/geom/LineSegment.h> // for composition
 
 namespace geos {
-	namespace algorithm {
-		namespace distance {
-			class PointPairDistance;
-		}
-	}
-	namespace geom {
-		class Geometry;
-		class Coordinate;
-		class LineString;
-		class Polygon;
-	}
+namespace algorithm {
+namespace distance {
+class PointPairDistance;
+}
+}
+namespace geom {
+class Geometry;
+class Coordinate;
+class LineString;
+class Polygon;
+}
 }
 
 namespace geos {
@@ -48,23 +48,23 @@ class DistanceToPoint
 {
 public:
 
-	DistanceToPoint() {}
+    DistanceToPoint() {}
 
-	static void computeDistance(const geom::Geometry& geom,
-			            const geom::Coordinate& pt,
-	                            PointPairDistance& ptDist);
+    static void computeDistance(const geom::Geometry& geom,
+                                const geom::Coordinate& pt,
+                                PointPairDistance& ptDist);
 
-	static void computeDistance(const geom::LineString& geom,
-			            const geom::Coordinate& pt,
-	                            PointPairDistance& ptDist);
+    static void computeDistance(const geom::LineString& geom,
+                                const geom::Coordinate& pt,
+                                PointPairDistance& ptDist);
 
-	static void computeDistance(const geom::LineSegment& geom,
-			            const geom::Coordinate& pt,
-	                            PointPairDistance& ptDist);
+    static void computeDistance(const geom::LineSegment& geom,
+                                const geom::Coordinate& pt,
+                                PointPairDistance& ptDist);
 
-	static void computeDistance(const geom::Polygon& geom,
-			            const geom::Coordinate& pt,
-	                            PointPairDistance& ptDist);
+    static void computeDistance(const geom::Polygon& geom,
+                                const geom::Coordinate& pt,
+                                PointPairDistance& ptDist);
 
 };
 

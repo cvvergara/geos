@@ -15,42 +15,42 @@
 
 namespace tut
 {
-    //
-    // Test Group
-    //
+//
+// Test Group
+//
 
-    struct basic {};
+struct basic {};
 
-    typedef test_group<basic> group;
-    typedef group::object object;
+typedef test_group<basic> group;
+typedef group::object object;
 
-    group test_capidefines_group("capi::defines");
+group test_capidefines_group("capi::defines");
 
-    // Make sure version elements all defined
-    template<>
-    template<>
-    void object::test<1>() {
-        ensure(std::string(EXPAND_AND_QUOTE(GEOS_VERSION_MAJOR)).length() > 0);
-        ensure(std::string(EXPAND_AND_QUOTE(GEOS_VERSION_MINOR)).length() > 0);
-        ensure(std::string(EXPAND_AND_QUOTE(GEOS_VERSION_PATCH)).length() > 0);
-        ensure(std::string(GEOS_VERSION).length() > 0);
+// Make sure version elements all defined
+template<>
+template<>
+void object::test<1>() {
+    ensure(std::string(EXPAND_AND_QUOTE(GEOS_VERSION_MAJOR)).length() > 0);
+    ensure(std::string(EXPAND_AND_QUOTE(GEOS_VERSION_MINOR)).length() > 0);
+    ensure(std::string(EXPAND_AND_QUOTE(GEOS_VERSION_PATCH)).length() > 0);
+    ensure(std::string(GEOS_VERSION).length() > 0);
 
-        ensure(std::string(EXPAND_AND_QUOTE(GEOS_CAPI_VERSION_MAJOR)).length() > 0);
-        ensure(std::string(EXPAND_AND_QUOTE(GEOS_CAPI_VERSION_MINOR)).length() > 0);
-        ensure(std::string(EXPAND_AND_QUOTE(GEOS_CAPI_VERSION_PATCH)).length() > 0);
-        ensure(std::string(GEOS_CAPI_VERSION).length() > 0);
-    }
+    ensure(std::string(EXPAND_AND_QUOTE(GEOS_CAPI_VERSION_MAJOR)).length() > 0);
+    ensure(std::string(EXPAND_AND_QUOTE(GEOS_CAPI_VERSION_MINOR)).length() > 0);
+    ensure(std::string(EXPAND_AND_QUOTE(GEOS_CAPI_VERSION_PATCH)).length() > 0);
+    ensure(std::string(GEOS_CAPI_VERSION).length() > 0);
+}
 
-    // Make sure version representations agree
-    template<>
-    template<>
-    void object::test<2>() {
-        ensure_equals(
-                GEOS_VERSION,
-                std::string(EXPAND_AND_QUOTE(GEOS_VERSION_MAJOR)) + "." +
-                std::string(EXPAND_AND_QUOTE(GEOS_VERSION_MINOR)) + "." +
-                std::string(EXPAND_AND_QUOTE(GEOS_VERSION_PATCH)));
-    }
+// Make sure version representations agree
+template<>
+template<>
+void object::test<2>() {
+    ensure_equals(
+        GEOS_VERSION,
+        std::string(EXPAND_AND_QUOTE(GEOS_VERSION_MAJOR)) + "." +
+        std::string(EXPAND_AND_QUOTE(GEOS_VERSION_MINOR)) + "." +
+        std::string(EXPAND_AND_QUOTE(GEOS_VERSION_PATCH)));
+}
 
 } // namespace tut
 

@@ -24,7 +24,7 @@ namespace quadedge { //geos.triangulate.quadedge
 
 LocateFailureException::LocateFailureException(std::string const&msg)
 {
-	util::GEOSException("LocateFailureException", msg);
+    util::GEOSException("LocateFailureException", msg);
 }
 
 } //namespace geos.triangulate.quadedge

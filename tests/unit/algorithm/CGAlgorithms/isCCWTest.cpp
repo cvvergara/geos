@@ -22,109 +22,109 @@ using namespace geos::algorithm;
 
 namespace tut
 {
-    //
-    // Test Group
-    //
+//
+// Test Group
+//
 
-    struct test_isccw_data
+struct test_isccw_data
+{
+    typedef std::unique_ptr<geos::geom::Geometry> GeometryPtr;
+
+    geos::geom::CoordinateSequence* cs_;
+    geos::io::WKTReader reader_;
+    geos::io::WKBReader breader_;
+
+    test_isccw_data()
+        : cs_(nullptr)
     {
-	    typedef std::unique_ptr<geos::geom::Geometry> GeometryPtr;
-
-        geos::geom::CoordinateSequence* cs_;
-        geos::io::WKTReader reader_;
-        geos::io::WKBReader breader_;
-
-        test_isccw_data()
-            : cs_(nullptr)
-        {
-            assert(nullptr == cs_);
-        }
-
-        ~test_isccw_data()
-        {
-            delete cs_;
-            cs_ = nullptr;
-        }
-    };
-
-    typedef test_group<test_isccw_data> group;
-    typedef group::object object;
-
-    group test_isccw_group("geos::algorithm::CGAlgorithms::isCCW");
-
-    //
-    // Test Cases
-    //
-
-    // 1 - Test if coordinates of polygon are counter-clockwise oriented
-    template<>
-    template<>
-    void object::test<1>()
-    {
-        const std::string wkt("POLYGON ((60 180, 140 240, 140 240, 140 240, 200 180, 120 120, 60 180))");
-		GeometryPtr geom(reader_.read(wkt));
-
-        cs_ = geom->getCoordinates();
-        bool isCCW = CGAlgorithms::isCCW(cs_);
-
-        ensure_equals( false, isCCW );
+        assert(nullptr == cs_);
     }
 
-    // 2 - Test if coordinates of polygon are counter-clockwise oriented
-    template<>
-    template<>
-    void object::test<2>()
+    ~test_isccw_data()
     {
-        const std::string wkt("POLYGON ((60 180, 140 120, 100 180, 140 240, 60 180))");
-		GeometryPtr geom(reader_.read(wkt));
-
-        cs_ = geom->getCoordinates();
-        bool isCCW = CGAlgorithms::isCCW(cs_);
-
-        ensure_equals( true, isCCW );
+        delete cs_;
+        cs_ = nullptr;
     }
+};
 
-    // 3 - Test the same polygon as in test No 2 but with duplicated top point
-    template<>
-    template<>
-    void object::test<3>()
-    {
-        const std::string wkt("POLYGON ((60 180, 140 120, 100 180, 140 240, 140 240, 60 180))");
-		GeometryPtr geom(reader_.read(wkt));
+typedef test_group<test_isccw_data> group;
+typedef group::object object;
 
-        cs_ = geom->getCoordinates();
-        bool isCCW = CGAlgorithms::isCCW(cs_);
+group test_isccw_group("geos::algorithm::CGAlgorithms::isCCW");
 
-        ensure_equals( true, isCCW );
-    }
+//
+// Test Cases
+//
 
-    // 4 - Test orientation the narrow (almost collapsed) ring
-    //     resulting in GEOS during execution of the union described
-    //     in http://trac.osgeo.org/geos/ticket/398
-    template<>
-    template<>
-    void object::test<4>()
-    {
-        std::istringstream wkt("0102000000040000000000000000000000841D588465963540F56BFB214F0341408F26B714B2971B40F66BFB214F0341408C26B714B2971B400000000000000000841D588465963540");
-        GeometryPtr geom(breader_.readHEX(wkt));
-        cs_ = geom->getCoordinates();
-        bool isCCW = CGAlgorithms::isCCW(cs_);
-        ensure_equals( isCCW, false );
-    }
+// 1 - Test if coordinates of polygon are counter-clockwise oriented
+template<>
+template<>
+void object::test<1>()
+{
+    const std::string wkt("POLYGON ((60 180, 140 240, 140 240, 140 240, 200 180, 120 120, 60 180))");
+    GeometryPtr geom(reader_.read(wkt));
 
-    // 5 - Test orientation the narrow (almost collapsed) ring
-    //     resulting in JTS during execution of the union described
-    //     in http://trac.osgeo.org/geos/ticket/398
-    template<>
-    template<>
-    void object::test<5>()
-    {
-        std::istringstream wkt("0102000000040000000000000000000000841D588465963540F56BFB214F0341408F26B714B2971B40F66BFB214F0341408E26B714B2971B400000000000000000841D588465963540");
-        GeometryPtr geom(breader_.readHEX(wkt));
-        cs_ = geom->getCoordinates();
-        bool isCCW = CGAlgorithms::isCCW(cs_);
-        ensure_equals( isCCW, true );
-    }
+    cs_ = geom->getCoordinates();
+    bool isCCW = CGAlgorithms::isCCW(cs_);
+
+    ensure_equals( false, isCCW );
+}
+
+// 2 - Test if coordinates of polygon are counter-clockwise oriented
+template<>
+template<>
+void object::test<2>()
+{
+    const std::string wkt("POLYGON ((60 180, 140 120, 100 180, 140 240, 60 180))");
+    GeometryPtr geom(reader_.read(wkt));
+
+    cs_ = geom->getCoordinates();
+    bool isCCW = CGAlgorithms::isCCW(cs_);
+
+    ensure_equals( true, isCCW );
+}
+
+// 3 - Test the same polygon as in test No 2 but with duplicated top point
+template<>
+template<>
+void object::test<3>()
+{
+    const std::string wkt("POLYGON ((60 180, 140 120, 100 180, 140 240, 140 240, 60 180))");
+    GeometryPtr geom(reader_.read(wkt));
+
+    cs_ = geom->getCoordinates();
+    bool isCCW = CGAlgorithms::isCCW(cs_);
+
+    ensure_equals( true, isCCW );
+}
+
+// 4 - Test orientation the narrow (almost collapsed) ring
+//     resulting in GEOS during execution of the union described
+//     in http://trac.osgeo.org/geos/ticket/398
+template<>
+template<>
+void object::test<4>()
+{
+    std::istringstream wkt("0102000000040000000000000000000000841D588465963540F56BFB214F0341408F26B714B2971B40F66BFB214F0341408C26B714B2971B400000000000000000841D588465963540");
+    GeometryPtr geom(breader_.readHEX(wkt));
+    cs_ = geom->getCoordinates();
+    bool isCCW = CGAlgorithms::isCCW(cs_);
+    ensure_equals( isCCW, false );
+}
+
+// 5 - Test orientation the narrow (almost collapsed) ring
+//     resulting in JTS during execution of the union described
+//     in http://trac.osgeo.org/geos/ticket/398
+template<>
+template<>
+void object::test<5>()
+{
+    std::istringstream wkt("0102000000040000000000000000000000841D588465963540F56BFB214F0341408F26B714B2971B40F66BFB214F0341408E26B714B2971B400000000000000000841D588465963540");
+    GeometryPtr geom(breader_.readHEX(wkt));
+    cs_ = geom->getCoordinates();
+    bool isCCW = CGAlgorithms::isCCW(cs_);
+    ensure_equals( isCCW, true );
+}
 
 } // namespace tut
 

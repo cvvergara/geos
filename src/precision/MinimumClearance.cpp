@@ -64,8 +64,8 @@ void MinimumClearance::compute() {
 
     public:
         MinClearanceDistance() :
-                minDist(std::numeric_limits<double>::infinity()),
-                minPts(std::vector<Coordinate>(2))
+            minDist(std::numeric_limits<double>::infinity()),
+            minPts(std::vector<Coordinate>(2))
         {}
 
         const std::vector<Coordinate> * getCoordinates() {
@@ -177,8 +177,8 @@ void MinimumClearance::compute() {
     std::pair<const void *, const void *> nearest = tree.m_tree->nearestNeighbour(&mcd);
 
     minClearance = mcd.distance(
-            static_cast<const FacetSequence *>(nearest.first),
-            static_cast<const FacetSequence *>(nearest.second));
+                       static_cast<const FacetSequence *>(nearest.first),
+                       static_cast<const FacetSequence *>(nearest.second));
 
     const std::vector<Coordinate>* minClearancePtsVec = mcd.getCoordinates();
     minClearancePts->setAt((*minClearancePtsVec)[0], 0);

@@ -65,11 +65,11 @@ template<>
 void object::test<1>()
 {
     g1 = reader.read(
-        "POINT (0 0)"
-        );
+             "POINT (0 0)"
+         );
     g2 = reader.read(
-        "POINT (0 0)"
-        );
+             "POINT (0 0)"
+         );
     pg1 = prep::PreparedGeometryFactory::prepare(g1);
     pg2 = prep::PreparedGeometryFactory::prepare(g2);
 
@@ -83,11 +83,11 @@ template<>
 void object::test<2>()
 {
     g1 = reader.read(
-        "LINESTRING(0 0, 1 1, 0 2)"
-        );
+             "LINESTRING(0 0, 1 1, 0 2)"
+         );
     g2 = reader.read(
-        "POINT (1 1)"
-        );
+             "POINT (1 1)"
+         );
     pg1 = prep::PreparedGeometryFactory::prepare(g1);
     pg2 = prep::PreparedGeometryFactory::prepare(g2);
 
@@ -101,11 +101,11 @@ template<>
 void object::test<3>()
 {
     g1 = reader.read(
-        "LINESTRING(0 0, 1 1, 0 2)"
-        );
+             "LINESTRING(0 0, 1 1, 0 2)"
+         );
     g2 = reader.read(
-        "POINT (0 2)"
-        );
+             "POINT (0 2)"
+         );
     pg1 = prep::PreparedGeometryFactory::prepare(g1);
     pg2 = prep::PreparedGeometryFactory::prepare(g2);
 
@@ -119,11 +119,11 @@ template<>
 void object::test<4>()
 {
     g1 = reader.read(
-        "LINESTRING (-612844.96290006 279079.117329031,-257704.820935236 574364.179187424)"
-        );
+             "LINESTRING (-612844.96290006 279079.117329031,-257704.820935236 574364.179187424)"
+         );
     g2 = reader.read(
-        "POINT (-257704.820935236 574364.179187424)"
-        );
+             "POINT (-257704.820935236 574364.179187424)"
+         );
     pg1 = prep::PreparedGeometryFactory::prepare(g1);
     pg2 = prep::PreparedGeometryFactory::prepare(g2);
 

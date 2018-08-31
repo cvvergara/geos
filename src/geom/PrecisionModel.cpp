@@ -68,79 +68,79 @@ PrecisionModel::makePrecise(double val) const
 void
 PrecisionModel::makePrecise(Coordinate& coord) const
 {
-	// optimization for full precision
-	if (modelType==FLOATING) return;
+    // optimization for full precision
+    if (modelType==FLOATING) return;
 
-	coord.x=makePrecise(coord.x);
-	coord.y=makePrecise(coord.y);
+    coord.x=makePrecise(coord.x);
+    coord.y=makePrecise(coord.y);
 }
 
 
 /*public*/
 PrecisionModel::PrecisionModel()
-	:
-	modelType(FLOATING),
-	scale(0.0)
+    :
+    modelType(FLOATING),
+    scale(0.0)
 {
 #if GEOS_DEBUG
-	cerr<<"PrecisionModel["<<this<<"] ctor()"<<endl;
+    cerr<<"PrecisionModel["<<this<<"] ctor()"<<endl;
 #endif
-	//modelType=FLOATING;
-	//scale=1.0;
+    //modelType=FLOATING;
+    //scale=1.0;
 }
 
 /*public*/
 PrecisionModel::PrecisionModel(Type nModelType)
-	:
-	modelType(nModelType),
-	scale(1.0)
+    :
+    modelType(nModelType),
+    scale(1.0)
 {
 #if GEOS_DEBUG
-	cerr<<"PrecisionModel["<<this<<"] ctor(Type)"<<endl;
+    cerr<<"PrecisionModel["<<this<<"] ctor(Type)"<<endl;
 #endif
-	//modelType=nModelType;
-	//if (modelType==FIXED) setScale(1.0);
-	//else setScale(666); // arbitrary number for invariant testing
+    //modelType=nModelType;
+    //if (modelType==FIXED) setScale(1.0);
+    //else setScale(666); // arbitrary number for invariant testing
 }
 
 
 /*public (deprecated) */
 PrecisionModel::PrecisionModel(double newScale, double newOffsetX, double newOffsetY)
-		//throw(IllegalArgumentException *)
-	:
-	modelType(FIXED)
+//throw(IllegalArgumentException *)
+    :
+    modelType(FIXED)
 {
     ::geos::ignore_unused_variable_warning(newOffsetX);
     ::geos::ignore_unused_variable_warning(newOffsetY);
 
 #if GEOS_DEBUG
-	cerr<<"PrecisionModel["<<this<<"] ctor(scale,offsets)"<<endl;
+    cerr<<"PrecisionModel["<<this<<"] ctor(scale,offsets)"<<endl;
 #endif
 
-	//modelType = FIXED;
-	setScale(newScale);
+    //modelType = FIXED;
+    setScale(newScale);
 }
 
 /*public*/
 PrecisionModel::PrecisionModel(double newScale)
-		//throw (IllegalArgumentException *)
-	:
-	modelType(FIXED)
+//throw (IllegalArgumentException *)
+    :
+    modelType(FIXED)
 {
 #if GEOS_DEBUG
-	cerr<<"PrecisionModel["<<this<<"] ctor(scale)"<<endl;
+    cerr<<"PrecisionModel["<<this<<"] ctor(scale)"<<endl;
 #endif
-	setScale(newScale);
+    setScale(newScale);
 }
 
 
 PrecisionModel::PrecisionModel(const PrecisionModel &pm)
-	:
-	modelType(pm.modelType),
-	scale(pm.scale)
+    :
+    modelType(pm.modelType),
+    scale(pm.scale)
 {
 #if GEOS_DEBUG
-	cerr<<"PrecisionModel["<<this<<"] ctor(pm["<< &pm <<"])"<<endl;
+    cerr<<"PrecisionModel["<<this<<"] ctor(pm["<< &pm <<"])"<<endl;
 #endif
 }
 
@@ -148,38 +148,38 @@ PrecisionModel::PrecisionModel(const PrecisionModel &pm)
 bool
 PrecisionModel::isFloating() const
 {
-	return (modelType == FLOATING || modelType == FLOATING_SINGLE);
+    return (modelType == FLOATING || modelType == FLOATING_SINGLE);
 }
 
 /*public*/
 int
 PrecisionModel::getMaximumSignificantDigits() const
 {
-	int maxSigDigits = 16;
-	if (modelType == FLOATING) {
-		maxSigDigits = 16;
-	} else if (modelType == FLOATING_SINGLE) {
-		maxSigDigits = 6;
-	} else if (modelType == FIXED) {
+    int maxSigDigits = 16;
+    if (modelType == FLOATING) {
+        maxSigDigits = 16;
+    } else if (modelType == FLOATING_SINGLE) {
+        maxSigDigits = 6;
+    } else if (modelType == FIXED) {
 
-		double dgtsd = std::log(getScale()) / std::log(double(10.0));
-		const int dgts = static_cast<int>(
-			dgtsd > 0 ? std::ceil(dgtsd)
-			          : std::floor(dgtsd)
-		);
-		maxSigDigits = dgts;
-	}
-	return maxSigDigits;
+        double dgtsd = std::log(getScale()) / std::log(double(10.0));
+        const int dgts = static_cast<int>(
+                             dgtsd > 0 ? std::ceil(dgtsd)
+                             : std::floor(dgtsd)
+                         );
+        maxSigDigits = dgts;
+    }
+    return maxSigDigits;
 }
 
 
 /*private*/
 void
 PrecisionModel::setScale(double newScale)
-		// throw IllegalArgumentException
+// throw IllegalArgumentException
 {
-	if ( newScale <= 0 )
-		throw util::IllegalArgumentException("PrecisionModel scale cannot be 0");
+    if ( newScale <= 0 )
+        throw util::IllegalArgumentException("PrecisionModel scale cannot be 0");
     scale = std::fabs(newScale);
 }
 
@@ -187,48 +187,48 @@ PrecisionModel::setScale(double newScale)
 double
 PrecisionModel::getOffsetX() const
 {
-	return 0;
+    return 0;
 }
 
 /*public*/
 double
 PrecisionModel::getOffsetY() const
 {
-	return 0;
+    return 0;
 }
 
 
 string
 PrecisionModel::toString() const
 {
-	ostringstream s;
-  	if (modelType == FLOATING) {
-  		s<<"Floating";
-  	} else if (modelType == FLOATING_SINGLE) {
-  		s<<"Floating-Single";
-  	} else if (modelType == FIXED) {
-		s <<"Fixed (Scale=" << getScale()
-		  << " OffsetX=" << getOffsetX()
-		  << " OffsetY=" << getOffsetY()
-		  << ")";
-	} else {
-		s<<"UNKNOWN";
-	}
-	return s.str();
+    ostringstream s;
+    if (modelType == FLOATING) {
+        s<<"Floating";
+    } else if (modelType == FLOATING_SINGLE) {
+        s<<"Floating-Single";
+    } else if (modelType == FIXED) {
+        s <<"Fixed (Scale=" << getScale()
+          << " OffsetX=" << getOffsetX()
+          << " OffsetY=" << getOffsetY()
+          << ")";
+    } else {
+        s<<"UNKNOWN";
+    }
+    return s.str();
 }
 
 bool operator==(const PrecisionModel& a, const PrecisionModel& b) {
-	return a.isFloating() == b.isFloating() &&
-			a.getScale() == b.getScale();
+    return a.isFloating() == b.isFloating() &&
+           a.getScale() == b.getScale();
 }
 
 /*public*/
 int
 PrecisionModel::compareTo(const PrecisionModel *other) const
 {
-	int sigDigits=getMaximumSignificantDigits();
-	int otherSigDigits=other->getMaximumSignificantDigits();
-	return sigDigits<otherSigDigits? -1: (sigDigits==otherSigDigits? 0:1);
+    int sigDigits=getMaximumSignificantDigits();
+    int otherSigDigits=other->getMaximumSignificantDigits();
+    return sigDigits<otherSigDigits? -1: (sigDigits==otherSigDigits? 0:1);
 }
 
 } // namespace geos::geom

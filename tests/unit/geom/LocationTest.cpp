@@ -9,75 +9,75 @@
 
 namespace tut
 {
-    //
-    // Test Group
-    //
+//
+// Test Group
+//
 
-    // Common data used by tests
-    struct test_location_data
+// Common data used by tests
+struct test_location_data
+{
+    int undef;
+    int interior;
+    int boundary;
+    int exterior;
+    test_location_data()
+        : undef(geos::geom::Location::UNDEF),
+          interior(geos::geom::Location::INTERIOR),
+          boundary(geos::geom::Location::BOUNDARY),
+          exterior(geos::geom::Location::EXTERIOR)
+    {}
+};
+
+typedef test_group<test_location_data> group;
+typedef group::object object;
+
+group test_location_group("geos::geom::Location");
+
+//
+// Test Cases
+//
+
+// Test of default constructor
+template<>
+template<>
+void object::test<1>()
+{
+    ensure("NOTE: Location has no default constructor.", true);
+}
+
+// Test of toLocationSymbol()
+template<>
+template<>
+void object::test<2>()
+{
+    using geos::geom::Location;
+
+    ensure_equals( Location::toLocationSymbol(exterior), 'e' );
+    ensure_equals( Location::toLocationSymbol(boundary), 'b' );
+    ensure_equals( Location::toLocationSymbol(interior), 'i' );
+    ensure_equals( Location::toLocationSymbol(undef), '-' );
+}
+
+// Test of toLocationSymbol() throwing IllegalArgumentException
+template<>
+template<>
+void object::test<3>()
+{
+    using geos::geom::Location;
+
+    try
     {
-		int undef;
-		int interior;
-		int boundary;
-		int exterior;
-		test_location_data()
-			: undef(geos::geom::Location::UNDEF),
-			interior(geos::geom::Location::INTERIOR),
-			boundary(geos::geom::Location::BOUNDARY),
-			exterior(geos::geom::Location::EXTERIOR)
-		{}
-	};
+        Location::toLocationSymbol(101);
+        Location::toLocationSymbol(-101);
 
-    typedef test_group<test_location_data> group;
-    typedef group::object object;
-
-    group test_location_group("geos::geom::Location");
-
-    //
-    // Test Cases
-    //
-
-    // Test of default constructor
-    template<>
-    template<>
-    void object::test<1>()
-    {
-		ensure("NOTE: Location has no default constructor.", true);
+        fail("IllegalArgumentException expected");
     }
-
-    // Test of toLocationSymbol()
-    template<>
-    template<>
-    void object::test<2>()
+    catch ( geos::util::IllegalArgumentException const& e )
     {
-		using geos::geom::Location;
-
-		ensure_equals( Location::toLocationSymbol(exterior), 'e' );
-		ensure_equals( Location::toLocationSymbol(boundary), 'b' );
-		ensure_equals( Location::toLocationSymbol(interior), 'i' );
-		ensure_equals( Location::toLocationSymbol(undef), '-' );
+        const char* msg = e.what(); // ok
+        ensure( msg != nullptr );
     }
-
-    // Test of toLocationSymbol() throwing IllegalArgumentException
-    template<>
-    template<>
-    void object::test<3>()
-    {
-		using geos::geom::Location;
-
-		try
-		{
-			Location::toLocationSymbol(101);
-			Location::toLocationSymbol(-101);
-
-			fail("IllegalArgumentException expected");
-		}
-		catch ( geos::util::IllegalArgumentException const& e )
-		{
-			const char* msg = e.what(); // ok
-			ensure( msg != nullptr );
-		}
-    }
+}
 
 } // namespace tut
 

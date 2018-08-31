@@ -31,9 +31,9 @@ namespace strtree { // geos.index.strtree
  * the root node will have the highest level
  */
 AbstractNode::AbstractNode(int newLevel, size_t capacity) {
-	childBoundables.reserve(capacity);
-	bounds=nullptr;
-	level=newLevel;
+    childBoundables.reserve(capacity);
+    bounds=nullptr;
+    level=newLevel;
 }
 
 AbstractNode::~AbstractNode() {
@@ -42,10 +42,10 @@ AbstractNode::~AbstractNode() {
 const void *
 AbstractNode::getBounds() const
 {
-	if (bounds==nullptr) {
-		bounds = computeBounds();
-	}
-	return bounds;
+    if (bounds==nullptr) {
+        bounds = computeBounds();
+    }
+    return bounds;
 }
 
 /**
@@ -53,7 +53,7 @@ AbstractNode::getBounds() const
 * root node will have the highest level
 */
 int AbstractNode::getLevel() {
-	return level;
+    return level;
 }
 
 /**
@@ -61,8 +61,8 @@ int AbstractNode::getLevel() {
  * (wrapped in an ItemBoundable)
  */
 void AbstractNode::addChildBoundable(Boundable *childBoundable) {
-	assert(bounds==nullptr);
-	childBoundables.push_back(childBoundable);
+    assert(bounds==nullptr);
+    childBoundables.push_back(childBoundable);
 }
 
 } // namespace geos.index.strtree

@@ -31,10 +31,10 @@ namespace distance { // geos.operation.distance
 */
 GeometryLocation::GeometryLocation(const Geometry *newComponent, size_t newSegIndex, const Coordinate &newPt)
 {
-	component = newComponent;
-	segIndex = newSegIndex;
-	inside_area = false;
-	pt = newPt;
+    component = newComponent;
+    segIndex = newSegIndex;
+    inside_area = false;
+    pt = newPt;
 }
 
 /**
@@ -42,17 +42,17 @@ GeometryLocation::GeometryLocation(const Geometry *newComponent, size_t newSegIn
 */
 GeometryLocation::GeometryLocation(const Geometry *newComponent, const Coordinate &newPt)
 {
-	component = newComponent;
-	inside_area = true;
-	segIndex = INSIDE_AREA;
-	pt = newPt;
+    component = newComponent;
+    inside_area = true;
+    segIndex = INSIDE_AREA;
+    pt = newPt;
 }
 
 /**
 * Returns the geometry associated with this location.
 */
 const Geometry* GeometryLocation::getGeometryComponent() {
-	return component;
+    return component;
 }
 /**
 * Returns the segment index for this location. If the location is inside an
@@ -63,7 +63,7 @@ const Geometry* GeometryLocation::getGeometryComponent() {
 size_t
 GeometryLocation::getSegmentIndex()
 {
-	return segIndex;
+    return segIndex;
 }
 /**
 * Returns the location.
@@ -71,11 +71,11 @@ GeometryLocation::getSegmentIndex()
 Coordinate&
 GeometryLocation::getCoordinate()
 {
-	return pt;
+    return pt;
 }
 
 bool GeometryLocation::isInsideArea() {
-	return inside_area;
+    return inside_area;
 }
 
 } // namespace geos.operation.distance

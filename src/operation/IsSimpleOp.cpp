@@ -49,28 +49,30 @@ class EndpointInfo
 {
 public:
 
-	Coordinate pt;
+    Coordinate pt;
 
-	bool isClosed;
+    bool isClosed;
 
-	int degree;
+    int degree;
 
-    	EndpointInfo(const geom::Coordinate& newPt);
+    EndpointInfo(const geom::Coordinate& newPt);
 
-	const Coordinate& getCoordinate() const { return pt; }
+    const Coordinate& getCoordinate() const {
+        return pt;
+    }
 
-	void addEndpoint(bool newIsClosed)
-	{
-		degree++;
-		isClosed |= newIsClosed;
-	}
+    void addEndpoint(bool newIsClosed)
+    {
+        degree++;
+        isClosed |= newIsClosed;
+    }
 };
 
 EndpointInfo::EndpointInfo(const Coordinate& newPt)
 {
-	pt=newPt;
-	isClosed=false;
-	degree=0;
+    pt=newPt;
+    isClosed=false;
+    degree=0;
 }
 
 // -----------------------------------------------------
@@ -79,46 +81,46 @@ EndpointInfo::EndpointInfo(const Coordinate& newPt)
 
 /*public*/
 IsSimpleOp::IsSimpleOp()
-	:
-	isClosedEndpointsInInterior(true),
-	geom(nullptr),
-	nonSimpleLocation()
+    :
+    isClosedEndpointsInInterior(true),
+    geom(nullptr),
+    nonSimpleLocation()
 {}
 
 /*public*/
 IsSimpleOp::IsSimpleOp(const Geometry& g)
-	:
-	isClosedEndpointsInInterior(true),
-	geom(&g),
-	nonSimpleLocation()
+    :
+    isClosedEndpointsInInterior(true),
+    geom(&g),
+    nonSimpleLocation()
 {}
 
 /*public*/
 IsSimpleOp::IsSimpleOp(const Geometry& g,
-	               const BoundaryNodeRule& boundaryNodeRule)
-	:
-	isClosedEndpointsInInterior( ! boundaryNodeRule.isInBoundary(2) ),
-	geom(&g),
-	nonSimpleLocation()
+                       const BoundaryNodeRule& boundaryNodeRule)
+    :
+    isClosedEndpointsInInterior( ! boundaryNodeRule.isInBoundary(2) ),
+    geom(&g),
+    nonSimpleLocation()
 {}
 
 /*public*/
 bool
 IsSimpleOp::isSimple()
 {
-	nonSimpleLocation.reset();
+    nonSimpleLocation.reset();
 
-	if ( dynamic_cast<const LineString*>(geom) )
-		return isSimpleLinearGeometry(geom);
+    if ( dynamic_cast<const LineString*>(geom) )
+        return isSimpleLinearGeometry(geom);
 
-	if ( dynamic_cast<const MultiLineString*>(geom) )
-		return isSimpleLinearGeometry(geom);
+    if ( dynamic_cast<const MultiLineString*>(geom) )
+        return isSimpleLinearGeometry(geom);
 
-	const MultiPoint* mp = dynamic_cast<const MultiPoint*>(geom);
-	if ( mp ) return isSimpleMultiPoint(*mp);
+    const MultiPoint* mp = dynamic_cast<const MultiPoint*>(geom);
+    if ( mp ) return isSimpleMultiPoint(*mp);
 
-	// all other geometry types are simple by definition
-	return true;
+    // all other geometry types are simple by definition
+    return true;
 }
 
 
@@ -126,158 +128,158 @@ IsSimpleOp::isSimple()
 bool
 IsSimpleOp::isSimple(const LineString *p_geom)
 {
-	return isSimpleLinearGeometry(p_geom);
+    return isSimpleLinearGeometry(p_geom);
 }
 
 /*public*/
 bool
 IsSimpleOp::isSimple(const MultiLineString *p_geom)
 {
-	return isSimpleLinearGeometry(p_geom);
+    return isSimpleLinearGeometry(p_geom);
 }
 
 /*public*/
 bool
 IsSimpleOp::isSimple(const MultiPoint *mp)
 {
-	return isSimpleMultiPoint(*mp);
+    return isSimpleMultiPoint(*mp);
 }
 
 /*private*/
 bool
 IsSimpleOp::isSimpleMultiPoint(const MultiPoint& mp)
 {
-	if (mp.isEmpty()) return true;
-	set<const Coordinate*, CoordinateLessThen> points;
+    if (mp.isEmpty()) return true;
+    set<const Coordinate*, CoordinateLessThen> points;
 
-	for (std::size_t i=0, n=mp.getNumGeometries(); i<n; ++i)
-	{
-		const Point *pt = dynamic_cast<const Point*>(mp.getGeometryN(i));
-		assert(pt);
-		const Coordinate *p=pt->getCoordinate();
-		if (points.find(p) != points.end())
-		{
-			nonSimpleLocation.reset(new Coordinate(*p));
-			return false;
-		}
-		points.insert(p);
-	}
-	return true;
+    for (std::size_t i=0, n=mp.getNumGeometries(); i<n; ++i)
+    {
+        const Point *pt = dynamic_cast<const Point*>(mp.getGeometryN(i));
+        assert(pt);
+        const Coordinate *p=pt->getCoordinate();
+        if (points.find(p) != points.end())
+        {
+            nonSimpleLocation.reset(new Coordinate(*p));
+            return false;
+        }
+        points.insert(p);
+    }
+    return true;
 }
 
 bool
 IsSimpleOp::isSimpleLinearGeometry(const Geometry *p_geom)
 {
-	if (p_geom->isEmpty()) return true;
-	GeometryGraph graph(0,p_geom);
-	LineIntersector li;
-	std::unique_ptr<SegmentIntersector> si (graph.computeSelfNodes(&li,true));
+    if (p_geom->isEmpty()) return true;
+    GeometryGraph graph(0,p_geom);
+    LineIntersector li;
+    std::unique_ptr<SegmentIntersector> si (graph.computeSelfNodes(&li,true));
 
-	// if no self-intersection, must be simple
-	if (!si->hasIntersection()) return true;
+    // if no self-intersection, must be simple
+    if (!si->hasIntersection()) return true;
 
-	if (si->hasProperIntersection())
-	{
-		nonSimpleLocation.reset(
-			new Coordinate(si->getProperIntersectionPoint())
-		);
-		return false;
-	}
+    if (si->hasProperIntersection())
+    {
+        nonSimpleLocation.reset(
+            new Coordinate(si->getProperIntersectionPoint())
+        );
+        return false;
+    }
 
-	if (hasNonEndpointIntersection(graph)) return false;
+    if (hasNonEndpointIntersection(graph)) return false;
 
-	if ( isClosedEndpointsInInterior ) {
-		if (hasClosedEndpointIntersection(graph)) return false;
-	}
+    if ( isClosedEndpointsInInterior ) {
+        if (hasClosedEndpointIntersection(graph)) return false;
+    }
 
-	return true;
+    return true;
 }
 
 /*private*/
 bool
 IsSimpleOp::hasNonEndpointIntersection(GeometryGraph &graph)
 {
-	vector<Edge*> *edges=graph.getEdges();
-	for (vector<Edge*>::iterator i=edges->begin();i<edges->end();i++) {
-		Edge *e=*i;
-		auto maxSegmentIndex = e->getMaximumSegmentIndex();
-		EdgeIntersectionList &eiL=e->getEdgeIntersectionList();
-		for ( EdgeIntersectionList::iterator eiIt=eiL.begin(),
-			eiEnd=eiL.end(); eiIt!=eiEnd; ++eiIt )
-		{
-			EdgeIntersection *ei=*eiIt;
-			if (!ei->isEndPoint(maxSegmentIndex))
-			{
-				nonSimpleLocation.reset(
-					new Coordinate(ei->getCoordinate())
-				);
-				return true;
-			}
-		}
-	}
-	return false;
+    vector<Edge*> *edges=graph.getEdges();
+    for (vector<Edge*>::iterator i=edges->begin(); i<edges->end(); i++) {
+        Edge *e=*i;
+        auto maxSegmentIndex = e->getMaximumSegmentIndex();
+        EdgeIntersectionList &eiL=e->getEdgeIntersectionList();
+        for ( EdgeIntersectionList::iterator eiIt=eiL.begin(),
+                eiEnd=eiL.end(); eiIt!=eiEnd; ++eiIt )
+        {
+            EdgeIntersection *ei=*eiIt;
+            if (!ei->isEndPoint(maxSegmentIndex))
+            {
+                nonSimpleLocation.reset(
+                    new Coordinate(ei->getCoordinate())
+                );
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /*private*/
 bool
 IsSimpleOp::hasClosedEndpointIntersection(GeometryGraph &graph)
 {
-	map<const Coordinate*,EndpointInfo*,CoordinateLessThen> endPoints;
-	vector<Edge*> *edges=graph.getEdges();
-	for (vector<Edge*>::iterator i=edges->begin();i<edges->end();i++) {
-		Edge *e=*i;
-		//int maxSegmentIndex=e->getMaximumSegmentIndex();
-		bool isClosed=e->isClosed();
-		const Coordinate *p0=&e->getCoordinate(0);
-		addEndpoint(endPoints,p0,isClosed);
-		const Coordinate *p1=&e->getCoordinate(e->getNumPoints()-1);
-		addEndpoint(endPoints,p1,isClosed);
-	}
+    map<const Coordinate*,EndpointInfo*,CoordinateLessThen> endPoints;
+    vector<Edge*> *edges=graph.getEdges();
+    for (vector<Edge*>::iterator i=edges->begin(); i<edges->end(); i++) {
+        Edge *e=*i;
+        //int maxSegmentIndex=e->getMaximumSegmentIndex();
+        bool isClosed=e->isClosed();
+        const Coordinate *p0=&e->getCoordinate(0);
+        addEndpoint(endPoints,p0,isClosed);
+        const Coordinate *p1=&e->getCoordinate(e->getNumPoints()-1);
+        addEndpoint(endPoints,p1,isClosed);
+    }
 
-	map<const Coordinate*,EndpointInfo*,CoordinateLessThen>::iterator it=endPoints.begin();
-	for (; it!=endPoints.end(); ++it) {
-		EndpointInfo *eiInfo=it->second;
-		if (eiInfo->isClosed && eiInfo->degree!=2) {
+    map<const Coordinate*,EndpointInfo*,CoordinateLessThen>::iterator it=endPoints.begin();
+    for (; it!=endPoints.end(); ++it) {
+        EndpointInfo *eiInfo=it->second;
+        if (eiInfo->isClosed && eiInfo->degree!=2) {
 
-			nonSimpleLocation.reset(
-				new Coordinate( eiInfo->getCoordinate() )
-			);
+            nonSimpleLocation.reset(
+                new Coordinate( eiInfo->getCoordinate() )
+            );
 
-			it=endPoints.begin();
-			for (; it!=endPoints.end(); ++it) {
-				EndpointInfo *ep=it->second;
-				delete ep;
-			}
-            		return true;
-		}
-	}
+            it=endPoints.begin();
+            for (; it!=endPoints.end(); ++it) {
+                EndpointInfo *ep=it->second;
+                delete ep;
+            }
+            return true;
+        }
+    }
 
-	it=endPoints.begin();
-	for (; it!=endPoints.end(); ++it) {
-		EndpointInfo *ep=it->second;
-		delete ep;
-	}
-	return false;
+    it=endPoints.begin();
+    for (; it!=endPoints.end(); ++it) {
+        EndpointInfo *ep=it->second;
+        delete ep;
+    }
+    return false;
 }
 
 /*private*/
 void
 IsSimpleOp::addEndpoint(
-	map<const Coordinate*,EndpointInfo*,CoordinateLessThen>&endPoints,
-	const Coordinate *p,bool isClosed)
+    map<const Coordinate*,EndpointInfo*,CoordinateLessThen>&endPoints,
+    const Coordinate *p,bool isClosed)
 {
-	map<const Coordinate*,EndpointInfo*,CoordinateLessThen>::iterator it=endPoints.find(p);
-	EndpointInfo *eiInfo;
-	if (it==endPoints.end()) {
-		eiInfo=nullptr;
-	} else {
-		eiInfo=it->second;
-	}
-	if (eiInfo==nullptr) {
-		eiInfo=new EndpointInfo(*p);
-		endPoints[p]=eiInfo;
-	}
-	eiInfo->addEndpoint(isClosed);
+    map<const Coordinate*,EndpointInfo*,CoordinateLessThen>::iterator it=endPoints.find(p);
+    EndpointInfo *eiInfo;
+    if (it==endPoints.end()) {
+        eiInfo=nullptr;
+    } else {
+        eiInfo=it->second;
+    }
+    if (eiInfo==nullptr) {
+        eiInfo=new EndpointInfo(*p);
+        endPoints[p]=eiInfo;
+    }
+    eiInfo->addEndpoint(isClosed);
 }
 
 } // namespace geos::operation

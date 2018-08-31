@@ -27,12 +27,12 @@ namespace operation { // geos.operation
 namespace polygonize { // geos.operation.polygonize
 
 PolygonizeEdge::PolygonizeEdge(const LineString *newLine) {
-	line=newLine;
+    line=newLine;
 }
 
 const LineString *
 PolygonizeEdge::getLine() {
-	return line;
+    return line;
 }
 
 } // namespace geos.operation.polygonize

@@ -18,22 +18,22 @@
 namespace tut
 {
 
-    namespace detail
+namespace detail
+{
+template<typename M>
+std::ostringstream &msg_prefix(std::ostringstream &str, const M &msg)
+{
+    std::ostringstream ss;
+    ss << msg;
+
+    if(!ss.str().empty())
     {
-        template<typename M>
-        std::ostringstream &msg_prefix(std::ostringstream &str, const M &msg)
-        {
-            std::ostringstream ss;
-            ss << msg;
-
-            if(!ss.str().empty())
-            {
-                str << msg << ": ";
-            }
-
-            return str;
-        }
+        str << msg << ": ";
     }
+
+    return str;
+}
+}
 
 
 namespace
@@ -98,11 +98,11 @@ void ensure_equals(const M& msg, const LHS& actual, const RHS& expected)
     {
         std::ostringstream ss;
         detail::msg_prefix(ss,msg)
-           << "expected `"
-           << expected
-           << "` actual `"
-           << actual
-           << "`";
+                << "expected `"
+                << expected
+                << "` actual `"
+                << actual
+                << "`";
         throw failure(ss.str());
     }
 }
@@ -121,11 +121,11 @@ void ensure_equals(const M& msg, const LHS * const actual, const RHS * const exp
     {
         std::ostringstream ss;
         detail::msg_prefix(ss,msg)
-           << "expected `"
-           << (void*)expected
-           << "` actual `"
-           << (void*)actual
-           << "`";
+                << "expected `"
+                << (void*)expected
+                << "` actual `"
+                << (void*)actual
+                << "`";
         throw failure(ss.str());
     }
 }
@@ -139,12 +139,12 @@ void ensure_equals(const M& msg, const double& actual, const double& expected, c
     {
         std::ostringstream ss;
         detail::msg_prefix(ss,msg)
-           << std::scientific
-           << std::showpoint
-           << std::setprecision(16)
-           << "expected `" << expected
-           << "` actual `" << actual
-           << "` with precision `" << epsilon << "`";
+                << std::scientific
+                << std::showpoint
+                << std::setprecision(16)
+                << "expected `" << expected
+                << "` actual `" << actual
+                << "` with precision `" << epsilon << "`";
         throw failure(ss.str());
     }
 }
@@ -190,9 +190,9 @@ void ensure_equals(const std::string &msg,
         {
             std::ostringstream ss;
             detail::msg_prefix(ss,msg)
-                << "expected `" << *rhs_i
-                << "` actual `" << *lhs_i
-                << "` at offset " << std::distance(lhs_begin, lhs_i);
+                    << "expected `" << *rhs_i
+                    << "` actual `" << *lhs_i
+                    << "` at offset " << std::distance(lhs_begin, lhs_i);
             throw failure(ss.str());
         }
 
@@ -236,13 +236,13 @@ void ensure_distance(const M& msg, const T& actual, const T& expected, const T& 
     {
         std::ostringstream ss;
         detail::msg_prefix(ss,msg)
-            << " expected `"
-            << expected-distance
-            << "` - `"
-            << expected+distance
-            << "` actual `"
-            << actual
-            << "`";
+                << " expected `"
+                << expected-distance
+                << "` - `"
+                << expected+distance
+                << "` actual `"
+                << actual
+                << "`";
         throw failure(ss.str());
     }
 }
@@ -262,7 +262,7 @@ void ensure_errno(const M& msg, bool cond)
         char e[512];
         std::ostringstream ss;
         detail::msg_prefix(ss,msg)
-           << strerror_r(errno, e, sizeof(e));
+                << strerror_r(errno, e, sizeof(e));
         throw failure(ss.str());
 #else
         throw failure(msg);

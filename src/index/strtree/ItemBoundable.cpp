@@ -26,11 +26,11 @@ ItemBoundable::ItemBoundable(const void* newBounds, void* newItem) :
 
 const void*
 ItemBoundable::getBounds() const {
-	return bounds;
+    return bounds;
 }
 
 void* ItemBoundable::getItem() const {
-	return item;
+    return item;
 }
 
 } // namespace geos.index.strtree

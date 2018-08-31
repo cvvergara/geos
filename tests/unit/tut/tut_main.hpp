@@ -65,9 +65,9 @@ inline bool tut_main(int argc, const char * const * const argv, std::ostream &os
     if(argc>1)
     {
         if(std::string(argv[1]) == "-h" ||
-           std::string(argv[1]) == "--help" ||
-           std::string(argv[1]) == "/?" ||
-           argc > 3)
+                std::string(argv[1]) == "--help" ||
+                std::string(argv[1]) == "/?" ||
+                argc > 3)
         {
             os << usage.rdbuf();
             return false;
@@ -77,30 +77,30 @@ inline bool tut_main(int argc, const char * const * const argv, std::ostream &os
     // Check command line options.
     switch(argc)
     {
-        case 1:
-            runner.get().run_tests();
+    case 1:
+        runner.get().run_tests();
         break;
 
-        case 2:
-            runner.get().run_tests(argv[1]);
+    case 2:
+        runner.get().run_tests(argv[1]);
         break;
 
-        case 3:
+    case 3:
+    {
+        char *end;
+        int t = strtol(argv[2], &end, 10);
+        if(end != argv[2] + strlen(argv[2]))
         {
-            char *end;
-            int t = strtol(argv[2], &end, 10);
-            if(end != argv[2] + strlen(argv[2]))
-            {
-                throw no_such_test("`" + std::string(argv[2]) + "` should be a number");
-            }
-
-            test_result tr;
-            if(!runner.get().run_test(argv[1], t, tr) || tr.result == test_result::dummy)
-            {
-                throw no_such_test("No testcase `" + std::string(argv[2]) + "` in group `" + argv[1] + "`");
-            }
+            throw no_such_test("`" + std::string(argv[2]) + "` should be a number");
         }
-        break;
+
+        test_result tr;
+        if(!runner.get().run_test(argv[1], t, tr) || tr.result == test_result::dummy)
+        {
+            throw no_such_test("No testcase `" + std::string(argv[2]) + "` in group `" + argv[1] + "`");
+        }
+    }
+    break;
     }
 
     return true;

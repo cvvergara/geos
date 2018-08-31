@@ -20,8 +20,8 @@
  */
 inline int getMachineByteOrder()
 {
-	static int endian_check = 1; // don't modify !!
-	return *((char *)&endian_check);
+    static int endian_check = 1; // don't modify !!
+    return *((char *)&endian_check);
 }
 
 #endif

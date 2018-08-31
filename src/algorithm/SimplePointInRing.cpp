@@ -19,23 +19,23 @@
 
 // Forward declarations
 namespace geos {
-	namespace geom {
-		class Coordinate;
-	}
+namespace geom {
+class Coordinate;
+}
 }
 
 namespace geos {
 namespace algorithm { // geos.algorithm
 
-SimplePointInRing::SimplePointInRing(geom::LinearRing *ring){
-	pts=ring->getCoordinatesRO();
+SimplePointInRing::SimplePointInRing(geom::LinearRing *ring) {
+    pts=ring->getCoordinatesRO();
 }
 
-SimplePointInRing::~SimplePointInRing(){
+SimplePointInRing::~SimplePointInRing() {
 }
 
-bool SimplePointInRing::isInside(const geom::Coordinate& pt){
-	return CGAlgorithms::isPointInRing(pt,pts);
+bool SimplePointInRing::isInside(const geom::Coordinate& pt) {
+    return CGAlgorithms::isPointInRing(pt,pts);
 }
 
 } // namespace geos.algorithm

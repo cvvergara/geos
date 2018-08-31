@@ -44,14 +44,14 @@ public:
         ENDIAN_LITTLE = 1
     };
 
-	static int getInt(const unsigned char *buf, int byteOrder);
-	static void putInt(int intValue, unsigned char *buf, int byteOrder);
+    static int getInt(const unsigned char *buf, int byteOrder);
+    static void putInt(int intValue, unsigned char *buf, int byteOrder);
 
-	static int64 getLong(const unsigned char *buf, int byteOrder);
-	static void putLong(int64 longValue, unsigned char *buf, int byteOrder);
+    static int64 getLong(const unsigned char *buf, int byteOrder);
+    static void putLong(int64 longValue, unsigned char *buf, int byteOrder);
 
-	static double getDouble(const unsigned char *buf, int byteOrder);
-	static void putDouble(double doubleValue, unsigned char *buf, int byteOrder);
+    static double getDouble(const unsigned char *buf, int byteOrder);
+    static void putDouble(double doubleValue, unsigned char *buf, int byteOrder);
 
 };
 

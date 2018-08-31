@@ -23,10 +23,10 @@
 
 // Forward declarations
 namespace geos {
-    namespace geom {
-        class Geometry;
-        class GeometryFactory;
-    }
+namespace geom {
+class Geometry;
+class GeometryFactory;
+}
 }
 
 namespace geos {

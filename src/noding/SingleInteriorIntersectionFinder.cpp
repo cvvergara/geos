@@ -29,39 +29,39 @@ namespace noding { // geos.noding
 /*public (override) */
 void
 SingleInteriorIntersectionFinder::processIntersections(
-	SegmentString* e0,  size_t segIndex0,
-	SegmentString* e1,  size_t segIndex1)
+    SegmentString* e0,  size_t segIndex0,
+    SegmentString* e1,  size_t segIndex1)
 {
-	using geos::geom::Coordinate;
+    using geos::geom::Coordinate;
 
-	// short-circuit if intersection already found
-	if (hasIntersection())
-		return;
+    // short-circuit if intersection already found
+    if (hasIntersection())
+        return;
 
-	// don't bother intersecting a segment with itself
-	if (e0 == e1 && segIndex0 == segIndex1) return;
+    // don't bother intersecting a segment with itself
+    if (e0 == e1 && segIndex0 == segIndex1) return;
 
-	const Coordinate& p00 = e0->getCoordinate(segIndex0);
-	const Coordinate& p01 = e0->getCoordinate(segIndex0 + 1);
-	const Coordinate& p10 = e1->getCoordinate(segIndex1);
-	const Coordinate& p11 = e1->getCoordinate(segIndex1 + 1);
+    const Coordinate& p00 = e0->getCoordinate(segIndex0);
+    const Coordinate& p01 = e0->getCoordinate(segIndex0 + 1);
+    const Coordinate& p10 = e1->getCoordinate(segIndex1);
+    const Coordinate& p11 = e1->getCoordinate(segIndex1 + 1);
 
-	li.computeIntersection(p00, p01, p10, p11);
+    li.computeIntersection(p00, p01, p10, p11);
 //if (li.hasIntersection() && li.isProper()) Debug.println(li);
 
-	if (li.hasIntersection())
-	{
-		if (li.isInteriorIntersection())
-		{
-			intSegments.resize(4);
-			intSegments[0] = p00;
-			intSegments[1] = p01;
-			intSegments[2] = p10;
-			intSegments[3] = p11;
+    if (li.hasIntersection())
+    {
+        if (li.isInteriorIntersection())
+        {
+            intSegments.resize(4);
+            intSegments[0] = p00;
+            intSegments[1] = p01;
+            intSegments[2] = p10;
+            intSegments[3] = p11;
 
-			interiorIntersection = li.getIntersection(0);
-		}
-	}
+            interiorIntersection = li.getIntersection(0);
+        }
+    }
 }
 
 

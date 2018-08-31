@@ -34,15 +34,15 @@ class GEOS_DLL ItemBoundable: public Boundable
 public:
 
     ItemBoundable(const void* newBounds, void* newItem);
-	~ItemBoundable() override = default;
+    ~ItemBoundable() override = default;
 
     const void* getBounds() const override;
-	void* getItem() const;
+    void* getItem() const;
 
 private:
 
-	const void* bounds;
-	void* item;
+    const void* bounds;
+    void* item;
 };
 
 } // namespace geos::index::strtree

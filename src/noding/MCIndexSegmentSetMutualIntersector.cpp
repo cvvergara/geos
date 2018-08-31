@@ -39,7 +39,7 @@ MCIndexSegmentSetMutualIntersector::addToIndex(SegmentString* segStr)
 {
     MonoChains segChains;
     MonotoneChainBuilder::getChains(segStr->getCoordinates(),
-      segStr, segChains);
+                                    segStr, segChains);
 
     MonoChains::size_type n = segChains.size();
     chainStore.reserve(chainStore.size() + n);
@@ -98,11 +98,11 @@ MCIndexSegmentSetMutualIntersector::addToMonoChains(SegmentString* segStr)
 
 /* public */
 MCIndexSegmentSetMutualIntersector::MCIndexSegmentSetMutualIntersector()
-:	monoChains(),
-index(new geos::index::strtree::STRtree()),
-indexCounter(0),
-processCounter(0),
-nOverlaps(0)
+    :	monoChains(),
+      index(new geos::index::strtree::STRtree()),
+      indexCounter(0),
+      processCounter(0),
+      nOverlaps(0)
 {
 }
 
@@ -118,7 +118,7 @@ MCIndexSegmentSetMutualIntersector::~MCIndexSegmentSetMutualIntersector()
     }
 
     for (i = monoChains.begin(), e = monoChains.end(); i != e; i++) {
-      delete *i;
+        delete *i;
     }
 }
 
@@ -144,9 +144,9 @@ MCIndexSegmentSetMutualIntersector::process(SegmentString::ConstVect * segString
     nOverlaps = 0;
 
     for (MonoChains::iterator i = monoChains.begin(), e = monoChains.end();
-         i != e; i++)
+            i != e; i++)
     {
-      delete *i;
+        delete *i;
     }
     monoChains.clear();
 
@@ -162,7 +162,7 @@ MCIndexSegmentSetMutualIntersector::process(SegmentString::ConstVect * segString
 /* public */
 void
 MCIndexSegmentSetMutualIntersector::SegmentOverlapAction::overlap(
-	MonotoneChain& mc1, size_t start1, MonotoneChain& mc2, size_t start2)
+    MonotoneChain& mc1, size_t start1, MonotoneChain& mc2, size_t start2)
 {
     SegmentString * ss1 = (SegmentString *)(mc1.getContext());
     SegmentString * ss2 = (SegmentString *)(mc2.getContext());

@@ -24,9 +24,9 @@ using namespace geos::operation::distance;
 using namespace geos::algorithm;
 
 FacetSequence::FacetSequence(const CoordinateSequence* p_pts, size_t p_start, size_t p_end) :
-        pts(p_pts),
-        start(p_start),
-        end(p_end) {
+    pts(p_pts),
+    start(p_start),
+    end(p_end) {
     computeEnvelope();
 }
 
