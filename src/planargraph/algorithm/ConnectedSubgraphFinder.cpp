@@ -12,7 +12,6 @@
  *
  **********************************************************************/
 
-#include <geos/platform.h>
 #include <geos/planargraph/algorithm/ConnectedSubgraphFinder.h>
 #include <geos/planargraph/Subgraph.h>
 #include <geos/planargraph/Edge.h>

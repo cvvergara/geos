@@ -13,7 +13,6 @@
  *
  **********************************************************************/
 
-#include <geos/platform.h>
 #include <geos/algorithm/InteriorPointPoint.h>
 #include <geos/geom/Coordinate.h>
 #include <geos/geom/Geometry.h>

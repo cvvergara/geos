@@ -17,7 +17,6 @@
  *
  **********************************************************************/
 
-#include <geos/platform.h>
 #include <geos/algorithm/LineIntersector.h>
 #include <geos/algorithm/CGAlgorithms.h>
 #include <geos/algorithm/HCoordinate.h>

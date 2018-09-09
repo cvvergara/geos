@@ -17,7 +17,6 @@
  *
  **********************************************************************/
 
-#include <geos/platform.h>
 #include <geos/operation/overlay/OverlayOp.h>
 #include <geos/operation/overlay/validate/OverlayResultValidator.h>
 #include <geos/operation/overlay/ElevationMatrix.h>

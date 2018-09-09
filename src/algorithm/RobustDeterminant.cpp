@@ -38,7 +38,6 @@
 
 #include <cmath>
 
-#include <geos/platform.h> // for std::isnan, std::isfinite
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4127)

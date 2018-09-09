@@ -18,7 +18,6 @@
  *
  **********************************************************************/
 
-#include <geos/platform.h>
 #include <geos/geom/Coordinate.h>
 #include <geos/geomgraph/Node.h>
 #include <geos/geomgraph/Edge.h>

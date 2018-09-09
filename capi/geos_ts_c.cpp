@@ -16,7 +16,6 @@
  *
  ***********************************************************************/
 
-#include <geos/platform.h>  // for std::isfinite
 #include <geos/geom/Coordinate.h>
 #include <geos/geom/Geometry.h>
 #include <geos/geom/prep/PreparedGeometry.h>
@@ -77,8 +76,7 @@
 #include <geos/util/Machine.h>
 #include <geos/version.h>
 
-// This should go away
-#include <cmath> // finite
+#include <cmath>
 #include <cstdarg>
 #include <cstddef>
 #include <cstdio>

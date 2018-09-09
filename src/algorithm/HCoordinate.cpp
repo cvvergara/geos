@@ -21,7 +21,6 @@
 #include <geos/algorithm/HCoordinate.h>
 #include <geos/algorithm/NotRepresentableException.h>
 #include <geos/geom/Coordinate.h>
-#include <geos/platform.h>
 
 #include <memory>
 #include <cmath>

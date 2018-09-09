@@ -18,7 +18,6 @@
  *
  **********************************************************************/
 
-#include <geos/platform.h>
 #include <geos/algorithm/CGAlgorithms.h>
 #include <geos/algorithm/MinimumDiameter.h>
 #include <geos/util/UnsupportedOperationException.h>

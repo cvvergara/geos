@@ -13,7 +13,6 @@
  **********************************************************************/
 
 #include <geos/geom/Coordinate.h>
-#include <geos/platform.h> // for std::isnan
 
 #include <sstream>
 #include <string>

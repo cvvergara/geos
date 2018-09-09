@@ -17,7 +17,6 @@
  *
  **********************************************************************/
 
-#include <geos/platform.h>
 #include <geos/operation/overlay/LineBuilder.h>
 #include <geos/operation/overlay/OverlayOp.h>
 #include <geos/algorithm/PointLocator.h>
