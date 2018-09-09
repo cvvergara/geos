@@ -216,7 +216,7 @@ AC_CACHE_CHECK([for isnan], ac_cv_isnan,
  ac_cv_isnan=no
 )])
 if test x"$ac_cv_isnan" = x"yes"; then
-  AC_DEFINE(HAVE_std::isnan, [1], [Has isnan])
+  AC_DEFINE(HAVE_ISNAN, [1], [Has isnan])
 fi
 AC_LANG_POP([C++])
 
