@@ -258,6 +258,7 @@ add_custom_target(geos_revision
     -D DST=${PROJECT_BINARY_DIR}/geos_revision.h
     -P ${PROJECT_BINARY_DIR}/geos_revision.cmake)
 
+if (0)
 if(EXISTS ${PROJECT_SOURCE_DIR}/include/geos/platform.h)
   message(STATUS "Disabling existing ${PROJECT_SOURCE_DIR}/include/geos/platform.h")
 
@@ -277,6 +278,7 @@ endif()
 message(STATUS "Generating GEOS ${PROJECT_BINARY_DIR}/include/geos/platform.h")
 configure_file(${PROJECT_SOURCE_DIR}/include/geos/platform.h.cmake
   ${PROJECT_BINARY_DIR}/include/geos/platform.h)
+endif()
 
 message(STATUS "Generating GEOS ${PROJECT_BINARY_DIR}/include/geos/version.h")
 configure_file(${PROJECT_SOURCE_DIR}/include/geos/version.h.in
