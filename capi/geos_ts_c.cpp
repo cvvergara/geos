@@ -79,7 +79,7 @@
 // This should go away
 #include <cmath>  // finite
 #include <cstdarg>
-#if 0
+#if 1
 // removing this does not affect the compilation?
 #include <cstddef>
 #include <cstdio>
