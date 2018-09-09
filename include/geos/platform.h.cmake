@@ -35,7 +35,6 @@
 #ifdef _MSC_VER
 #  define _USE_MATH_DEFINES
 #endif
-#include <cmath>
 #include <limits>
 #include <cinttypes>
 
@@ -47,7 +46,6 @@
 
 typedef int64_t int64;
 
-#define ISNAN(x) std::isnan(x)
 #define FINITE(x) std::isfinite(x)
 
 // Some handy constants

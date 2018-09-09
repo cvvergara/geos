@@ -14,7 +14,7 @@
 #include <geos/geom/GeometryFactory.h>
 #include <geos/geom/PrecisionModel.h>
 #include <geos/operation/valid/TopologyValidationError.h>
-#include <geos/platform.h> // for ISNAN
+#include <geos/platform.h> // for std::isnan
 // std
 #include <cmath>
 #include <string>
@@ -73,7 +73,7 @@ namespace tut
 	ensure_equals( err->getErrorType(),
 	               TopologyValidationError::eInvalidCoordinate );
 
-	ensure(0 != ISNAN(errCoord.y));
+	ensure(0 != std::isnan(errCoord.y));
 	ensure_equals(valid, false);
     }
 

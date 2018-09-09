@@ -462,7 +462,7 @@ OverlayOp::getAverageZ(const Polygon *poly)
 	for (size_t i=0; i<npts; ++i)
 	{
 		const Coordinate &c = pts->getAt(i);
-		if ( !ISNAN(c.z) )
+		if ( !std::isnan(c.z) )
 		{
 			totz += c.z;
 			zcount++;

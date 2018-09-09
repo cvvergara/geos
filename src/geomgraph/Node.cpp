@@ -245,7 +245,7 @@ Node::addZ(double z)
 #if GEOS_DEBUG
 	cerr<<"["<<this<<"] Node::addZ("<<z<<")";
 #endif
-	if ( ISNAN(z) )
+	if ( std::isnan(z) )
 	{
 #if GEOS_DEBUG
 		cerr<<" skipped"<<endl;

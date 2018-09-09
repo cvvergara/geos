@@ -218,7 +218,7 @@ LineBuilder::propagateZ(CoordinateSequence *cs)
 	size_t cssize = cs->getSize();
 	for (size_t i = 0; i < cssize; ++i)
 	{
-		if ( !ISNAN(cs->getAt(i).z) ) v3d.push_back(i);
+		if ( !std::isnan(cs->getAt(i).z) ) v3d.push_back(i);
 	}
 
 #if GEOS_DEBUG

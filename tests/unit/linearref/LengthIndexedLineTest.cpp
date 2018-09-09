@@ -399,7 +399,7 @@ void object::test<25>()
     LengthIndexedLine indexedLine(linearGeom.get());
     double projIndex = indexedLine.project(Coordinate(5, 5));
     Coordinate projPt = indexedLine.extractPoint(projIndex);
-    ensure(0 != ISNAN(projPt.z));
+    ensure(0 != std::isnan(projPt.z));
 }
 
 /**

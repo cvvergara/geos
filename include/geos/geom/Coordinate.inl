@@ -7,7 +7,7 @@
  *
  * This is free software; you can redistribute and/or modify it under
  * the terms of the GNU Lesser General Public Licence as published
- * by the Free Software Foundation. 
+ * by the Free Software Foundation.
  * See the COPYING file for more information.
  *
  **********************************************************************/
@@ -35,7 +35,7 @@ Coordinate::setNull()
 INLINE bool
 Coordinate::isNull() const
 {
-	return (ISNAN(x) && ISNAN(y) && ISNAN(z));
+	return (std::isnan(x) && std::isnan(y) && std::isnan(z));
 }
 
 INLINE
@@ -73,8 +73,8 @@ Coordinate::compareTo(const Coordinate& other) const
 INLINE bool
 Coordinate::equals3D(const Coordinate& other) const
 {
-	return (x == other.x) && ( y == other.y) && 
-		((z == other.z)||(ISNAN(z) && ISNAN(other.z)));
+	return (x == other.x) && ( y == other.y) &&
+		((z == other.z)||(std::isnan(z) && std::isnan(other.z)));
 }
 
 INLINE double
