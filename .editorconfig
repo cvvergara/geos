@@ -60,3 +60,9 @@ indent_size = 4
 [tests/xmltester/Stackwalker.cpp]
 indent_style = space
 indent_size = 2
+
+
+[capi/geos_ts_c.cpp]
+indent_style = space
+indent_size = 2
+
