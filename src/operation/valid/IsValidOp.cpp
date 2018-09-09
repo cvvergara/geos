@@ -93,8 +93,8 @@ IsValidOp::isValid()
 bool
 IsValidOp::isValid(const Coordinate &coord)
 {
-	if (! FINITE(coord.x) ) return false;
-	if (! FINITE(coord.y) ) return false;
+	if (! std::isfinite(coord.x) ) return false;
+	if (! std::isfinite(coord.y) ) return false;
 	return true;
 }
 

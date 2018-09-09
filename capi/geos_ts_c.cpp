@@ -16,7 +16,7 @@
  *
  ***********************************************************************/
 
-#include <geos/platform.h>  // for FINITE
+#include <geos/platform.h>  // for std::isfinite
 #include <geos/geom/Coordinate.h>
 #include <geos/geom/Geometry.h>
 #include <geos/geom/prep/PreparedGeometry.h>
@@ -3913,7 +3913,7 @@ GEOSHasZ_r(GEOSContextHandle_t extHandle, const Geometry *g)
     double az = g->getCoordinate()->z;
     //handle->ERROR_MESSAGE("ZCoord: %g", az);
 
-    return static_cast<char>(FINITE(az));
+    return static_cast<char>(std::isfinite(az));
 }
 
 int

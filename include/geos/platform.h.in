@@ -13,11 +13,6 @@
 /* Set to 1 if you have ieeefp.h */
 #undef HAVE_IEEEFP_H
 
-/* Has finite */
-#undef HAVE_FINITE
-
-/* Has isfinite */
-#undef HAVE_ISFINITE
 
 #if defined(__GNUC__) && defined(_WIN32)
 /* For MingW the appropriate definitions are included in
@@ -55,21 +50,5 @@
 # endif
 #endif
 
-
-#if defined(HAVE_FINITE) && !defined(HAVE_ISFINITE)
-# define FINITE(x) (finite(x))
-#else
-# if defined(_MSC_VER)
-#  define FINITE(x) _finite(static_cast<double>(x))
-# elif defined(__hpux__) && defined(__ia64__)
-#  define FINITE(x) (_Isfinite(x))
-# else
-#  define FINITE(x) (isfinite(x))
-# endif
-#endif
-
-#ifndef FINITE
-#error "Can not compile without finite or isfinite function or macro"
-#endif
 
 #endif
