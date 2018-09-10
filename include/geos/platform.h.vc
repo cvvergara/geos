@@ -7,7 +7,7 @@
  *
  * This is free software; you can redistribute and/or modify it under
  * the terms of the GNU Lesser General Public Licence as published
- * by the Free Software Foundation.
+ * by the Free Software Foundation. 
  * See the COPYING file for more information.
  *
  **********************************************************************
@@ -37,23 +37,24 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include <cmath>
-#include <limits>
-#include <cstdint>
-
-
 #ifndef M_PI
-constexpr double M_PI = 4.0 * atan(1.0);
+#define M_PI       3.14159265358979323846
 #endif
 
+//Defines NaN for intel platforms
+#define DoubleNotANumber std::numeric_limits<double>::quiet_NaN()
+
+#define ISNAN(x)  _isnan(x)
+
+//Don't forget to define infinities
+#define DoubleInfinity std::numeric_limits<double>::infinity()
+#define DoubleNegInfinity -std::numeric_limits<double>::infinity()
+
+#define DoubleMax (std::numeric_limits<double>::max)()
+
+#define FINITE(x) _finite(static_cast<double>(x))
+#define finite(x) _finite(static_cast<double>(x))
+
 typedef __int64 int64;
-typedef int64_t int64;
 
-
-// Some handy constants
-constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
-constexpr double DoubleMax = (std::numeric_limits<double>::max)();
-constexpr double DoubleInfinity = (std::numeric_limits<double>::infinity)();
-constexpr double DoubleNegInfinity = (-(std::numeric_limits<double>::infinity)());
-
-#endif  // GEOS_PLATFORM_H
+#endif
