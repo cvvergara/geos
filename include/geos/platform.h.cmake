@@ -42,6 +42,7 @@
 constexpr double M_PI = 4.0 * atan(1.0);
 #endif
 
+typedef __int64 int64;
 typedef int64_t int64;
 
 
