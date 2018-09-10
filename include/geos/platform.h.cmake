@@ -31,6 +31,7 @@
 
 #ifdef _MSC_VER
 #  define _USE_MATH_DEFINES
+  typedef __int64 int64;
 #endif
 #include <cmath>
 #include <limits>
@@ -42,7 +43,6 @@
 constexpr double M_PI = 4.0 * atan(1.0);
 #endif
 
-typedef __int64 int64;
 typedef int64_t int64;
 
 
