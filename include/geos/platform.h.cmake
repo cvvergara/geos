@@ -40,7 +40,7 @@
 
 
 #ifndef M_PI
-constexpr double M_PI = 4.0 * atan(1.0);
+constexpr double M_PI = 4.0 * std::atan(1.0);
 #endif
 
 typedef int64_t int64;

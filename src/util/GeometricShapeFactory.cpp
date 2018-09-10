@@ -17,6 +17,7 @@
  *
  **********************************************************************/
 
+#include <geos/platform.h>
 #include <geos/util/GeometricShapeFactory.h>
 #include <geos/geom/Coordinate.h>
 #include <geos/geom/CoordinateSequenceFactory.h>
@@ -27,10 +28,6 @@
 #include <vector>
 #include <cmath>
 #include <memory>
-
-#ifndef M_PI
-#define M_PI        3.14159265358979323846
-#endif
 
 using namespace std;
 using namespace geos::geom;
