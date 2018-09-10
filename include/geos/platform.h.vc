@@ -39,6 +39,7 @@
 
 #include <cmath>
 #include <limits>
+#include <cstdint>
 
 
 #ifndef M_PI
