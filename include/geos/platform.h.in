@@ -1,18 +1,6 @@
 #ifndef GEOS_PLATFORM_H
 #define GEOS_PLATFORM_H
 
-/* Set to 1 if you have `int64_t' type */
-#undef HAVE_INT64_T_64
-
-/* Set to 1 if `long int' is 64 bits */
-#undef HAVE_LONG_INT_64
-
-/* Set to 1 if `long long int' is 64 bits */
-#undef HAVE_LONG_LONG_INT_64
-
-/* Set to 1 if you have ieeefp.h */
-#undef HAVE_IEEEFP_H
-
 
 #if defined(__GNUC__) && defined(_WIN32)
 /* For MingW the appropriate definitions are included in
@@ -23,32 +11,21 @@
 #include <float.h>
 #endif
 
+#include <cmath>
 #include <limits> // for std::numeric_limits
 
 
-
-//Defines NaN for intel platforms
-#define DoubleNotANumber std::numeric_limits<double>::quiet_NaN()
-
-//Don't forget to define infinities
-#define DoubleInfinity std::numeric_limits<double>::infinity()
-#define DoubleNegInfinity -std::numeric_limits<double>::infinity()
-
-#define DoubleMax std::numeric_limits<double>::max()
-
-#ifdef HAVE_INT64_T_64
-  typedef int64_t int64;
-#else
-# ifdef HAVE_LONG_LONG_INT_64
-   typedef long long int int64;
-# else
-   typedef long int int64;
-#  ifndef HAVE_LONG_INT_64
-#   define INT64_IS_REALLY32 1
-#   warning "Could not find 64bit integer definition!"
-#  endif
-# endif
+#ifndef M_PI
+   constexpr double M_PI = 4.0 * atan(1.0);
 #endif
 
+typedef int64_t int64;
+
+
+// Some handy constants
+constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
+constexpr double DoubleMax = (std::numeric_limits<double>::max)();
+constexpr double DoubleInfinity = (std::numeric_limits<double>::infinity)();
+constexpr double DoubleNegInfinity = (-(std::numeric_limits<double>::infinity)());
 
 #endif
