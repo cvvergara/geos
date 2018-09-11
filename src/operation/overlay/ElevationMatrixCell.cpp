@@ -43,7 +43,7 @@ ElevationMatrixCell::~ElevationMatrixCell()
 void
 ElevationMatrixCell::add(const Coordinate &c)
 {
-	if ( !ISNAN(c.z) )
+	if ( !std::isnan(c.z) )
 	{
 		if ( zvals.insert(c.z).second )
 		{
@@ -55,7 +55,7 @@ ElevationMatrixCell::add(const Coordinate &c)
 void
 ElevationMatrixCell::add(double z)
 {
-	if ( !ISNAN(z) )
+	if ( !std::isnan(z) )
 	{
 		if ( zvals.insert(z).second )
 		{

@@ -47,8 +47,6 @@
 
 typedef int64_t int64;
 
-#define ISNAN(x) std::isnan(x)
-#define FINITE(x) std::isfinite(x)
 
 // Some handy constants
 constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
