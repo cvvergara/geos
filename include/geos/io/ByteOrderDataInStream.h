@@ -22,7 +22,6 @@
 
 #include <geos/export.h>
 
-//#include <geos/constants.h>
 //#include <geos/io/ParseException.h>
 //#include <geos/io/ByteOrderValues.h>
 #include <geos/inline.h>

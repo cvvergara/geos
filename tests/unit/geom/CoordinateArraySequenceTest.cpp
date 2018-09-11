@@ -32,7 +32,7 @@ namespace tut
             if ( is3d ) {
               if ( std::isnan(c->z) ) c->z = 0.0;
             }
-            else c->z = DoubleNotANumber;
+            else c->z = geos::DoubleNotANumber;
           }
         };
     };

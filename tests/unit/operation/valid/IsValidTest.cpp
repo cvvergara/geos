@@ -59,7 +59,7 @@ namespace tut
     {
 	CoordinateSequence* cs = new CoordinateArraySequence();
 	cs->add(Coordinate(0.0, 0.0));
-	cs->add(Coordinate(1.0, DoubleNotANumber));
+	cs->add(Coordinate(1.0, geos::DoubleNotANumber));
 	GeomPtr line ( factory_->createLineString(cs) );
 
 

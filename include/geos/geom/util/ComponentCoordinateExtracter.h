@@ -23,7 +23,6 @@
 #include <geos/geom/Coordinate.h> // to be removed when we have the .inl
 #include <geos/geom/LineString.h> // to be removed when we have the .inl
 #include <geos/geom/Point.h> // to be removed when we have the .inl
-//#include <geos/constants.h>
 
 namespace geos {
 namespace geom { // geos::geom

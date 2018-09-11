@@ -23,7 +23,6 @@
 #include <geos/export.h>
 #include <string>
 #include <vector>
-#include <geos/constants.h>
 #include <geos/geom/LineString.h>
 
 #include <geos/inline.h>

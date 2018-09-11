@@ -16,7 +16,6 @@
 #ifndef GEOS_GEOM_GEOMETRYFILTER_H
 #define GEOS_GEOM_GEOMETRYFILTER_H
 
-//#include <geos/constants.h>
 #include <geos/export.h>
 #include <geos/inline.h>
 
