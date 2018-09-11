@@ -32,11 +32,12 @@ typedef __int64 int64;
 #ifdef M_PI
 #undef M_PI
 #endif
+typedef int64_t int64;
+
 namespace geos {
 
 constexpr double M_PI = 3.14159265358979323846;
 
-typedef int64_t int64;
 
 
 // Some handy constants
