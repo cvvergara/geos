@@ -14,8 +14,8 @@
  *
  *********************************************************************/
 
-#ifndef GEOS_CONSTANTS_H_
-#define GEOS_CONSTANTS_H_
+#ifndef INCLUDE_GEOS_CONSTANTS_H_
+#define INCLUDE_GEOS_CONSTANTS_H_
 
 #ifdef _MSC_VER
 #ifndef NOMINMAX
@@ -32,6 +32,8 @@ typedef __int64 int64;
 #ifdef M_PI
 #undef M_PI
 #endif
+namespace geos {
+
 constexpr double M_PI = 3.14159265358979323846;
 
 typedef int64_t int64;
@@ -43,6 +45,7 @@ constexpr double DoubleMax = (std::numeric_limits<double>::max)();
 constexpr double DoubleInfinity = (std::numeric_limits<double>::infinity)();
 constexpr double DoubleNegInfinity = (-(std::numeric_limits<double>::infinity)());
 
+}  // namespace geos
 
 
-#endif // GEOS_CONSTANTS_H_
+#endif  // INCLUDE_GEOS_CONSTANTS_H_
