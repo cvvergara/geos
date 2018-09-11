@@ -21,7 +21,7 @@
 
 #include "IndexedNestedRingTester.h" // TODO: private header>? --mloskot
 
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <geos/operation/valid/IsValidOp.h>
 #include <geos/operation/valid/ConsistentAreaTester.h>
 #include <geos/operation/valid/ConnectedInteriorTester.h>
@@ -93,8 +93,8 @@ IsValidOp::isValid()
 bool
 IsValidOp::isValid(const Coordinate &coord)
 {
-	if (! FINITE(coord.x) ) return false;
-	if (! FINITE(coord.y) ) return false;
+	if (! std::isfinite(coord.x) ) return false;
+	if (! std::isfinite(coord.y) ) return false;
 	return true;
 }
 
