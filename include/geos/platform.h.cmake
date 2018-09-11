@@ -32,7 +32,9 @@
 #ifdef _MSC_VER
 #  define _USE_MATH_DEFINES
   typedef __int64 int64;
+  #pragma fenv_access(on)
 #endif
+
 #include <cmath>
 #include <limits>
 #include <cstdint>

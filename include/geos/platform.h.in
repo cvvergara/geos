@@ -15,6 +15,7 @@
 #include <limits> // for std::numeric_limits
 #include <cstdint>
 
+#pragma fenv_access(on)
 
 #ifndef M_PI
    constexpr double M_PI = 4.0 * atan(1.0);
