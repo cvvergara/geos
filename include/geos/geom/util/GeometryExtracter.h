@@ -24,7 +24,7 @@
 #include <geos/export.h>
 #include <geos/geom/GeometryFilter.h>
 #include <geos/geom/GeometryCollection.h>
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <vector>
 
 namespace geos {

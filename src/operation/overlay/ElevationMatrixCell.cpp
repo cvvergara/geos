@@ -16,7 +16,7 @@
  *
  **********************************************************************/
 
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <geos/geom/Coordinate.h>
 #include <geos/operation/overlay/ElevationMatrixCell.h>
 

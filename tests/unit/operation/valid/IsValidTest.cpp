@@ -4,7 +4,7 @@
 
 #include <tut/tut.hpp>
 // geos
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <geos/operation/valid/IsValidOp.h>
 #include <geos/geom/Coordinate.h>
 #include <geos/geom/CoordinateArraySequence.h>
@@ -14,7 +14,7 @@
 #include <geos/geom/GeometryFactory.h>
 #include <geos/geom/PrecisionModel.h>
 #include <geos/operation/valid/TopologyValidationError.h>
-#include <geos/platform.h> // for std::isnan
+#include <geos/constants.h> // for std::isnan
 // std
 #include <cmath>
 #include <string>

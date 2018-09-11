@@ -16,7 +16,7 @@
 #define GEOS_GEOM_COORDINATESEQUENCE_H
 
 #include <geos/export.h>
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <geos/inline.h>
 
 #include <geos/geom/Coordinate.h> // for applyCoordinateFilter

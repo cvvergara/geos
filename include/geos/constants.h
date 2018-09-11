@@ -1,0 +1,48 @@
+/**********************************************************************
+ *
+ * constants.h
+ *
+ * GEOS - Geometry Engine Open Source
+ * http://geos.osgeo.org
+ *
+ * Copyright (C) 2018 Vicky Vergara
+ *
+ * This is free software; you can redistribute and/or modify it under
+ * the terms of the GNU Lesser General Public Licence as published
+ * by the Free Software Foundation.
+ * See the COPYING file for more information.
+ *
+ *********************************************************************/
+
+#ifndef GEOS_CONSTANTS_H_
+#define GEOS_CONSTANTS_H_
+
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+#define NOMINMAX 1
+typedef __int64 int64;
+#endif
+#endif
+
+#include <cmath>
+#include <limits>
+#include <cinttypes>
+
+
+#ifdef M_PI
+#undef M_PI
+#endif
+constexpr double M_PI = 3.14159265358979323846;
+
+typedef int64_t int64;
+
+
+// Some handy constants
+constexpr double DoubleNotANumber = std::numeric_limits<double>::quiet_NaN();
+constexpr double DoubleMax = (std::numeric_limits<double>::max)();
+constexpr double DoubleInfinity = (std::numeric_limits<double>::infinity)();
+constexpr double DoubleNegInfinity = (-(std::numeric_limits<double>::infinity)());
+
+
+
+#endif // GEOS_CONSTANTS_H_

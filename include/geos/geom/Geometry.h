@@ -32,7 +32,7 @@
 #endif
 
 #include <geos/export.h>
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <geos/inline.h>
 #include <geos/geom/Envelope.h>
 #include <geos/geom/Dimension.h> // for Dimension::DimensionType

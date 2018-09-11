@@ -16,7 +16,7 @@
  *
  **********************************************************************/
 
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <geos/operation/overlay/ElevationMatrix.h>
 #include <geos/util/IllegalArgumentException.h>
 #include <geos/geom/Geometry.h>

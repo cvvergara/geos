@@ -16,7 +16,7 @@
 #define GEOS_GEOM_COORDINATE_INL
 
 #include <geos/geom/Coordinate.h>
-#include <geos/platform.h> // for DoubleNotANumber
+#include <geos/constants.h> // for DoubleNotANumber
 
 #include <cassert>
 #include <cmath>

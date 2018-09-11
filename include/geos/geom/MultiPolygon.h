@@ -24,7 +24,7 @@
 #include <geos/export.h>
 #include <string>
 #include <vector>
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <geos/geom/GeometryCollection.h> // for inheritance
 #include <geos/geom/Polygonal.h> // for inheritance
 #include <geos/geom/Dimension.h> // for Dimension::DimensionType

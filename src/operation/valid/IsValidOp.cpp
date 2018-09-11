@@ -21,7 +21,7 @@
 
 #include "IndexedNestedRingTester.h" // TODO: private header>? --mloskot
 
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <geos/operation/valid/IsValidOp.h>
 #include <geos/operation/valid/ConsistentAreaTester.h>
 #include <geos/operation/valid/ConnectedInteriorTester.h>

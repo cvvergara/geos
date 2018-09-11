@@ -19,7 +19,7 @@
 #include <geos/export.h>
 #include <geos/geom/GeometryFilter.h>
 #include <geos/geom/Polygon.h>
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <vector>
 
 namespace geos {

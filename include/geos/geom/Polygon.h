@@ -24,7 +24,7 @@
 #include <geos/export.h>
 #include <string>
 #include <vector>
-#include <geos/platform.h>
+#include <geos/constants.h>
 #include <geos/geom/Geometry.h> // for inheritance
 #include <geos/geom/Polygonal.h> // for inheritance
 #include <geos/geom/Envelope.h> // for proper use of unique_ptr<>
