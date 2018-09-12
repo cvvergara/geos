@@ -340,7 +340,7 @@ check: all
 	TestSweepLineSpeed.exe
 
 
-$(LIBNAME):	$(GEOS_ROOT)\include\geos\platform.h $(GEOS_ROOT)\include\geos\version.h ..\capi\geos_c.h $(OBJ)
+$(LIBNAME):	$(GEOS_ROOT)\include\geos\version.h ..\capi\geos_c.h $(OBJ)
 	if exist $(LIBNAME) del $(LIBNAME)
 	$(LINK) /lib /out:$(LIBNAME) $(OBJ)
 
@@ -351,9 +351,6 @@ $(DLLNAME):	$(OBJ)
 $(CDLLNAME): ..\capi\geos_c.obj ..\capi\geos_ts_c.obj $(DLLNAME)
 	$(LINK) /dll /debug $(LINKER_FLAGS) ..\capi\geos_c.obj ..\capi\geos_ts_c.obj $(LIBNAME) /out:$(CDLLNAME) /implib:$(CLIBNAME)
 	if exist $(CDLLNAME).manifest mt -manifest $(CDLLNAME).manifest -outputresource:$(CDLLNAME);2
-
-$(GEOS_ROOT)\include\geos\platform.h: $(GEOS_ROOT)\include\geos\platform.h.vc
-	$(CP) $(GEOS_ROOT)\include\geos\platform.h.vc $(GEOS_ROOT)\include\geos\platform.h
 
 $(GEOS_ROOT)\include\geos\version.h: $(GEOS_ROOT)\include\geos\version.h.vc
 	if not exist $(GEOS_ROOT)\include\geos\version.h $(CP) $(GEOS_ROOT)\include\geos\version.h.vc $(GEOS_ROOT)\include\geos\version.h
