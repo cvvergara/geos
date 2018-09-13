@@ -12,7 +12,6 @@ REM
 set GEOS_HEADERS=include\geos
 
 COPY %GEOS_HEADERS%\version.h.vc %GEOS_HEADERS%\version.h
-COPY %GEOS_HEADERS%\platform.h.vc %GEOS_HEADERS%\platform.h
 COPY capi\geos_c.h.in capi\geos_c.h
 REM Empty string as dummy git SHA-1
 @ECHO #define GEOS_REVISION "" > geos_revision.h
