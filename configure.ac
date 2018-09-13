@@ -37,7 +37,7 @@ CAPI_VERSION="$CAPI_VERSION_MAJOR.$CAPI_VERSION_MINOR.$CAPI_VERSION_PATCH"
 
 AM_INIT_AUTOMAKE([geos], [$VERSION], [no-define])
 AM_MAINTAINER_MODE
-AC_CONFIG_HEADERS([include/config.h] [include/geos/platform.h])
+AC_CONFIG_HEADERS([include/config.h])
 AC_PROG_CC
 
 
