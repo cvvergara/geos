@@ -182,7 +182,7 @@ endif()
 #################################################################################
 # Setup C/C++ library features
 #################################################################################
-
+if (false)
 # check header files
 include(CheckIncludeFiles)
 
@@ -201,6 +201,7 @@ else()
   else()
     check_type_size("long long int" HAVE_LONG_LONG_INT_64)
   endif()
+endif()
 endif()
 
 ################################################################################
