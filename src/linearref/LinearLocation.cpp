@@ -204,7 +204,10 @@ LinearLocation::getCoordinate(const Geometry* linearGeom) const
 	const LineString* lineComp = dynamic_cast<const LineString *> (linearGeom->getGeometryN(componentIndex));
 	if ( ! lineComp ) {
 		throw util::IllegalArgumentException("LinearLocation::getCoordinate only works with LineString geometries");
-	}  
+	}
+	if (linearGeom->isEmpty()) {
+		return Coordinate::getNull();
+	}
 	Coordinate p0 = lineComp->getCoordinateN(segmentIndex);
 	if (segmentIndex >= lineComp->getNumPoints() - 1)
 		return p0;
